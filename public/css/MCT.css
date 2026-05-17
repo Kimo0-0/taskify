@@ -1,0 +1,63 @@
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.btn {
+  border: transparent;
+  background: transparent;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.btn-aqua {
+  color: white;
+  background: linear-gradient(to right, #3c75f5, #4bbbfd);
+  color: #fff;
+  box-shadow: 0 0 32px -5px #459ffa;
+  font-size: 13px;
+  display: inline-block;
+}
+.btn-danger {
+  color: #fff;
+  background: linear-gradient(45deg, #b60a1b, #ff8b96);
+}
+.btn-bs-danger {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+.border-1 {
+  border: 1px solid #000 !important;
+  border-radius: 5px !important;
+}
+
+@media (max-width: 570px) {
+  .gt-570 {
+    display: none !important;
+  }
+  .sidebar {
+    overflow: hidden !important;
+    z-index: 10000000 !important;
+    width: 0 !important;
+    transition-delay: 0s !important;
+  }
+  .sidebar * {
+    transition-delay: 0s !important;
+  }
+  .sidebar.active {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    z-index: 10000000 !important;
+    height: 100vh !important;
+    width: 100vw !important;
+    overflow-y: scroll !important;
+  }
+}
+@media (min-width: 570px) {
+  .lt-570 {
+    display: none !important;
+  }
+}
