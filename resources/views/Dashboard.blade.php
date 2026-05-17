@@ -213,7 +213,9 @@
     // Global variable to know which page we are on
     const activePage = '{{ $activeNav ?? "dashboard_nav" }}';
 
-    // ================== UI Helpers ==================
+    // Cache the initial paginated tasks and pagination HTML to restore instantly on search reset
+    const initialTasksHtml = document.querySelector('.tasks-list') ? document.querySelector('.tasks-list').innerHTML : '';
+    const initialPaginationHtml = document.querySelector('.pagination-container') ? document.querySelector('.pagination-container').innerHTML : '';
     function buildTaskHtml(task) {
       const isCompleted = task.status === 'completed';
       const isHighPriority = task.priority.toLowerCase() === 'high';
@@ -427,36 +429,77 @@
         });
     }
 
+    let searchDebounceTimeout = null;
+
     function filterTasks() {
       const query = document.getElementById('search-tasks').value.toLowerCase().trim();
       const category = document.getElementById('filter-category').value;
       const priority = document.getElementById('filter-priority').value;
       const status = document.getElementById('filter-status').value;
 
-      document.querySelectorAll('.tasks-list .task').forEach(card => {
-          const title = card.dataset.title || '';
-          const desc = card.dataset.desc || '';
-          const cardCat = card.dataset.category || '';
-          const cardPri = card.dataset.priority || '';
-          const cardStat = card.dataset.status || '';
-
-          const matchesSearch = !query || title.includes(query) || desc.includes(query);
-          const matchesCategory = !category || cardCat === category;
-          const matchesPriority = !priority || cardPri === priority;
-          const matchesStatus = !status || cardStat === status;
-
-          if (matchesSearch && matchesCategory && matchesPriority && matchesStatus) {
-              card.style.display = 'flex';
-              setTimeout(() => {
-                  card.style.opacity = '1';
-                  card.style.transform = 'scale(1)';
-              }, 10);
-          } else {
-              card.style.opacity = '0';
-              card.style.transform = 'scale(0.95)';
-              card.style.display = 'none';
+      // If all filters are empty, instantly restore the initial paginated tasks & pagination HTML
+      if (!query && !category && !priority && !status) {
+          const container = document.querySelector('.tasks-list');
+          if (container && initialTasksHtml) {
+              container.innerHTML = initialTasksHtml;
           }
-      });
+          const pagContainer = document.querySelector('.pagination-container');
+          if (pagContainer && initialPaginationHtml) {
+              pagContainer.innerHTML = initialPaginationHtml;
+              pagContainer.style.display = 'flex';
+          }
+          // Restart countdown timers for the active tasks
+          if (typeof startCountdownTimers === 'function') {
+              startCountdownTimers();
+          }
+          return;
+      }
+
+      // Perform unpaginated AJAX search & multi-filtering across the entire database!
+      clearTimeout(searchDebounceTimeout);
+      searchDebounceTimeout = setTimeout(() => {
+          axios.get('/tasks/api-search', {
+              params: {
+                  search: query,
+                  category_id: category,
+                  priority: priority,
+                  status: status,
+                  active_nav: activePage
+              }
+          })
+          .then(response => {
+              const tasks = response.data.data;
+              const container = document.querySelector('.tasks-list');
+              container.innerHTML = '';
+
+              if (tasks.length === 0) {
+                  container.innerHTML = `
+                      <div style="grid-column: 1 / -1; text-align: center; padding: 60px 40px; color: var(--text-muted); font-family: var(--font-main);">
+                          <i class="fa-solid fa-folder-open" style="font-size: 3rem; margin-bottom: 16px; color: var(--border-color);"></i>
+                          <h3 style="margin: 0 0 8px 0; color: var(--text-main); font-size: 1.2rem;">No Tasks Found</h3>
+                          <p style="margin: 0; font-size: 0.9rem;">We couldn't find any tasks matching your filters across the database.</p>
+                      </div>`;
+              } else {
+                  tasks.forEach(task => {
+                      container.insertAdjacentHTML('beforeend', buildTaskHtml(task));
+                  });
+              }
+
+              // Hide pagination while searching/filtering to show all database matches
+              const pagContainer = document.querySelector('.pagination-container');
+              if (pagContainer) {
+                  pagContainer.style.display = 'none';
+              }
+
+              // Restart countdown timers for new search cards
+              if (typeof startCountdownTimers === 'function') {
+                  startCountdownTimers();
+              }
+          })
+          .catch(error => {
+              console.error("Error searching tasks:", error);
+          });
+      }, 250); // 250ms Debounce
     }
 
     function resetFilters() {

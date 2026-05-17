@@ -26,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
   Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
   Route::get('/Trash', [TaskController::class, 'trash'])->name('trash');
+  Route::get('/tasks/api-search', [TaskController::class, 'apiSearch'])->name('tasks.apiSearch');
   Route::post('/tasks/empty-trash', [TaskController::class, 'emptyTrash'])->name('tasks.emptyTrash');
   Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
   Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');

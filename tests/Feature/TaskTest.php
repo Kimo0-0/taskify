@@ -175,3 +175,30 @@ test('user can empty the recycle bin', function () {
     $test->assertDatabaseMissing('tasks', ['id' => $task1->id]);
     $test->assertDatabaseMissing('tasks', ['id' => $task2->id]);
 });
+
+test('user can perform fuzzy API search and multi-filtering bypassing pagination', function () {
+    /** @var \Tests\TestCase $test */
+    $test = $this;
+    /** @var \App\Models\User $user */
+    $user = User::factory()->create();
+    
+    // Create 15 tasks to normally cause pagination (10 per page)
+    for ($i = 1; $i <= 15; $i++) {
+        Task::create([
+            'title' => "Task Number $i",
+            'due_date' => now()->addDays($i)->toDateTimeString(),
+            'user_id' => $user->id,
+            'status' => $i % 2 === 0 ? 'completed' : 'pending',
+            'priority' => $i === 7 ? 'high' : 'medium'
+        ]);
+    }
+
+    // Call API search to find "Task Number 7" (high priority)
+    $response = $test
+        ->actingAs($user)
+        ->getJson("/tasks/api-search?search=Number 7&priority=high");
+
+    $response->assertOk();
+    $response->assertJsonCount(1, 'data');
+    $response->assertJsonPath('data.0.title', 'Task Number 7');
+});

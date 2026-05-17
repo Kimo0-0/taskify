@@ -170,6 +170,79 @@ class TaskController extends Controller
     }
 
     /**
+     * API Endpoint for unpaginated real-time search & multi-filtering.
+     */
+    public function apiSearch(Request $request)
+    {
+        $query = Auth::user()->tasks()->with(['category', 'subtasks']);
+
+        // Check if we are searching within Trashed tasks
+        if ($request->active_nav === 'Trash_nav') {
+            $query->onlyTrashed();
+        } else {
+            // Apply standard scopes based on the active page filter
+            if ($request->active_nav === 'Today_nav') {
+                $query->whereDate('due_date', \Carbon\Carbon::today());
+            } elseif ($request->active_nav === 'Important_nav') {
+                $query->where('priority', 'high');
+            } elseif ($request->active_nav === 'Completed_nav') {
+                $query->where('status', 'completed');
+            }
+        }
+
+        // Apply Fuzzy Search Term
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%$search%")
+                  ->orWhere('description', 'like', "%$search%");
+            });
+        }
+
+        // Apply Category Filter
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Apply Priority Filter
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->priority);
+        }
+
+        // Apply Status Filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Fetch all matching tasks without pagination!
+        $tasks = $query->orderBy('due_date', 'asc')->get();
+
+        // Format to match exact response expectation of buildTaskHtml
+        $formattedTasks = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'title' => $task->title,
+                'description' => $task->description,
+                'due_date' => $task->due_date,
+                'status' => $task->status,
+                'priority' => $task->priority,
+                'category_id' => $task->category_id,
+                'category_name' => $task->category ? $task->category->name : 'No Category',
+                'formatted_date' => \Carbon\Carbon::parse($task->due_date)->format('M d, Y h:i A'),
+                'subtasks' => $task->subtasks->map(function ($subtask) {
+                    return [
+                        'id' => $subtask->id,
+                        'title' => $subtask->title,
+                        'is_completed' => (bool)$subtask->is_completed,
+                    ];
+                })->toArray(),
+            ];
+        });
+
+        return $this->success($formattedTasks);
+    }
+
+    /**
      * Permanently delete all soft-deleted tasks for the user.
      */
     public function emptyTrash()
