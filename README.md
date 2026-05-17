@@ -1,10 +1,6 @@
 # ⚡ Taskify — Modern & Fully Reactive Task Management System
 
 <p align="center">
-  <img src="UI_UX/Gemini_Generated_Image_3y7hii3y7hii3y7h.png" width="800" alt="Taskify Dashboard" style="border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15);">
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel">
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3">
@@ -40,17 +36,6 @@
 * **Frontend:** Blade, Vanilla JS, Axios.js, FontAwesome 6
 * **Database:** SQLite (default) / MySQL
 * **Styling:** Custom CSS (Custom design variables, flexible responsive grid, HSL-colors)
-
----
-
-## 📸 Screenshots & Design Assets
-
-Here are some of the design concepts and user interface assets generated during the development of **Taskify**:
-
-<p align="center">
-  <img src="UI_UX/Gemini_Generated_Image_je6e19je6e19je6e.png" width="45%" alt="Asset 1" style="border-radius: 8px; margin: 2%; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-  <img src="UI_UX/Gemini_Generated_Image_iyu4k0iyu4k0iyu4.png" width="45%" alt="Asset 2" style="border-radius: 8px; margin: 2%; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-</p>
 
 ---
 
