@@ -40,7 +40,7 @@
 
             <label>Task Title</label>
             <input type="text" id="task-title" name="title" placeholder="What needs to be done?">
-            
+
             <label>Description</label>
             <textarea id="task-description" name="description" rows="3" placeholder="Add details..."></textarea>
 
@@ -53,7 +53,7 @@
                 <div id="subtask-list" style="margin-top: 12px;"></div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="task-form-unique-grid">
                 <div>
                     <label>Due Date</label>
                     <input type="datetime-local" name="due_date" id="task-due" style="width: 100%;">
@@ -147,10 +147,10 @@
                         location.reload(); // Fallback if buildTaskHtml isn't defined
                     }
                 }
-                
+
                 document.getElementById("addTaskForm").reset();
                 document.getElementById("subtask-list").innerHTML = '';
-                
+
                 // Update Total Counter if exists
                 const totalCount = document.getElementById("total-tasks-count");
                 if (totalCount) {
@@ -183,7 +183,7 @@
       function toggleTheme() {
           const docEl = document.documentElement;
           docEl.classList.toggle('dark-mode');
-          
+
           const isDark = docEl.classList.contains('dark-mode');
           localStorage.setItem('theme', isDark ? 'dark' : 'light');
           updateThemeUI();

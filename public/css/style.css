@@ -41,7 +41,9 @@ body {
   background-color: var(--bg-color);
   margin: 0;
   color: var(--text-main);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 .page {
   display: flex;
@@ -174,12 +176,20 @@ body {
 .fab-add:active {
   transform: scale(0.9);
 }
+.task-form-unique-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
 
 @media (max-width: 500px) {
   .task-status {
     grid-template-columns: 1fr;
     margin: 16px;
     gap: 16px;
+  }
+  .task-form-unique-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -191,7 +201,10 @@ nav {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 @media (max-width: 400px) {
@@ -234,7 +247,10 @@ nav {
   border-radius: 16px;
   padding: 24px;
   display: flex;
-  transition: transform 0.3s, background-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -296,7 +312,11 @@ nav {
   border-radius: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   border-top: 4px solid transparent;
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -438,7 +458,10 @@ form select {
   font-size: 1rem;
   width: 100%;
   box-sizing: border-box;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 form label {
   font-weight: 600;
@@ -467,7 +490,9 @@ form label {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 .close-btn:hover {
   background: var(--close-btn-hover);
@@ -631,7 +656,8 @@ img {
   animation: pulse-countdown 2.5s infinite ease-in-out;
 }
 @keyframes pulse-countdown {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     box-shadow: 0 0 0 rgba(245, 158, 11, 0);
   }
@@ -658,7 +684,7 @@ html.dark-mode .task-countdown {
 
 /* Sort completed subtasks to the bottom of the list */
 .subtask-item.subtask-detail-item.completed {
-    order: 10;
+  order: 10;
 }
 
 /* Premium Custom Pagination Styling */
@@ -711,3 +737,34 @@ html.dark-mode .task-countdown {
   box-shadow: none;
 }
 
+/* Premium Filter Bar focus and hover transitions */
+.filter-bar input:focus,
+.filter-bar select:focus {
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+.filter-bar select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  padding-right: 40px !important;
+}
+.filter-bar button:hover {
+  background: var(--text-main) !important;
+  color: var(--card-bg) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+@media (max-width: 768px) {
+  .filter-bar {
+    margin: 16px !important;
+    padding: 16px !important;
+  }
+  .filter-bar div {
+    width: 100% !important;
+  }
+}

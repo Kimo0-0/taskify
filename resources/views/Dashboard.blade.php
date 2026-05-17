@@ -50,6 +50,41 @@
     </div>
   </div>
 
+  {{-- Real-Time Search & Multi-Filter Bar --}}
+  <div class="filter-bar" style="margin: 24px 36px; padding: 20px; background: var(--card-bg); border-radius: 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; border: 1px solid var(--border-color); transition: all 0.3s ease;">
+      <div style="flex: 1; min-width: 250px; position: relative;">
+          <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.95rem;"></i>
+          <input type="text" id="search-tasks" placeholder="Search tasks by title or description..." oninput="filterTasks()" style="width: 100%; padding: 12px 16px 12px 44px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; box-sizing: border-box; transition: all 0.3s ease;">
+      </div>
+      
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; width: auto;">
+          <select id="filter-category" onchange="filterTasks()" style="padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;">
+              <option value="">All Categories</option>
+              @foreach ($categories as $category)
+                  <option value="{{ $category->id }}">{{ $category->name }}</option>
+              @endforeach
+          </select>
+
+          <select id="filter-priority" onchange="filterTasks()" style="padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;">
+              <option value="">All Priorities</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+          </select>
+
+          <select id="filter-status" onchange="filterTasks()" style="padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;">
+              <option value="">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="in progress">In Progress</option>
+              <option value="completed">Completed</option>
+          </select>
+          
+          <button onclick="resetFilters()" style="padding: 12px 16px; background: var(--border-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-filter-circle-xmark"></i> Reset
+          </button>
+      </div>
+  </div>
+
   <div class="tasks-list">
     @foreach ($tasks as $task)
       @php
@@ -60,7 +95,7 @@
       @php
         $isOverdueTask = ($task['status'] != 'completed' && \Carbon\Carbon::parse($task['due_date'])->isPast());
       @endphp
-      <div class="task {{ $task['status'] == 'completed' ? 'completed' : '' }} {{ $isOverdueTask ? 'overdue' : '' }}" id="task-{{ $task['id'] }}" data-priority="{{ strtolower($task['priority']) }}">
+      <div class="task {{ $task['status'] == 'completed' ? 'completed' : '' }} {{ $isOverdueTask ? 'overdue' : '' }}" id="task-{{ $task['id'] }}" data-priority="{{ strtolower($task['priority']) }}" data-category="{{ $task['category_id'] ?? '' }}" data-status="{{ strtolower($task['status']) }}" data-title="{{ strtolower($task['title']) }}" data-desc="{{ strtolower($task['description'] ?? '') }}">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div class="task-catigory">
                 <span>{{ $task['category_name'] }}</span>
@@ -390,6 +425,46 @@
         .catch((error) => {
           alert("Error emptying recycle bin: " + (error.response?.data?.message || 'Unknown error'));
         });
+    }
+
+    function filterTasks() {
+      const query = document.getElementById('search-tasks').value.toLowerCase().trim();
+      const category = document.getElementById('filter-category').value;
+      const priority = document.getElementById('filter-priority').value;
+      const status = document.getElementById('filter-status').value;
+
+      document.querySelectorAll('.tasks-list .task').forEach(card => {
+          const title = card.dataset.title || '';
+          const desc = card.dataset.desc || '';
+          const cardCat = card.dataset.category || '';
+          const cardPri = card.dataset.priority || '';
+          const cardStat = card.dataset.status || '';
+
+          const matchesSearch = !query || title.includes(query) || desc.includes(query);
+          const matchesCategory = !category || cardCat === category;
+          const matchesPriority = !priority || cardPri === priority;
+          const matchesStatus = !status || cardStat === status;
+
+          if (matchesSearch && matchesCategory && matchesPriority && matchesStatus) {
+              card.style.display = 'flex';
+              setTimeout(() => {
+                  card.style.opacity = '1';
+                  card.style.transform = 'scale(1)';
+              }, 10);
+          } else {
+              card.style.opacity = '0';
+              card.style.transform = 'scale(0.95)';
+              card.style.display = 'none';
+          }
+      });
+    }
+
+    function resetFilters() {
+      document.getElementById('search-tasks').value = '';
+      document.getElementById('filter-category').value = '';
+      document.getElementById('filter-priority').value = '';
+      document.getElementById('filter-status').value = '';
+      filterTasks();
     }
 
     function openUpdateForm(task) {
