@@ -104,3 +104,52 @@ test('user cannot view or modify other users tasks', function () {
 
     $response->assertStatus(404);
 });
+
+test('user can restore a soft deleted task', function () {
+    /** @var \Tests\TestCase $test */
+    $test = $this;
+    /** @var \App\Models\User $user */
+    $user = User::factory()->create();
+    $task = Task::create([
+        'title' => 'Deleted Task',
+        'due_date' => now()->addDays(1)->toDateTimeString(),
+        'user_id' => $user->id,
+        'status' => 'pending'
+    ]);
+    $task->delete(); // Soft delete
+
+    $test->assertSoftDeleted('tasks', ['id' => $task->id]);
+
+    $response = $test
+        ->actingAs($user)
+        ->postJson("/tasks/{$task->id}/restore");
+
+    $response->assertOk();
+
+    $test->assertDatabaseHas('tasks', [
+        'id' => $task->id,
+        'deleted_at' => null
+    ]);
+});
+
+test('user can permanently force delete a soft deleted task', function () {
+    /** @var \Tests\TestCase $test */
+    $test = $this;
+    /** @var \App\Models\User $user */
+    $user = User::factory()->create();
+    $task = Task::create([
+        'title' => 'To Be Permanently Deleted Task',
+        'due_date' => now()->addDays(1)->toDateTimeString(),
+        'user_id' => $user->id,
+        'status' => 'pending'
+    ]);
+    $task->delete(); // Soft delete
+
+    $response = $test
+        ->actingAs($user)
+        ->deleteJson("/tasks/{$task->id}/force-delete");
+
+    $response->assertOk();
+
+    $test->assertDatabaseMissing('tasks', ['id' => $task->id]);
+});

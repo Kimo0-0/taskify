@@ -25,9 +25,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/Categories', [CategoryController::class, 'index'])->name('categories.index');
   Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
   Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+  Route::get('/Trash', [TaskController::class, 'trash'])->name('trash');
   Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
   Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
   Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
+  Route::post('/tasks/{id}/restore', [TaskController::class, 'restore'])->name('tasks.restore');
+  Route::delete('/tasks/{id}/force-delete', [TaskController::class, 'forceDelete'])->name('tasks.forceDelete');
   Route::post('/subtasks/{id}/toggle', [SubtaskController::class, 'toggle'])->name('subtasks.toggle');
   Route::get('/task/{id}', function ($id) {$task = Task::findOrFail($id);return view('task', ['task' => $task]);});
 });

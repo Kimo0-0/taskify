@@ -2,6 +2,12 @@
 @section('title', $title ?? 'Dashboard')
 @section($activeNav ?? 'Dashboard_nav', 'active')
 
+@if(isset($activeNav) && $activeNav == 'Trash_nav')
+  @section('CustomCss')
+    #create-task-btn { display: none !important; }
+  @endsection
+@endif
+
 @section('content')
   <div style="margin: 24px 36px 0;">
       <h1 style="font-family: var(--font-accent); font-size: 1.8rem; margin: 0; color: var(--text-main);">
@@ -80,18 +86,27 @@
             <i class="fa-regular fa-calendar"></i> {{ $task['formatted_date'] }}
           </div>
           <div class="task-actions">
-            <button class="task-action complete" onclick="toggleComplete({{ $task['id'] }}, '{{ $task['status'] }}')" title="Mark as {{ $task['status'] == 'completed' ? 'pending' : 'completed' }}">
-                <i class="fa-solid {{ $task['status'] == 'completed' ? 'fa-circle-check' : 'fa-circle' }}" style="{{ $task['status'] == 'completed' ? 'color: var(--completed-color);' : '' }}"></i>
-            </button>
-            <button class="task-action important" onclick="toggleImportant({{ $task['id'] }}, '{{ $task['priority'] }}')" title="Mark as {{ $task['priority'] == 'high' ? 'Normal' : 'Important' }}">
-                <i class="{{ $task['priority'] == 'high' ? 'fa-solid' : 'fa-regular' }} fa-star" style="{{ $task['priority'] == 'high' ? 'color: #f59e0b;' : '' }}"></i>
-            </button>
-            <button class="task-action edit" onclick='openUpdateForm({{ json_encode($task) }})'>
-                <i class="fa-regular fa-pen-to-square"></i>
-            </button>
-            <button class="task-action delete" onclick="deleteTask({{ $task['id'] }})">
-                <i class="fa-regular fa-trash-can"></i>
-            </button>
+            @if(isset($activeNav) && $activeNav == 'Trash_nav')
+              <button class="task-action restore" onclick="restoreTask({{ $task['id'] }})" title="Restore Task" style="color: var(--completed-color); font-size: 1.15rem; transition: transform 0.2s;">
+                  <i class="fa-solid fa-arrow-rotate-left"></i>
+              </button>
+              <button class="task-action delete-permanent" onclick="forceDeleteTask({{ $task['id'] }})" title="Delete Permanently" style="color: var(--overdue-color); font-size: 1.15rem; transition: transform 0.2s;">
+                  <i class="fa-solid fa-trash-can-slash"></i>
+              </button>
+            @else
+              <button class="task-action complete" onclick="toggleComplete({{ $task['id'] }}, '{{ $task['status'] }}')" title="Mark as {{ $task['status'] == 'completed' ? 'pending' : 'completed' }}">
+                  <i class="fa-solid {{ $task['status'] == 'completed' ? 'fa-circle-check' : 'fa-circle' }}" style="{{ $task['status'] == 'completed' ? 'color: var(--completed-color);' : '' }}"></i>
+              </button>
+              <button class="task-action important" onclick="toggleImportant({{ $task['id'] }}, '{{ $task['priority'] }}')" title="Mark as {{ $task['priority'] == 'high' ? 'Normal' : 'Important' }}">
+                  <i class="{{ $task['priority'] == 'high' ? 'fa-solid' : 'fa-regular' }} fa-star" style="{{ $task['priority'] == 'high' ? 'color: #f59e0b;' : '' }}"></i>
+              </button>
+              <button class="task-action edit" onclick='openUpdateForm({{ json_encode($task) }})'>
+                  <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <button class="task-action delete" onclick="deleteTask({{ $task['id'] }})">
+                  <i class="fa-regular fa-trash-can"></i>
+              </button>
+            @endif
           </div>
         </div>
       </div>
@@ -322,6 +337,37 @@
         })
         .catch((error) => {
           alert("Error deleting task");
+        });
+    }
+
+    function restoreTask(id) {
+      if(!confirm('Are you sure you want to restore this task?')) return;
+
+      const taskEl = document.getElementById(`task-${id}`);
+      axios.post(`/tasks/${id}/restore`, {
+          _token: document.querySelector('input[name="_token"]').value
+        })
+        .then(() => {
+          taskEl.remove();
+          updateCounter(1);
+        })
+        .catch((error) => {
+          alert("Error restoring task: " + (error.response.data.message || 'Unknown error'));
+        });
+    }
+
+    function forceDeleteTask(id) {
+      if(!confirm('WARNING: Are you sure you want to PERMANENTLY delete this task? This action cannot be undone!')) return;
+
+      const taskEl = document.getElementById(`task-${id}`);
+      axios.delete(`/tasks/${id}/force-delete`, {
+          headers: { 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value }
+        })
+        .then(() => {
+          taskEl.remove();
+        })
+        .catch((error) => {
+          alert("Error permanently deleting task: " + (error.response.data.message || 'Unknown error'));
         });
     }
 

@@ -118,6 +118,58 @@ class TaskController extends Controller
     }
 
     /**
+     * Show soft-deleted tasks.
+     */
+    public function trash()
+    {
+        $tasks = Auth::user()->tasks()->onlyTrashed()->with(['category', 'subtasks'])->orderBy('deleted_at', 'desc')->paginate(10);
+        $categories = \App\Models\Category::all();
+        $title = 'Recycle Bin';
+        $activeNav = 'Trash_nav';
+
+        $stats = [
+            'total' => Auth::user()->tasks()->count(),
+            'completed' => Auth::user()->tasks()->where('status', 'completed')->count(),
+            'overdue' => Auth::user()->tasks()->where('status', '!=', 'completed')->where('due_date', '<', now())->count(),
+        ];
+
+        return view('Dashboard', compact('tasks', 'categories', 'title', 'activeNav', 'stats'));
+    }
+
+    /**
+     * Restore a soft-deleted task.
+     */
+    public function restore($id)
+    {
+        $task = Auth::user()->tasks()->onlyTrashed()->find($id);
+
+        if (!$task) {
+            return $this->error('Task not found in trash', 404);
+        }
+
+        $task->restore();
+
+        return $this->success(null, 'Task restored successfully');
+    }
+
+    /**
+     * Permanently delete a task.
+     */
+    public function forceDelete($id)
+    {
+        $task = Auth::user()->tasks()->onlyTrashed()->find($id);
+
+        if (!$task) {
+            return $this->error('Task not found in trash', 404);
+        }
+
+        $task->subtasks()->delete();
+        $task->forceDelete();
+
+        return $this->success(null, 'Task permanently deleted');
+    }
+
+    /**
      * Show tasks for Today.
      */
     public function today()

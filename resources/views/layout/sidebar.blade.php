@@ -45,6 +45,12 @@
           <span class="title">Categories</span>
         </a>
       </li>
+      <li class="{{ Route::is('trash') ? 'active' : '' }}">
+        <a href="{{ route('trash') }}">
+          <span class="icon"><i class="fa-solid fa-trash-can"></i></span>
+          <span class="title">Trash</span>
+        </a>
+      </li>
     </ul>
   </div>
 </div>
