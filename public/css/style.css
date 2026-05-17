@@ -571,6 +571,7 @@ img {
   border-right: 1px solid rgba(219, 61, 66, 0.15);
   border-bottom: 1px solid rgba(219, 61, 66, 0.15);
   box-shadow: 0 4px 6px rgba(219, 61, 66, 0.02);
+  order: 9;
 }
 .task.overdue:hover {
   box-shadow: 0 10px 15px -3px rgba(219, 61, 66, 0.1);
@@ -653,5 +654,10 @@ html.dark-mode .task.overdue:hover {
 html.dark-mode .task-countdown {
   background: rgba(255, 255, 255, 0.03);
   border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Sort completed subtasks to the bottom of the list */
+.subtask-item.subtask-detail-item.completed {
+    order: 10;
 }
 
