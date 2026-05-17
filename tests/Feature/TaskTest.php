@@ -7,6 +7,7 @@ use App\Models\Category;
 
 test('authenticated user can create a task with subtasks', function () {
     /** @var Tests\TestCase $this */
+    /** @var \App\Models\User $user */
     $user = User::factory()->create();
 
     $response = $this
@@ -33,6 +34,7 @@ test('authenticated user can create a task with subtasks', function () {
 
 test('marking a task completed cascades to all its subtasks', function () {
     /** @var Tests\TestCase $this */
+    /** @var \App\Models\User $user */
     $user = User::factory()->create();
     $task = Task::create([
         'title' => 'Test Cascade Task',
@@ -40,7 +42,7 @@ test('marking a task completed cascades to all its subtasks', function () {
         'user_id' => $user->id,
         'status' => 'pending'
     ]);
-    
+
     $subtask1 = Subtask::create(['title' => 'Sub1', 'task_id' => $task->id, 'is_completed' => false]);
     $subtask2 = Subtask::create(['title' => 'Sub2', 'task_id' => $task->id, 'is_completed' => false]);
 
@@ -58,6 +60,7 @@ test('marking a task completed cascades to all its subtasks', function () {
 
 test('user can soft delete a task', function () {
     /** @var Tests\TestCase $this */
+    /** @var \App\Models\User $user */
     $user = User::factory()->create();
     $task = Task::create([
         'title' => 'Test Soft Delete Task',
@@ -80,8 +83,9 @@ test('user can soft delete a task', function () {
 test('user cannot view or modify other users tasks', function () {
     /** @var Tests\TestCase $this */
     $user1 = User::factory()->create();
+    /** @var \App\Models\User $user2 */
     $user2 = User::factory()->create();
-    
+
     $taskOwnedBy1 = Task::create([
         'title' => 'Task Owned By 1',
         'due_date' => now()->addDays(1)->toDateTimeString(),
