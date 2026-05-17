@@ -113,8 +113,8 @@
     @endforeach
   </div>
 
-  <div class="pagination-container" style="margin: 20px 36px;">
-      {{ $tasks->links() }}
+  <div class="pagination-container">
+      {{ $tasks->links('pagination::simple-bootstrap-4') }}
   </div>
 
   {{-- Update Task Form --}}
