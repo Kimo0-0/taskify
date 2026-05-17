@@ -17,7 +17,6 @@
             const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
                 document.documentElement.classList.add('dark-mode');
-                document.body.classList.add('dark-mode');
             }
         })();
     </script>
@@ -168,7 +167,7 @@
 
       // Theme Toggle Logic
       function updateThemeUI() {
-          const isDark = document.body.classList.contains('dark-mode');
+          const isDark = document.documentElement.classList.contains('dark-mode');
           const toggleIcon = document.getElementById('theme-toggle-icon');
           if (toggleIcon) {
               if (isDark) {
@@ -182,13 +181,10 @@
       }
 
       function toggleTheme() {
-          const body = document.body;
           const docEl = document.documentElement;
-          
-          body.classList.toggle('dark-mode');
           docEl.classList.toggle('dark-mode');
           
-          const isDark = body.classList.contains('dark-mode');
+          const isDark = docEl.classList.contains('dark-mode');
           localStorage.setItem('theme', isDark ? 'dark' : 'light');
           updateThemeUI();
       }
