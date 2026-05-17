@@ -20,7 +20,7 @@
   --font-accent: "Outfit", sans-serif;
 }
 
-body.dark-mode {
+html.dark-mode {
   --bg-color: #0b0f19;
   --text-main: #f3f4f6;
   --text-muted: #9ca3af;
@@ -640,16 +640,16 @@ img {
 }
 
 /* Dark Mode Overdue & Countdown Overrides */
-body.dark-mode .task.overdue {
+html.dark-mode .task.overdue {
   background: rgba(219, 61, 66, 0.08) !important;
   border-left-color: rgba(219, 61, 66, 0.3) !important;
   border-right-color: rgba(219, 61, 66, 0.3) !important;
   border-bottom-color: rgba(219, 61, 66, 0.3) !important;
 }
-body.dark-mode .task.overdue:hover {
+html.dark-mode .task.overdue:hover {
   background: rgba(219, 61, 66, 0.12) !important;
 }
-body.dark-mode .task-countdown {
+html.dark-mode .task-countdown {
   background: rgba(255, 255, 255, 0.03);
   border-color: rgba(255, 255, 255, 0.05);
 }
