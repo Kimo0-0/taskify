@@ -44,9 +44,12 @@
       @php
         $totalSubtasks = count($task['subtasks']);
         $completedSubtasks = collect($task['subtasks'])->where('is_completed', true)->count();
-        $progress = $totalSubtasks > 0 ? ($completedSubtasks / $totalSubtasks) * 100 : 0;
+        $progress = $totalSubtasks > 0 ? ($completedSubtasks / $totalSubtasks) * 100 : ($task['status'] == 'completed' ? 100 : 0);
       @endphp
-      <div class="task {{ $task['status'] == 'completed' ? 'completed' : '' }}" id="task-{{ $task['id'] }}" data-priority="{{ strtolower($task['priority']) }}">
+      @php
+        $isOverdueTask = ($task['status'] != 'completed' && \Carbon\Carbon::parse($task['due_date'])->isPast());
+      @endphp
+      <div class="task {{ $task['status'] == 'completed' ? 'completed' : '' }} {{ $isOverdueTask ? 'overdue' : '' }}" id="task-{{ $task['id'] }}" data-priority="{{ strtolower($task['priority']) }}">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div class="task-catigory">
                 <span>{{ $task['category_name'] }}</span>
@@ -55,16 +58,22 @@
         </div>
         <div class="task-title">
           <a href="/task/{{ $task['id'] }}"> {{ $task['title'] }}</a>
-          @if($task['status'] != 'completed' && \Carbon\Carbon::parse($task['due_date'])->isPast())
-            <span class="overdue-badge">Overdue</span>
+          @if($isOverdueTask)
+            <span class="overdue-badge"><i class="fa-solid fa-circle-exclamation"></i> Overdue</span>
           @endif
         </div>
 
-        @if($totalSubtasks > 0)
-        <div class="progress-container" title="{{ $completedSubtasks }}/{{ $totalSubtasks }} subtasks">
+        <div class="progress-container" title="{{ $totalSubtasks > 0 ? $completedSubtasks . '/' . $totalSubtasks . ' subtasks' : ($task['status'] == 'completed' ? 'Completed' : 'Pending') }}">
             <div class="progress-bar" style="width: {{ $progress }}%"></div>
         </div>
-        @endif
+
+        <div class="task-countdown" data-due="{{ $task['due_date'] }}" data-status="{{ $task['status'] }}">
+            @if($task['status'] == 'completed')
+                <i class="fa-solid fa-circle-check"></i> <span class="countdown-text">Completed</span>
+            @else
+                <i class="fa-solid fa-hourglass-half"></i> <span class="countdown-text">Calculating...</span>
+            @endif
+        </div>
 
         <div class="task-bar">
           <div class="task-date">
@@ -156,22 +165,26 @@
       const isOverdue = !isCompleted && new Date(task.due_date) < new Date();
       const progress = task.subtasks.length > 0
         ? (task.subtasks.filter(s => s.is_completed).length / task.subtasks.length) * 100
-        : 0;
+        : (isCompleted ? 100 : 0);
 
       return `
-          <div class="task ${isCompleted ? 'completed' : ''}" id="task-${task.id}" data-priority="${task.priority.toLowerCase()}">
+          <div class="task ${isCompleted ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}" id="task-${task.id}" data-priority="${task.priority.toLowerCase()}">
               <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                   <div class="task-catigory"><span>${task.category_name}</span></div>
                   <span class="status-badge ${task.status}">${task.status}</span>
               </div>
               <div class="task-title">
                   <a href="/task/${task.id}">${task.title}</a>
-                  ${isOverdue ? '<span class="overdue-badge">Overdue</span>' : ''}
+                  ${isOverdue ? '<span class="overdue-badge"><i class="fa-solid fa-circle-exclamation"></i> Overdue</span>' : ''}
               </div>
-              ${task.subtasks.length > 0 ? `
-              <div class="progress-container">
+              <div class="progress-container" title="${task.subtasks.length > 0 ? `${task.subtasks.filter(s => s.is_completed).length}/${task.subtasks.length} subtasks` : (isCompleted ? 'Completed' : 'Pending')}">
                   <div class="progress-bar" style="width: ${progress}%"></div>
-              </div>` : ''}
+              </div>
+              <div class="task-countdown" data-due="${task.due_date}" data-status="${task.status}">
+                  ${isCompleted 
+                    ? '<i class="fa-solid fa-circle-check"></i> <span class="countdown-text">Completed</span>' 
+                    : '<i class="fa-solid fa-hourglass-half"></i> <span class="countdown-text">Calculating...</span>'}
+              </div>
               <div class="task-bar">
                   <div class="task-date"><i class="fa-regular fa-calendar"></i> ${task.formatted_date}</div>
                   <div class="task-actions">
@@ -203,10 +216,11 @@
           const task = response.data.data;
           const taskEl = document.getElementById(`task-${task.id}`);
 
-          if (activePage === 'important_nav' && task.priority.toLowerCase() !== 'high') {
+          if (activePage.toLowerCase() === 'important_nav' && task.priority.toLowerCase() !== 'high') {
               taskEl.remove();
           } else {
               taskEl.outerHTML = buildTaskHtml(task);
+              if (typeof updateCountdowns === "function") updateCountdowns();
           }
         })
         .catch((error) => {
@@ -225,10 +239,11 @@
           const task = response.data.data;
           const taskEl = document.getElementById(`task-${task.id}`);
 
-          if (activePage === 'completed_nav' && task.status !== 'completed') {
+          if (activePage.toLowerCase() === 'completed_nav' && task.status !== 'completed') {
               taskEl.remove();
           } else {
               taskEl.outerHTML = buildTaskHtml(task);
+              if (typeof updateCountdowns === "function") updateCountdowns();
           }
 
           // Update stats on the fly
@@ -364,6 +379,7 @@
 
           // Update HTML
           taskEl.outerHTML = buildTaskHtml(task);
+          if (typeof updateCountdowns === "function") updateCountdowns();
 
           // Update Completed Counter
           if (wasCompleted !== isNowCompleted) {
@@ -394,5 +410,83 @@
     document.getElementById("update-add-subtask-btn").addEventListener("click", function() {
       addSubtaskToList("update-subtask-input", "update-subtask-list");
     });
+
+    // ================== Countdown Timers ==================
+    function updateCountdowns() {
+        document.querySelectorAll('.task-countdown').forEach(el => {
+            const dueDateStr = el.dataset.due;
+            const taskStatus = el.dataset.status;
+            const textEl = el.querySelector('.countdown-text');
+            const iconEl = el.querySelector('i');
+            
+            if (taskStatus === 'completed') {
+                el.style.display = 'flex';
+                el.classList.remove('urgent');
+                textEl.innerText = 'Completed';
+                if (iconEl) {
+                    iconEl.className = 'fa-solid fa-circle-check';
+                }
+                return;
+            }
+            
+            const dueDate = new Date(dueDateStr);
+            const now = new Date();
+            const diffMs = dueDate - now;
+            
+            if (diffMs <= 0) {
+                // Task is overdue
+                el.classList.remove('urgent');
+                const taskCard = el.closest('.task');
+                if (taskCard) {
+                    taskCard.classList.add('overdue');
+                    const titleEl = taskCard.querySelector('.task-title');
+                    if (titleEl && !titleEl.querySelector('.overdue-badge')) {
+                        titleEl.insertAdjacentHTML('beforeend', '<span class="overdue-badge"><i class="fa-solid fa-circle-exclamation"></i> Overdue</span>');
+                    }
+                }
+                textEl.innerText = 'Overdue';
+                if (iconEl) {
+                    iconEl.className = 'fa-solid fa-circle-exclamation';
+                }
+                return;
+            }
+            
+            // Calculate time parts
+            const diffSecs = Math.floor(diffMs / 1000);
+            const days = Math.floor(diffSecs / 86400);
+            const hours = Math.floor((diffSecs % 86400) / 3600);
+            const minutes = Math.floor((diffSecs % 3600) / 60);
+            const seconds = diffSecs % 60;
+            
+            // Format output string
+            let timeStr = '';
+            if (days > 0) {
+                timeStr += `${days}d ${hours}h ${minutes}m`;
+            } else if (hours > 0) {
+                timeStr += `${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                timeStr += `${minutes}m ${seconds}s remaining`;
+            }
+            
+            textEl.innerText = timeStr;
+            
+            // If less than 24 hours remaining, mark as urgent
+            if (diffMs < 24 * 60 * 60 * 1000) {
+                el.classList.add('urgent');
+                if (iconEl) {
+                    iconEl.className = 'fa-solid fa-hourglass-start fa-spin';
+                }
+            } else {
+                el.classList.remove('urgent');
+                if (iconEl) {
+                    iconEl.className = 'fa-solid fa-hourglass-half';
+                }
+            }
+        });
+    }
+    
+    // Start interval
+    updateCountdowns();
+    setInterval(updateCountdowns, 1000);
   </script>
 @endsection

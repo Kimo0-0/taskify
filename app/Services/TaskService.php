@@ -53,7 +53,10 @@ class TaskService
 
         if (isset($data['subtasks']) && is_array($data['subtasks'])) {
             foreach ($data['subtasks'] as $subtaskTitle) {
-                $task->subtasks()->create(['title' => $subtaskTitle]);
+                $task->subtasks()->create([
+                    'title' => $subtaskTitle,
+                    'is_completed' => ($task->status === 'completed')
+                ]);
             }
         }
 
@@ -67,10 +70,18 @@ class TaskService
     {
         $task->update($data);
 
+        // If the task status is updated to completed, complete all its subtasks
+        if (isset($data['status']) && $data['status'] === 'completed') {
+            $task->subtasks()->update(['is_completed' => true]);
+        }
+
         if (isset($data['subtasks']) && is_array($data['subtasks'])) {
             $task->subtasks()->delete();
             foreach ($data['subtasks'] as $subtaskTitle) {
-                $task->subtasks()->create(['title' => $subtaskTitle]);
+                $task->subtasks()->create([
+                    'title' => $subtaskTitle,
+                    'is_completed' => ($task->status === 'completed')
+                ]);
             }
         }
 

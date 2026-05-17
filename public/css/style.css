@@ -96,60 +96,67 @@ body {
   gap: 12px;
   width: 100%;
   padding: 12px 24px;
-} .sidebar .close-sidebar {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: #fff;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+}
+.sidebar .close-sidebar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 /* Visibility Utilities */
 @media (min-width: 769px) {
-    .lt-768 { display: none !important; }
+  .lt-768 {
+    display: none !important;
+  }
 }
 @media (max-width: 768px) {
-    .gt-768 { display: none !important; }
+  .gt-768 {
+    display: none !important;
+  }
 }
 
 .fab-add {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: #fff;
-    border: none;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
-    cursor: pointer;
-    z-index: 999;
-    transition: transform 0.2s, box-shadow 0.2s;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+  cursor: pointer;
+  z-index: 999;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .fab-add:active {
-    transform: scale(0.9);
+  transform: scale(0.9);
 }
 
 @media (max-width: 500px) {
-    .task-status {
-        grid-template-columns: 1fr;
-        margin: 16px;
-        gap: 16px;
-    }
+  .task-status {
+    grid-template-columns: 1fr;
+    margin: 16px;
+    gap: 16px;
+  }
 }
 
 /* Navbar */
@@ -163,9 +170,16 @@ nav {
 }
 
 @media (max-width: 400px) {
-    nav { padding: 12px 16px; }
-    .btn-aqua { padding: 8px 12px; font-size: 0.9rem; }
-    .nav-profile span { display: none; }
+  nav {
+    padding: 12px 16px;
+  }
+  .btn-aqua {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  .nav-profile span {
+    display: none;
+  }
 }
 .btn-aqua {
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
@@ -244,11 +258,11 @@ nav {
 }
 
 @media (max-width: 400px) {
-    .tasks-list {
-        grid-template-columns: 1fr;
-        padding: 0 16px 16px;
-        gap: 16px;
-    }
+  .tasks-list {
+    grid-template-columns: 1fr;
+    padding: 0 16px 16px;
+    gap: 16px;
+  }
 }
 .task {
   background: #fff;
@@ -376,10 +390,13 @@ form.update_Task {
 }
 
 @media (max-width: 350px) {
-    form.add_Task, form.update_Task {
-        padding: 16px;
-    }
-    .form-title { font-size: 1.2rem; }
+  form.add_Task,
+  form.update_Task {
+    padding: 16px;
+  }
+  .form-title {
+    font-size: 1.2rem;
+  }
 }
 form input,
 form textarea,
@@ -439,23 +456,23 @@ form label {
   margin: 12px 0;
 }
 .status-badge {
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 20px;
-    text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
 }
 
 .status-badge.pending {
-    background: rgba(245, 158, 11, 0.1);
-    color: #f59e0b;
-    border: 1px solid #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid #f59e0b;
 }
 
 .status-badge.completed {
-    background: rgba(45, 166, 105, 0.1);
-    color: var(--completed-color);
-    border: 1px solid var(--completed-color);
+  background: rgba(45, 166, 105, 0.1);
+  color: var(--completed-color);
+  border: 1px solid var(--completed-color);
 }
 .custom-checkbox {
   width: 20px;
@@ -510,3 +527,81 @@ img {
   height: 100%;
   object-fit: cover;
 }
+
+/* Overdue Tasks Styling */
+.task.overdue {
+  border-top-color: var(--overdue-color) !important;
+  background: #fff5f5;
+  border-left: 1px solid rgba(219, 61, 66, 0.15);
+  border-right: 1px solid rgba(219, 61, 66, 0.15);
+  border-bottom: 1px solid rgba(219, 61, 66, 0.15);
+  box-shadow: 0 4px 6px rgba(219, 61, 66, 0.02);
+}
+.task.overdue:hover {
+  box-shadow: 0 10px 15px -3px rgba(219, 61, 66, 0.1);
+  background: #fff3f3;
+}
+.task.overdue .task-date {
+  color: var(--overdue-color);
+  font-weight: 600;
+}
+.overdue-badge {
+  background: rgba(219, 61, 66, 0.1);
+  color: var(--overdue-color);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  border: 1px solid rgba(219, 61, 66, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+/* Task Countdown Timer Styling */
+.task-countdown {
+  font-size: 0.8rem;
+  font-weight: 550;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 8px 0;
+  background: rgba(0, 0, 0, 0.02);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+.task.completed .task-countdown {
+  background: rgba(45, 166, 105, 0.06);
+  color: var(--completed-color);
+  border-color: rgba(45, 166, 105, 0.12);
+  font-weight: 600;
+}
+.task.overdue .task-countdown {
+  background: rgba(219, 61, 66, 0.05);
+  color: var(--overdue-color);
+  border-color: rgba(219, 61, 66, 0.12);
+  font-weight: 600;
+}
+.task-countdown.urgent {
+  background: rgba(245, 158, 11, 0.08);
+  color: #d97706;
+  border-color: rgba(245, 158, 11, 0.18);
+  font-weight: 600;
+  animation: pulse-countdown 2.5s infinite ease-in-out;
+}
+@keyframes pulse-countdown {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 rgba(245, 158, 11, 0);
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.1);
+  }
+}
+

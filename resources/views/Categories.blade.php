@@ -19,7 +19,7 @@
       <div style="background: #fff; padding: 32px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
           <div id="categories-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
               @foreach ($categories as $category)
-                  <div class="category-card" id="category-{{ $category->id }}" style="background: #f9fafb; padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f3f4f6;">
+                  <div class="category-card" id="category-{{ $category->id }}" style="background: #ececec; padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e5e7eb;">
                       <span style="font-weight: 600; color: var(--text-main);">{{ $category->name }}</span>
                       <button class="task-action delete" onclick="deleteCategory({{ $category->id }})" style="color: var(--overdue-color); cursor: pointer; background: none; border: none;">
                           <i class="fa-regular fa-trash-can"></i>
@@ -57,7 +57,7 @@
         .then((response) => {
           const category = response.data.data;
           const html = `
-            <div class="category-card" id="category-${category.id}" style="background: #f9fafb; padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f3f4f6;">
+            <div class="category-card" id="category-${category.id}" style="background: #ececec; padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e5e7eb;">
                 <span style="font-weight: 600; color: var(--text-main);">${category.name}</span>
                 <button class="task-action delete" onclick="deleteCategory(${category.id})" style="color: var(--overdue-color); cursor: pointer; background: none; border: none;">
                     <i class="fa-regular fa-trash-can"></i>
