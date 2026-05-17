@@ -153,3 +153,25 @@ test('user can permanently force delete a soft deleted task', function () {
 
     $test->assertDatabaseMissing('tasks', ['id' => $task->id]);
 });
+
+test('user can empty the recycle bin', function () {
+    /** @var \Tests\TestCase $test */
+    $test = $this;
+    /** @var \App\Models\User $user */
+    $user = User::factory()->create();
+    
+    $task1 = Task::create(['title' => 'T1', 'due_date' => now()->addDays(1)->toDateTimeString(), 'user_id' => $user->id, 'status' => 'pending']);
+    $task2 = Task::create(['title' => 'T2', 'due_date' => now()->addDays(1)->toDateTimeString(), 'user_id' => $user->id, 'status' => 'pending']);
+    
+    $task1->delete();
+    $task2->delete();
+
+    $response = $test
+        ->actingAs($user)
+        ->postJson("/tasks/empty-trash");
+
+    $response->assertOk();
+
+    $test->assertDatabaseMissing('tasks', ['id' => $task1->id]);
+    $test->assertDatabaseMissing('tasks', ['id' => $task2->id]);
+});

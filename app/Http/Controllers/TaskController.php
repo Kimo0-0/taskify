@@ -170,6 +170,23 @@ class TaskController extends Controller
     }
 
     /**
+     * Permanently delete all soft-deleted tasks for the user.
+     */
+    public function emptyTrash()
+    {
+        try {
+            $tasks = Auth::user()->tasks()->onlyTrashed()->get();
+            foreach ($tasks as $task) {
+                $task->subtasks()->delete();
+                $task->forceDelete();
+            }
+            return $this->success(null, 'Recycle bin emptied successfully');
+        } catch (\Exception $e) {
+            return $this->error('Failed to empty recycle bin', 500, [$e->getMessage()]);
+        }
+    }
+
+    /**
      * Show tasks for Today.
      */
     public function today()

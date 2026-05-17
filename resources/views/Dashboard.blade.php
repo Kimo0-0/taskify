@@ -9,10 +9,15 @@
 @endif
 
 @section('content')
-  <div style="margin: 24px 36px 0;">
+  <div style="margin: 24px 36px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
       <h1 style="font-family: var(--font-accent); font-size: 1.8rem; margin: 0; color: var(--text-main);">
           {{ $title ?? 'Dashboard' }}
       </h1>
+      @if(isset($activeNav) && $activeNav == 'Trash_nav' && count($tasks) > 0)
+        <button onclick="emptyTrash()" class="btn-danger" style="display: flex; align-items: center; gap: 8px; background: var(--overdue-color); color: #fff; padding: 10px 20px; border: none; border-radius: 12px; font-weight: 600; font-family: var(--font-main); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);">
+            <i class="fa-solid fa-trash-can"></i> Empty Trash
+        </button>
+      @endif
   </div>
 
   <div class="task-status">
@@ -91,7 +96,7 @@
                   <i class="fa-solid fa-arrow-rotate-left"></i>
               </button>
               <button class="task-action delete-permanent" onclick="forceDeleteTask({{ $task['id'] }})" title="Delete Permanently" style="color: var(--overdue-color); font-size: 1.15rem; transition: transform 0.2s;">
-                  <i class="fa-solid fa-trash-can-slash"></i>
+                  <i class="fa-solid fa-trash"></i>
               </button>
             @else
               <button class="task-action complete" onclick="toggleComplete({{ $task['id'] }}, '{{ $task['status'] }}')" title="Mark as {{ $task['status'] == 'completed' ? 'pending' : 'completed' }}">
@@ -368,6 +373,22 @@
         })
         .catch((error) => {
           alert("Error permanently deleting task: " + (error.response.data.message || 'Unknown error'));
+        });
+    }
+
+    function emptyTrash() {
+      if(!confirm('WARNING: Are you sure you want to PERMANENTLY delete ALL tasks in the recycle bin? This action CANNOT be undone!')) return;
+
+      axios.post('/tasks/empty-trash', {
+          _token: document.querySelector('input[name="_token"]').value
+        })
+        .then(() => {
+          document.querySelectorAll('.tasks-list .task').forEach(el => el.remove());
+          updateCounter(0);
+          window.location.reload();
+        })
+        .catch((error) => {
+          alert("Error emptying recycle bin: " + (error.response?.data?.message || 'Unknown error'));
         });
     }
 
