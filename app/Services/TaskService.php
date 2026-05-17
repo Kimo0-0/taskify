@@ -90,10 +90,13 @@ class TaskService
 
     /**
      * Delete a task (Soft Delete).
+     *
+     * @param \App\Models\Task $task
+     * @return bool|null
      */
     public function deleteTask(Task $task)
     {
-        return $task->delete();
+        return Task::destroy($task->id);
     }
 
     /**

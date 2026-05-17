@@ -1,0 +1,479 @@
+{
+	"info": {
+		"_postman_id": "8f26319d-c269-412c-9867-e626fdf6c65",
+		"name": "Taskify Task Management API",
+		"description": "Comprehensive Postman Collection for the Taskify Task Management API project. Includes all CRUD operations for Tasks, Categories, Subtasks, Auth, and filtering/searching parameters.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Kareem Ramadan\",\n    \"email\": \"kareem@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "Register a new user in the system. Passwords are securely hashed on the backend."
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"kareem@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Login to the system to start a session."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"logout"
+							]
+						},
+						"description": "Log out the currently authenticated user."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks Management",
+			"item": [
+				{
+					"name": "Get All Tasks (Dashboard)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/Dashboard?search=test&status=pending",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Dashboard"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "test",
+									"description": "Search by task title or description"
+								},
+								{
+									"key": "status",
+									"value": "pending",
+									"description": "Filter by status (pending, in progress, completed)"
+								}
+							]
+						},
+						"description": "Get all tasks for the logged in user with search, status filtering, and pagination stats."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Build Premium Documentation\",\n    \"description\": \"Write Arabic & English PDFs in FPDF\",\n    \"due_date\": \"2026-05-20 18:00:00\",\n    \"priority\": \"high\",\n    \"status\": \"pending\",\n    \"category_id\": 1,\n    \"subtasks\": [\n        \"Verify Tahoma Font\",\n        \"Test RTL Layout\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/tasks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tasks"
+							]
+						},
+						"description": "Create a new task with nested subtasks. The priority accepts low, medium, and high. The status accepts pending, in progress, and completed."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task Details",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated Task Title\",\n    \"status\": \"completed\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/tasks/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tasks",
+								"1"
+							]
+						},
+						"description": "Update specific fields of an existing task. If status is set to 'completed', all associated subtasks are automatically completed on the backend."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Task (Soft Delete)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/tasks/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tasks",
+								"1"
+							]
+						},
+						"description": "Deletes the task securely by setting deleted_at timestamp (Soft Delete)."
+					},
+					"response": []
+				},
+				{
+					"name": "Today Tasks Feed",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/Today",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Today"
+							]
+						},
+						"description": "Fetch tasks due today for the authenticated user."
+					},
+					"response": []
+				},
+				{
+					"name": "Upcoming Tasks Feed",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/Upcoming",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Upcoming"
+							]
+						},
+						"description": "Fetch tasks due in the future."
+					},
+					"response": []
+				},
+				{
+					"name": "Important Tasks Feed",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/Important",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Important"
+							]
+						},
+						"description": "Fetch high priority tasks."
+					},
+					"response": []
+				},
+				{
+					"name": "Completed Tasks Feed",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/Completed",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Completed"
+							]
+						},
+						"description": "Fetch already completed tasks."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subtasks",
+			"item": [
+				{
+					"name": "Toggle Subtask Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/subtasks/1/toggle",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"subtasks",
+								"1",
+								"toggle"
+							]
+						},
+						"description": "Toggle the is_completed checkbox status of a specific subtask."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get Categories List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/Categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Categories"
+							]
+						},
+						"description": "Retrieve all categories."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Work\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Create a new category category."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/categories/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories",
+								"1"
+							]
+						},
+						"description": "Delete a category by ID."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		}
+	]
+}

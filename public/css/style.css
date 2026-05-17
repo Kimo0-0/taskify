@@ -519,6 +519,8 @@ form label {
     padding: 0 16px;
   }
 }
+
+textarea#update-task-description,
 textarea#task-description {
   min-height: 200px;
 }
