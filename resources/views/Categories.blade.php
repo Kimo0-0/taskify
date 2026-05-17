@@ -5,6 +5,48 @@
 
 @section('CustomCss')
   #create-task-btn { display: none !important; }
+  .category-container {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 36px;
+      margin: 36px;
+  }
+  @media (max-width: 768px) {
+      .category-container {
+          grid-template-columns: 1fr;
+          margin: 16px;
+          gap: 20px;
+      }
+  }
+  .category-panel {
+      background: var(--card-bg);
+      padding: 32px;
+      border-radius: 20px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .category-card {
+      background: var(--border-color);
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--border-color);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  .category-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      background: var(--input-bg);
+      color: var(--text-main);
+      border-radius: 8px;
+      font-family: var(--font-main);
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
 @endsection
 
 @section('content')
@@ -14,14 +56,14 @@
       </h1>
   </div>
 
-  <div style="display: grid; grid-template-columns: 1fr 350px; gap: 36px; margin: 36px;">
+  <div class="category-container">
       {{-- Categories List --}}
-      <div style="background: #fff; padding: 32px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+      <div class="category-panel">
           <div id="categories-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
               @foreach ($categories as $category)
-                  <div class="category-card" id="category-{{ $category->id }}" style="background: #ececec; padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e5e7eb;">
+                  <div class="category-card" id="category-{{ $category->id }}">
                       <span style="font-weight: 600; color: var(--text-main);">{{ $category->name }}</span>
-                      <button class="task-action delete" onclick="deleteCategory({{ $category->id }})" style="color: var(--overdue-color); cursor: pointer; background: none; border: none;">
+                      <button class="task-action delete" onclick="deleteCategory({{ $category->id }})" style="color: var(--overdue-color); cursor: pointer; background: none; border: none; padding: 0;">
                           <i class="fa-regular fa-trash-can"></i>
                       </button>
                   </div>
@@ -30,13 +72,13 @@
       </div>
 
       {{-- Add Category Form --}}
-      <div style="background: #fff; padding: 32px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: fit-content;">
-          <h2 style="font-family: var(--font-accent); font-size: 1.2rem; margin: 0 0 20px 0;">Add New Category</h2>
+      <div class="category-panel" style="height: fit-content;">
+          <h2 style="font-family: var(--font-accent); font-size: 1.2rem; margin: 0 0 20px 0; color: var(--text-main);">Add New Category</h2>
           <form onsubmit="event.preventDefault(); addCategory();" style="display: flex; flex-direction: column; gap: 16px;">
               @csrf
               <div>
-                  <label style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px;">Category Name</label>
-                  <input type="text" id="category-name" placeholder="e.g. Work, Personal" required style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                  <label style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text-main);">Category Name</label>
+                  <input type="text" id="category-name" class="category-input" placeholder="e.g. Work, Personal" required>
               </div>
               <button type="submit" class="btn-aqua" style="justify-content: center; width: 100%;">
                   <i class="fa-solid fa-plus"></i> Create Category
@@ -57,9 +99,9 @@
         .then((response) => {
           const category = response.data.data;
           const html = `
-            <div class="category-card" id="category-${category.id}" style="background: #ececec; padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e5e7eb;">
+            <div class="category-card" id="category-${category.id}">
                 <span style="font-weight: 600; color: var(--text-main);">${category.name}</span>
-                <button class="task-action delete" onclick="deleteCategory(${category.id})" style="color: var(--overdue-color); cursor: pointer; background: none; border: none;">
+                <button class="task-action delete" onclick="deleteCategory(${category.id})" style="color: var(--overdue-color); cursor: pointer; background: none; border: none; padding: 0;">
                     <i class="fa-regular fa-trash-can"></i>
                 </button>
             </div>`;

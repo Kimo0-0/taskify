@@ -9,15 +9,39 @@
   --text-muted: #6b7280;
   --card-bg: #ffffff;
   --accent-color: #3b82f6;
+  --border-color: #f3f4f6;
+  --progress-bg: #e5e7eb;
+  --input-bg: #ffffff;
+  --close-btn-bg: #f3f4f6;
+  --close-btn-hover: #e5e7eb;
+  --subtask-bg: #f9fafb;
+  --nav-bg: #ffffff;
   --font-main: "Inter", sans-serif;
   --font-accent: "Outfit", sans-serif;
 }
+
+body.dark-mode {
+  --bg-color: #0b0f19;
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --card-bg: #111827;
+  --sidebar-color: #030712;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --progress-bg: #374151;
+  --input-bg: #1f2937;
+  --close-btn-bg: #1f2937;
+  --close-btn-hover: #374151;
+  --subtask-bg: #1f2937;
+  --nav-bg: #111827;
+}
+
 body {
   display: flex;
   font-family: var(--font-main);
   background-color: var(--bg-color);
   margin: 0;
   color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 .page {
   display: flex;
@@ -162,11 +186,12 @@ body {
 /* Navbar */
 nav {
   padding: 16px 20px;
-  background: #fff;
+  background: var(--nav-bg);
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 @media (max-width: 400px) {
@@ -205,10 +230,11 @@ nav {
   margin: 36px;
 }
 .tasks-card {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 24px;
   display: flex;
+  transition: transform 0.3s, background-color 0.3s ease, box-shadow 0.3s ease;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -265,12 +291,12 @@ nav {
   }
 }
 .task {
-  background: #fff;
+  background: var(--card-bg);
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   border-top: 4px solid transparent;
-  transition: all 0.3s;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -297,7 +323,7 @@ nav {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  background: #f3f4f6;
+  background: var(--border-color);
   padding: 4px 8px;
   border-radius: 4px;
   color: var(--text-muted);
@@ -314,7 +340,7 @@ nav {
   align-items: center;
   margin-top: 8px;
   padding-top: 12px;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--border-color);
 }
 .task-date {
   font-size: 0.85rem;
@@ -346,7 +372,7 @@ nav {
 } /* Progress Bar */
 .progress-container {
   height: 8px;
-  background: #e5e7eb;
+  background: var(--progress-bg);
   border-radius: 4px;
   overflow: hidden;
   margin-top: 8px;
@@ -373,7 +399,7 @@ nav {
 }
 form.add_Task,
 form.update_Task {
-  background: #fff;
+  background: var(--card-bg);
   padding: 24px;
   border-radius: 20px;
   width: 95%;
@@ -387,6 +413,7 @@ form.update_Task {
   box-sizing: border-box;
   overflow-y: auto;
   scrollbar-width: none;
+  transition: background-color 0.3s ease;
 }
 
 @media (max-width: 350px) {
@@ -402,12 +429,15 @@ form input,
 form textarea,
 form select {
   padding: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-main);
   border-radius: 8px;
   font-family: var(--font-main);
   font-size: 1rem;
   width: 100%;
   box-sizing: border-box;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 form label {
   font-weight: 600;
@@ -426,7 +456,8 @@ form label {
   position: absolute;
   top: 20px;
   right: 20px;
-  background: #f3f4f6;
+  background: var(--close-btn-bg);
+  color: var(--text-main);
   border: none;
   width: 32px;
   height: 32px;
@@ -435,10 +466,10 @@ form label {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 .close-btn:hover {
-  background: #e5e7eb;
+  background: var(--close-btn-hover);
 } /* Checkboxes */
 .subtasks-section {
   display: flex;
@@ -449,10 +480,11 @@ form label {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f9fafb;
+  background: var(--subtask-bg);
   padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
   margin: 12px 0;
 }
 .status-badge {
@@ -605,5 +637,20 @@ img {
     opacity: 0.85;
     box-shadow: 0 0 8px rgba(245, 158, 11, 0.1);
   }
+}
+
+/* Dark Mode Overdue & Countdown Overrides */
+body.dark-mode .task.overdue {
+  background: rgba(219, 61, 66, 0.08) !important;
+  border-left-color: rgba(219, 61, 66, 0.3) !important;
+  border-right-color: rgba(219, 61, 66, 0.3) !important;
+  border-bottom-color: rgba(219, 61, 66, 0.3) !important;
+}
+body.dark-mode .task.overdue:hover {
+  background: rgba(219, 61, 66, 0.12) !important;
+}
+body.dark-mode .task-countdown {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.05);
 }
 

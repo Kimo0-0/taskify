@@ -11,6 +11,16 @@
     <style>
       @yield('CustomCss');
     </style>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+                document.documentElement.classList.add('dark-mode');
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
 </head>
 <body>
     @include('layout.sidebar')
@@ -155,6 +165,36 @@
                 alert("Error adding task: " + (error.response.data.message || 'Unknown error'));
             });
       }
+
+      // Theme Toggle Logic
+      function updateThemeUI() {
+          const isDark = document.body.classList.contains('dark-mode');
+          const toggleIcon = document.getElementById('theme-toggle-icon');
+          if (toggleIcon) {
+              if (isDark) {
+                  toggleIcon.className = 'fa-solid fa-sun';
+                  toggleIcon.style.color = '#f59e0b';
+              } else {
+                  toggleIcon.className = 'fa-regular fa-moon';
+                  toggleIcon.style.color = 'var(--text-muted)';
+              }
+          }
+      }
+
+      function toggleTheme() {
+          const body = document.body;
+          const docEl = document.documentElement;
+          
+          body.classList.toggle('dark-mode');
+          docEl.classList.toggle('dark-mode');
+          
+          const isDark = body.classList.contains('dark-mode');
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+          updateThemeUI();
+      }
+
+      // Initialize Theme UI on DOMContentLoaded
+      document.addEventListener('DOMContentLoaded', updateThemeUI);
     </script>
 </body>
 </html>

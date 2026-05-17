@@ -6,9 +6,43 @@
   #create-task-btn { display: none !important; }
   #Back-to-Dashboard { display: flex !important; }
   
+  .task-details-card {
+      max-width: 800px;
+      margin: 40px auto;
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  @media (max-width: 768px) {
+      .task-details-card {
+          margin: 16px;
+          padding: 24px;
+      }
+  }
+  
+  .description-box {
+      color: var(--text-muted);
+      line-height: 1.6;
+      background: var(--subtask-bg);
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid var(--border-color);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .subtask-detail-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      border-radius: 12px;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
   .subtask-item.completed span {
       text-decoration: line-through;
-      color: #9ca3af;
+      color: var(--text-muted);
   }
   
   .custom-checkbox.checked {
@@ -18,8 +52,8 @@
 @endsection
 
 @section('content')
-  <div class="task_content" style="max-width: 800px; margin: 40px auto; background: #fff; padding: 40px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+  <div class="task-details-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
         <div>
             <h1 style="font-family: var(--font-accent); font-size: 2.2rem; margin: 0 0 8px 0; color: var(--text-main);">
                 {{ $task['title'] }}
@@ -45,28 +79,28 @@
             <span id="progress-text" style="font-weight: 600; color: var(--text-muted);">{{ round($progress) }}% Complete</span>
             <span id="subtask-count" style="font-size: 0.9rem; color: var(--text-muted);">{{ $completedSubtasks }}/{{ $totalSubtasks }} Subtasks</span>
         </div>
-        <div class="progress-container" style="height: 12px; background: #f3f4f6;">
+        <div class="progress-container" style="height: 12px;">
             <div id="main-progress-bar" class="progress-bar" style="width: {{ $progress }}%; height: 100%; border-radius: 6px;"></div>
         </div>
     </div>
 
     <div style="margin-bottom: 32px;">
-        <h3 style="font-family: var(--font-accent); font-size: 1.2rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+        <h3 style="font-family: var(--font-accent); font-size: 1.2rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: var(--text-main);">
             <i class="fa-solid fa-align-left" style="color: var(--accent-color);"></i> Description
         </h3>
-        <p style="color: var(--text-muted); line-height: 1.6; background: #f9fafb; padding: 20px; border-radius: 12px; border-left: 4px solid #e5e7eb;">
+        <p class="description-box">
             {{ $task['description'] ?: 'No description provided.' }}
         </p>
     </div>
 
     <div class="subtasks-section">
-        <h3 style="font-family: var(--font-accent); font-size: 1.2rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+        <h3 style="font-family: var(--font-accent); font-size: 1.2rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-main);">
             <i class="fa-solid fa-list-check" style="color: var(--accent-color);"></i> Sub-tasks
         </h3>
         <div id="subtasks-list" style="display: flex; flex-direction: column; gap: 12px;">
             @forelse ($task->subtasks as $subtask)
-                <div class="subtask-item {{ $subtask->is_completed ? 'completed' : '' }}" id="subtask-{{ $subtask->id }}" style="background: #fff; border: 1px solid #f3f4f6; padding: 16px; border-radius: 12px; transition: all 0.2s;">
-                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; width: 100%;" onclick="toggleSubtask({{ $subtask->id }})">
+                <div class="subtask-item subtask-detail-item {{ $subtask->is_completed ? 'completed' : '' }}" id="subtask-{{ $subtask->id }}">
+                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; width: 100%; color: var(--text-main);" onclick="toggleSubtask({{ $subtask->id }})">
                         <div class="custom-checkbox {{ $subtask->is_completed ? 'checked' : '' }}"></div>
                         <span style="font-weight: 500;">
                             {{ $subtask['title'] }}
