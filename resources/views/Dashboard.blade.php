@@ -412,6 +412,101 @@
     });
 
     // ================== Countdown Timers ==================
+    // ================== Desktop & In-App Notifications ==================
+    if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+
+    function playNotificationBeep() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+            oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
+            
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.4);
+        } catch (e) {
+            console.log("Audio play blocked or not supported");
+        }
+    }
+
+    function showInAppToast(message) {
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.style.cssText = `
+                position: fixed;
+                top: 24px;
+                right: 24px;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                pointer-events: none;
+            `;
+            document.body.appendChild(container);
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        toast.style.cssText = `
+            background: #ef4444;
+            color: #ffffff;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.35);
+            font-family: var(--font-main);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            opacity: 0;
+            transform: translateY(-20px) scale(0.9);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        `;
+        
+        toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="font-size: 1.2rem;"></i> <span>${message}</span>`;
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateY(0) scale(1)';
+        }, 50);
+        
+        playNotificationBeep();
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-20px) scale(0.9)';
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 5000);
+    }
+
+    function showTaskExpiredNotification(title) {
+        if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+            new Notification("Taskify: Task Expired!", {
+                body: `The deadline for your task "${title}" has ended!`,
+            });
+        }
+        showInAppToast(`Task Expired: "${title}" deadline has ended!`);
+    }
+
+    // ================== Countdown Timers ==================
     function updateCountdowns() {
         document.querySelectorAll('.task-countdown').forEach(el => {
             const dueDateStr = el.dataset.due;
@@ -438,10 +533,16 @@
                 el.classList.remove('urgent');
                 const taskCard = el.closest('.task');
                 if (taskCard) {
-                    taskCard.classList.add('overdue');
-                    const titleEl = taskCard.querySelector('.task-title');
-                    if (titleEl && !titleEl.querySelector('.overdue-badge')) {
-                        titleEl.insertAdjacentHTML('beforeend', '<span class="overdue-badge"><i class="fa-solid fa-circle-exclamation"></i> Overdue</span>');
+                    if (!taskCard.classList.contains('overdue')) {
+                        taskCard.classList.add('overdue');
+                        const titleEl = taskCard.querySelector('.task-title');
+                        if (titleEl && !titleEl.querySelector('.overdue-badge')) {
+                            titleEl.insertAdjacentHTML('beforeend', '<span class="overdue-badge"><i class="fa-solid fa-circle-exclamation"></i> Overdue</span>');
+                        }
+                        
+                        // Just expired! Trigger notification
+                        const taskTitle = taskCard.querySelector('.task-title a').innerText;
+                        showTaskExpiredNotification(taskTitle);
                     }
                 }
                 textEl.innerText = 'Overdue';

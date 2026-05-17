@@ -313,6 +313,7 @@ nav {
 .task.completed {
   opacity: 0.7;
   border-top-color: #d1d5db !important;
+  order: 10;
 }
 
 .task.completed .task-title a {
