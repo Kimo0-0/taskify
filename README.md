@@ -1,58 +1,125 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ⚡ Taskify — Modern & Fully Reactive Task Management System
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="UI_UX/Gemini_Generated_Image_3y7hii3y7hii3y7h.png" width="800" alt="Taskify Dashboard" style="border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15);">
 </p>
 
-## About Laravel
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3">
+  <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License">
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Taskify** is a professional, high-performance, and visually stunning Task Management System built using **Laravel 11**, **Vanilla CSS**, and **Axios.js**. It features a modern Single Page Application (SPA) feel, letting you manage your daily productivity seamlessly with **zero page refreshes**.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* ⚡ **Zero-Refresh SPA Experience:** Adding, updating, deleting, and toggling tasks/subtasks is done dynamically using Axios.js.
+* 📊 **Live Stats Dashboard:** Real-time counter metrics (Total Tasks, Completed, Overdue) that update on the fly when tasks change.
+* 📈 **Dynamic Subtask Progress:** Interactive progress bars on every task card showing exactly what percentage of subtasks are complete.
+* 🎯 **Smart Navigation Filters:**
+  * 🏠 **Dashboard:** Overall task feed with active filters.
+  * ☀️ **Today:** Auto-filters tasks due today.
+  * 📅 **Upcoming:** Tracks future deadlines.
+  * ⭐ **Important:** High-priority task board.
+  * ✅ **Completed:** Archives all accomplished work.
+* 📁 **Category Manager:** Custom categorizations with dedicated management screens.
+* 🎨 **Premium Glassmorphism UI:** Stunning dark/light aesthetic, tailored HSL color palettes, elegant animations, custom scrollbars, and fully responsive layouts.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 🛠️ Tech Stack
 
-## Agentic Development
+* **Backend:** Laravel 11, PHP 8.3+
+* **Frontend:** Blade, Vanilla JS, Axios.js, FontAwesome 6
+* **Database:** SQLite (default) / MySQL
+* **Styling:** Custom CSS (Custom design variables, flexible responsive grid, HSL-colors)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
 
+## 📸 Screenshots & Design Assets
+
+Here are some of the design concepts and user interface assets generated during the development of **Taskify**:
+
+<p align="center">
+  <img src="UI_UX/Gemini_Generated_Image_je6e19je6e19je6e.png" width="45%" alt="Asset 1" style="border-radius: 8px; margin: 2%; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+  <img src="UI_UX/Gemini_Generated_Image_iyu4k0iyu4k0iyu4.png" width="45%" alt="Asset 2" style="border-radius: 8px; margin: 2%; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+</p>
+
+---
+
+## 🚀 Installation & Local Setup
+
+Get your local development server up and running in just a few minutes.
+
+### Prerequisites
+Make sure you have [PHP 8.2+](https://www.php.net/), [Composer](https://getcomposer.org/), and [Node.js](https://nodejs.org/) installed.
+
+### 1. Clone the Repository
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/kareemmramadan12121212-creator/Laravel_task_manager_api.git
+cd Laravel_task_manager_api
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Install PHP Dependencies
+```bash
+composer install
+```
 
-## Contributing
+### 3. Install Frontend Assets
+```bash
+npm install
+npm run build
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 4. Setup Environment Config
+Copy the example environment file and generate the application key:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Code of Conduct
+### 5. Setup Database
+Create an empty SQLite database (default) or configure MySQL in your `.env`.
+```bash
+# For SQLite:
+touch database/database.sqlite
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Run Migrations:
+php artisan migrate
+```
 
-## Security Vulnerabilities
+### 6. Serve the Application
+```bash
+php artisan serve
+```
+Visit the app locally at: `http://127.0.0.1:8000` or configure it via your favorite local environment (like [Laragon](https://laragon.org/) at `http://task_management_api.local`).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🌐 Exposing Externally (Ngrok Support)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+To test the application on external mobile devices or share it with others, you can expose the local domain using **Ngrok**:
+
+```bash
+ngrok http task_management_api.local:80 --host-header=task_management_api.local
+```
+
+### Trusted Proxies Setup (Already Configured)
+To prevent HTTPS redirect loops and keep routes securely absolute when shared via Ngrok, Taskify utilizes Laravel 11's trusted proxies inside `bootstrap/app.php`:
+```php
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->trustProxies(at: '*');
+})
+```
+
+---
+
+## 📝 License
+This project is open-sourced software licensed under the [MIT license](LICENSE).
