@@ -29,7 +29,7 @@ test('authenticated user can create a task with subtasks', function () {
         'user_id' => $user->id
     ]);
 
-    $task = Task::where('title', 'Test Task')->first();
+    $task = Task::firstWhere('title', 'Test Task');
     $test->assertCount(2, $task->subtasks);
 });
 
@@ -44,7 +44,7 @@ test('marking a task completed cascades to all its subtasks', function () {
         'user_id' => $user->id,
         'status' => 'pending'
     ]);
-    
+
     $subtask1 = Subtask::create(['title' => 'Sub1', 'task_id' => $task->id, 'is_completed' => false]);
     $subtask2 = Subtask::create(['title' => 'Sub2', 'task_id' => $task->id, 'is_completed' => false]);
 
@@ -90,7 +90,7 @@ test('user cannot view or modify other users tasks', function () {
     $user1 = User::factory()->create();
     /** @var \App\Models\User $user2 */
     $user2 = User::factory()->create();
-    
+
     $taskOwnedBy1 = Task::create([
         'title' => 'Task Owned By 1',
         'due_date' => now()->addDays(1)->toDateTimeString(),
