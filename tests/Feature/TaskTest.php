@@ -6,6 +6,7 @@ use App\Models\Subtask;
 use App\Models\Category;
 
 test('authenticated user can create a task with subtasks', function () {
+    /** @var Tests\TestCase $this */
     $user = User::factory()->create();
 
     $response = $this
@@ -20,7 +21,7 @@ test('authenticated user can create a task with subtasks', function () {
         ]);
 
     $response->assertStatus(201);
-    
+
     $this->assertDatabaseHas('tasks', [
         'title' => 'Test Task',
         'user_id' => $user->id
@@ -31,6 +32,7 @@ test('authenticated user can create a task with subtasks', function () {
 });
 
 test('marking a task completed cascades to all its subtasks', function () {
+    /** @var Tests\TestCase $this */
     $user = User::factory()->create();
     $task = Task::create([
         'title' => 'Test Cascade Task',
@@ -49,12 +51,13 @@ test('marking a task completed cascades to all its subtasks', function () {
         ]);
 
     $response->assertOk();
-    
+
     $this->assertTrue((bool) $subtask1->fresh()->is_completed);
     $this->assertTrue((bool) $subtask2->fresh()->is_completed);
 });
 
 test('user can soft delete a task', function () {
+    /** @var Tests\TestCase $this */
     $user = User::factory()->create();
     $task = Task::create([
         'title' => 'Test Soft Delete Task',
@@ -68,13 +71,14 @@ test('user can soft delete a task', function () {
         ->deleteJson("/tasks/{$task->id}");
 
     $response->assertOk();
-    
+
     $this->assertSoftDeleted('tasks', [
         'id' => $task->id
     ]);
 });
 
 test('user cannot view or modify other users tasks', function () {
+    /** @var Tests\TestCase $this */
     $user1 = User::factory()->create();
     $user2 = User::factory()->create();
     
