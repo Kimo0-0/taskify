@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel">
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3">
-  <img src="https://img.shields.io/badge/mysql-fff?style=for-the-badge&logo=mysql&logoColor=#08668D" alt="SQLite">
+  <img src="https://img.shields.io/badge/mysql-E59208?style=for-the-badge&logo=mysql&logoColor=#08668D" alt="SQLite">
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License">
 </p>
 
