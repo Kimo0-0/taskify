@@ -71,10 +71,10 @@ php artisan key:generate
 ```
 
 ### 5. Setup Database
-Create an empty SQLite database (default) or configure MySQL in your `.env`.
+Create an empty MySQL database (default) or configure MySQL in your `.env`.
 ```bash
-# For SQLite:
-touch database/database.sqlite
+# For MySQL:
+touch database/database.MySQL
 
 # Run Migrations:
 php artisan migrate
