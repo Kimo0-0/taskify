@@ -25,7 +25,12 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $tasks = $this->taskService->getAllTasks($request->all());
+                // Get tasks for dashboard, excluding completed ones unless the user is on the Completed page
+        if ($request->filled('active_nav') && $request->active_nav === 'Completed_nav') {
+            $tasks = Auth::user()->tasks()->with(['category', 'subtasks'])->orderBy('created_at', 'desc')->paginate(10);
+        } else {
+            $tasks = Auth::user()->tasks()->where('status', '!=', 'completed')->with(['category', 'subtasks'])->orderBy('created_at', 'desc')->paginate(10);
+        }
 
         // Global stats for the user
         $stats = [
@@ -214,11 +219,11 @@ class TaskController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Fetch all matching tasks without pagination!
-        $tasks = $query->orderBy('due_date', 'asc')->get();
+        // Fetch all matching tasks with pagination (10 per page)
+        $tasks = $query->orderBy('due_date', 'asc')->paginate(10);
 
         // Format to match exact response expectation of buildTaskHtml
-        $formattedTasks = $tasks->map(function ($task) {
+        $formattedTasks = collect($tasks->items())->map(function ($task) {
             return [
                 'id' => $task->id,
                 'title' => $task->title,
@@ -227,7 +232,7 @@ class TaskController extends Controller
                 'status' => $task->status,
                 'priority' => $task->priority,
                 'category_id' => $task->category_id,
-                'category_name' => $task->category ? $task->category->name : 'No Category',
+                'category_name' => $task->category ? $task->category->name : 'Uncategorized',
                 'formatted_date' => \Carbon\Carbon::parse($task->due_date)->format('M d, Y h:i A'),
                 'subtasks' => $task->subtasks->map(function ($subtask) {
                     return [
@@ -239,7 +244,60 @@ class TaskController extends Controller
             ];
         });
 
-        return $this->success($formattedTasks);
+        return response()->json([
+            'current_page' => $tasks->currentPage(),
+            'last_page' => $tasks->lastPage(),
+            'prev_page_url' => $tasks->previousPageUrl(),
+            'next_page_url' => $tasks->nextPageUrl(),
+            'data' => $formattedTasks
+        ]);
+    }
+
+    /**
+     * Soft delete multiple tasks.
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:tasks,id'
+        ]);
+
+        $deletedCount = Auth::user()->tasks()->whereIn('id', $request->ids)->delete();
+
+        return $this->success(null, "$deletedCount tasks moved to trash");
+    }
+
+    /**
+     * Restore multiple soft-deleted tasks from the recycle bin.
+     */
+    public function bulkRestore(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array'
+        ]);
+
+        $restoredCount = Auth::user()->tasks()->onlyTrashed()->whereIn('id', $request->ids)->restore();
+
+        return $this->success(null, "$restoredCount tasks restored successfully");
+    }
+
+    /**
+     * Permanently delete multiple soft-deleted tasks from the database.
+     */
+    public function bulkForceDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array'
+        ]);
+
+        $tasks = Auth::user()->tasks()->onlyTrashed()->whereIn('id', $request->ids)->get();
+        foreach ($tasks as $task) {
+            $task->subtasks()->delete();
+            $task->forceDelete();
+        }
+
+        return $this->success(null, count($tasks) . " tasks permanently deleted");
     }
 
     /**

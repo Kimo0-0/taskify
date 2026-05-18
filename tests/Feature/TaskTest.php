@@ -202,3 +202,67 @@ test('user can perform fuzzy API search and multi-filtering bypassing pagination
     $response->assertJsonCount(1, 'data');
     $response->assertJsonPath('data.0.title', 'Task Number 7');
 });
+
+test('user can bulk soft delete tasks', function () {
+    /** @var \Tests\TestCase $test */
+    $test = $this;
+    /** @var \App\Models\User $user */
+    $user = User::factory()->create();
+    
+    $task1 = Task::create(['title' => 'Bulk T1', 'due_date' => now()->addDays(1)->toDateTimeString(), 'user_id' => $user->id, 'status' => 'pending']);
+    $task2 = Task::create(['title' => 'Bulk T2', 'due_date' => now()->addDays(2)->toDateTimeString(), 'user_id' => $user->id, 'status' => 'pending']);
+
+    $response = $test
+        ->actingAs($user)
+        ->postJson("/tasks/bulk-delete", [
+            'ids' => [$task1->id, $task2->id]
+        ]);
+
+    $response->assertOk();
+    $test->assertSoftDeleted('tasks', ['id' => $task1->id]);
+    $test->assertSoftDeleted('tasks', ['id' => $task2->id]);
+});
+
+test('user can bulk restore soft deleted tasks', function () {
+    /** @var \Tests\TestCase $test */
+    $test = $this;
+    /** @var \App\Models\User $user */
+    $user = User::factory()->create();
+    
+    $task1 = Task::create(['title' => 'Bulk T1', 'due_date' => now()->addDays(1)->toDateTimeString(), 'user_id' => $user->id, 'status' => 'pending']);
+    $task2 = Task::create(['title' => 'Bulk T2', 'due_date' => now()->addDays(2)->toDateTimeString(), 'user_id' => $user->id, 'status' => 'pending']);
+    $task1->delete();
+    $task2->delete();
+
+    $response = $test
+        ->actingAs($user)
+        ->postJson("/tasks/bulk-restore", [
+            'ids' => [$task1->id, $task2->id]
+        ]);
+
+    $response->assertOk();
+    $test->assertDatabaseHas('tasks', ['id' => $task1->id, 'deleted_at' => null]);
+    $test->assertDatabaseHas('tasks', ['id' => $task2->id, 'deleted_at' => null]);
+});
+
+test('user can bulk force delete soft deleted tasks', function () {
+    /** @var \Tests\TestCase $test */
+    $test = $this;
+    /** @var \App\Models\User $user */
+    $user = User::factory()->create();
+    
+    $task1 = Task::create(['title' => 'Bulk T1', 'due_date' => now()->addDays(1)->toDateTimeString(), 'user_id' => $user->id, 'status' => 'pending']);
+    $task2 = Task::create(['title' => 'Bulk T2', 'due_date' => now()->addDays(2)->toDateTimeString(), 'user_id' => $user->id, 'status' => 'pending']);
+    $task1->delete();
+    $task2->delete();
+
+    $response = $test
+        ->actingAs($user)
+        ->postJson("/tasks/bulk-force-delete", [
+            'ids' => [$task1->id, $task2->id]
+        ]);
+
+    $response->assertOk();
+    $test->assertDatabaseMissing('tasks', ['id' => $task1->id]);
+    $test->assertDatabaseMissing('tasks', ['id' => $task2->id]);
+});

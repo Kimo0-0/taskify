@@ -1,10 +1,13 @@
 <div class="sidebar">
   <button class="close-sidebar lt-768" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></button>
-  <div class="profile">
-    <div class="profile-avatar">
-      <img src="/images/profile.png" alt="Profile" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=3b82f6&color=fff'">
+  <div class="profile" onclick="openProfileModal()" style="cursor: pointer;" title="Edit Profile">
+    <div class="profile-avatar" style="position: relative;">
+      <img id="sidebar-profile-img" src="{{ Auth::user()->profile_image_url }}" alt="Profile">
+      <div class="avatar-edit-overlay">
+        <i class="fa-solid fa-camera"></i>
+      </div>
     </div>
-    <span class="profile-name">{{ Auth::user()->name }}</span>
+    <span class="profile-name" id="sidebar-profile-name">{{ Auth::user()->name }}</span>
   </div>
   
   <div class="links">

@@ -65,6 +65,7 @@ body {
   display: flex;
   flex-direction: column;
   padding: 24px 0;
+  box-sizing: border-box;
 }
 .sidebar .profile {
   display: flex;
@@ -80,6 +81,22 @@ body {
   border: 2px solid var(--accent-color);
   overflow: hidden;
   margin-bottom: 12px;
+  position: relative;
+}
+.sidebar .avatar-edit-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.sidebar .profile-avatar:hover .avatar-edit-overlay {
+  opacity: 1;
 }
 .sidebar .profile-name {
   font-family: var(--font-accent);
@@ -767,4 +784,55 @@ html.dark-mode .task-countdown {
   .filter-bar div {
     width: 100% !important;
   }
+}
+
+/* Premium Bulk Select Highlight States */
+.task.selected-for-bulk {
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.12) !important;
+  background: var(--bg-hover) !important;
+  transform: translateY(-2px);
+}
+.task-select-checkbox:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Premium Task Attachments UI */
+.upload-dropzone:hover {
+  background: var(--bg-hover) !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+.upload-dropzone i {
+  transition: transform 0.3s ease;
+}
+.upload-dropzone:hover i {
+  transform: scale(1.1) translateY(-2px);
+}
+
+.image-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
+}
+.image-card:hover .card-overlay {
+  opacity: 1 !important;
+}
+
+.attachment-row:hover {
+  transform: translateX(4px);
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.delete-attachment-btn:hover {
+  transform: scale(1.1);
+  background: #dc2626 !important;
+}
+
+/* Lightbox close button transitions */
+#lightbox button:hover {
+  background: rgba(255,255,255,0.2) !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  transform: scale(1.05);
 }

@@ -41,9 +41,25 @@ class Task extends Model
         return $this->belongsTo(Category::class);
     }
 
-    // لو عايز تربط التاسك باليوزر (عكس العلاقة)
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class);
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($task) {
+            if ($task->isForceDeleting()) {
+                foreach ($task->attachments as $attachment) {
+                    \Illuminate\Support\Facades\Storage::delete($attachment->file_path);
+                    $attachment->delete();
+                }
+            }
+        });
     }
 }

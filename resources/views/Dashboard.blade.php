@@ -54,25 +54,25 @@
   <div class="filter-bar" style="margin: 24px 36px; padding: 20px; background: var(--card-bg); border-radius: 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; border: 1px solid var(--border-color); transition: all 0.3s ease;">
       <div style="flex: 1; min-width: 250px; position: relative;">
           <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.95rem;"></i>
-          <input type="text" id="search-tasks" placeholder="Search tasks by title or description..." oninput="filterTasks()" style="width: 100%; padding: 12px 16px 12px 44px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; box-sizing: border-box; transition: all 0.3s ease;">
+          <input type="text" id="search-tasks" placeholder="Search tasks by title or description..." oninput="if(event.isTrusted) filterTasks()" autocomplete="off" data-form-type="other" data-lpignore="true" style="width: 100%; padding: 12px 16px 12px 44px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; box-sizing: border-box; transition: all 0.3s ease;">
       </div>
       
       <div style="display: flex; flex-wrap: wrap; gap: 12px; width: auto;">
-          <select id="filter-category" onchange="filterTasks()" style="padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;">
+          <select id="filter-category" onchange="if(event.isTrusted) filterTasks()" autocomplete="off" data-form-type="other" style="padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;">
               <option value="">All Categories</option>
               @foreach ($categories as $category)
                   <option value="{{ $category->id }}">{{ $category->name }}</option>
               @endforeach
           </select>
 
-          <select id="filter-priority" onchange="filterTasks()" style="padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;">
+          <select id="filter-priority" onchange="if(event.isTrusted) filterTasks()" autocomplete="off" data-form-type="other" style="padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;">
               <option value="">All Priorities</option>
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
           </select>
 
-          <select id="filter-status" onchange="filterTasks()" style="padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;">
+          <select id="filter-status" onchange="if(event.isTrusted) filterTasks()" autocomplete="off" data-form-type="other" style="padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;">
               <option value="">All Statuses</option>
               <option value="pending">Pending</option>
               <option value="in progress">In Progress</option>
@@ -97,8 +97,11 @@
       @endphp
       <div class="task {{ $task['status'] == 'completed' ? 'completed' : '' }} {{ $isOverdueTask ? 'overdue' : '' }}" id="task-{{ $task['id'] }}" data-priority="{{ strtolower($task['priority']) }}" data-category="{{ $task['category_id'] ?? '' }}" data-status="{{ strtolower($task['status']) }}" data-title="{{ strtolower($task['title']) }}" data-desc="{{ strtolower($task['description'] ?? '') }}">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <div class="task-catigory">
-                <span>{{ $task['category_name'] }}</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" class="task-select-checkbox" data-id="{{ $task['id'] }}" onchange="toggleSelectTask(this)" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent-color); border-radius: 4px; border: 1px solid var(--border-color); background: var(--input-bg); transition: all 0.3s ease;">
+                <div class="task-catigory" style="margin: 0;">
+                    <span>{{ $task['category_name'] }}</span>
+                </div>
             </div>
             <span class="status-badge {{ $task['status'] }}">{{ $task['status'] }}</span>
         </div>
@@ -155,6 +158,30 @@
 
   <div class="pagination-container">
       {{ $tasks->links('pagination::simple-bootstrap-4') }}
+  </div>
+
+  {{-- Floating Bulk Action Bar --}}
+  <div id="bulk-action-bar" style="position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 14px 28px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35); display: flex; align-items: center; gap: 20px; z-index: 10000; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: #fff;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="select-all-tasks" onchange="toggleSelectAll(this)" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent-color);">
+          <label for="select-all-tasks" style="font-weight: 600; font-size: 0.95rem; cursor: pointer; font-family: var(--font-main);">Select All</label>
+      </div>
+      <div style="width: 1px; height: 24px; background: rgba(255, 255, 255, 0.2);"></div>
+      <span id="bulk-select-count" style="font-family: var(--font-accent); font-weight: 600; font-size: 0.95rem;">0 Selected</span>
+      <div style="display: flex; gap: 12px;">
+          @if(isset($activeNav) && $activeNav == 'Trash_nav')
+              <button onclick="bulkRestore()" style="padding: 10px 16px; font-size: 0.9rem; background: var(--completed-color); color: #fff; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600;">
+                  <i class="fa-solid fa-arrow-rotate-left"></i> Restore Selected
+              </button>
+              <button onclick="bulkForceDelete()" style="padding: 10px 16px; font-size: 0.9rem; background: var(--overdue-color); color: #fff; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600;">
+                  <i class="fa-solid fa-trash"></i> Delete Permanently
+              </button>
+          @else
+              <button onclick="bulkDelete()" style="padding: 10px 16px; font-size: 0.9rem; background: var(--overdue-color); color: #fff; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600;">
+                  <i class="fa-regular fa-trash-can"></i> Delete Selected
+              </button>
+          @endif
+      </div>
   </div>
 
   {{-- Update Task Form --}}
@@ -214,8 +241,24 @@
     const activePage = '{{ $activeNav ?? "dashboard_nav" }}';
 
     // Cache the initial paginated tasks and pagination HTML to restore instantly on search reset
-    const initialTasksHtml = document.querySelector('.tasks-list') ? document.querySelector('.tasks-list').innerHTML : '';
-    const initialPaginationHtml = document.querySelector('.pagination-container') ? document.querySelector('.pagination-container').innerHTML : '';
+    // Cache the initial paginated tasks and pagination HTML to restore instantly on search reset
+    let initialTasksHtml = document.querySelector('.tasks-list') ? document.querySelector('.tasks-list').innerHTML : '';
+    let initialPaginationHtml = document.querySelector('.pagination-container') ? document.querySelector('.pagination-container').innerHTML : '';
+
+    // Intercept standard pagination link clicks to make all transitions refresh-free!
+    document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('click', function(e) {
+            const pageLink = e.target.closest('.pagination-container a');
+            if (pageLink) {
+                e.preventDefault();
+                const url = new URL(pageLink.href);
+                const page = url.searchParams.get('page') || 1;
+                window.history.pushState({page: page}, '', `?page=${page}`);
+                refreshTaskList();
+            }
+        });
+    });
+
     function buildTaskHtml(task) {
       const isCompleted = task.status === 'completed';
       const isHighPriority = task.priority.toLowerCase() === 'high';
@@ -225,9 +268,12 @@
         : (isCompleted ? 100 : 0);
 
       return `
-          <div class="task ${isCompleted ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}" id="task-${task.id}" data-priority="${task.priority.toLowerCase()}">
+          <div class="task ${isCompleted ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}" id="task-${task.id}" data-priority="${task.priority.toLowerCase()}" data-category="${task.category_id ?? ''}" data-status="${task.status.toLowerCase()}" data-title="${task.title.toLowerCase()}" data-desc="${(task.description || '').toLowerCase()}">
               <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                  <div class="task-catigory"><span>${task.category_name}</span></div>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                      <input type="checkbox" class="task-select-checkbox" data-id="${task.id}" onchange="toggleSelectTask(this)" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent-color); border-radius: 4px; border: 1px solid var(--border-color); background: var(--input-bg); transition: all 0.3s ease;">
+                      <div class="task-catigory" style="margin: 0;"><span>${task.category_name}</span></div>
+                  </div>
                   <span class="status-badge ${task.status}">${task.status}</span>
               </div>
               <div class="task-title">
@@ -354,7 +400,8 @@
           headers: { 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value }
         })
         .then(() => {
-          taskEl.remove();
+          // Dynamic slide up refresh!
+          refreshTaskList();
 
           // Update Total
           updateCounter(-1);
@@ -385,12 +432,11 @@
     function restoreTask(id) {
       if(!confirm('Are you sure you want to restore this task?')) return;
 
-      const taskEl = document.getElementById(`task-${id}`);
       axios.post(`/tasks/${id}/restore`, {
           _token: document.querySelector('input[name="_token"]').value
         })
         .then(() => {
-          taskEl.remove();
+          refreshTaskList();
           updateCounter(1);
         })
         .catch((error) => {
@@ -401,12 +447,11 @@
     function forceDeleteTask(id) {
       if(!confirm('WARNING: Are you sure you want to PERMANENTLY delete this task? This action cannot be undone!')) return;
 
-      const taskEl = document.getElementById(`task-${id}`);
       axios.delete(`/tasks/${id}/force-delete`, {
           headers: { 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value }
         })
         .then(() => {
-          taskEl.remove();
+          refreshTaskList();
         })
         .catch((error) => {
           alert("Error permanently deleting task: " + (error.response.data.message || 'Unknown error'));
@@ -431,7 +476,7 @@
 
     let searchDebounceTimeout = null;
 
-    function filterTasks() {
+    function filterTasks(page = 1) {
       const query = document.getElementById('search-tasks').value.toLowerCase().trim();
       const category = document.getElementById('filter-category').value;
       const priority = document.getElementById('filter-priority').value;
@@ -455,7 +500,7 @@
           return;
       }
 
-      // Perform unpaginated AJAX search & multi-filtering across the entire database!
+      // Perform paginated AJAX search & multi-filtering across the entire database!
       clearTimeout(searchDebounceTimeout);
       searchDebounceTimeout = setTimeout(() => {
           axios.get('/tasks/api-search', {
@@ -464,11 +509,13 @@
                   category_id: category,
                   priority: priority,
                   status: status,
-                  active_nav: activePage
+                  active_nav: activePage,
+                  page: page
               }
           })
           .then(response => {
-              const tasks = response.data.data;
+              const result = response.data;
+              const tasks = result.data;
               const container = document.querySelector('.tasks-list');
               container.innerHTML = '';
 
@@ -485,10 +532,27 @@
                   });
               }
 
-              // Hide pagination while searching/filtering to show all database matches
+              // Dynamically render dynamic pagination links for current search result set
               const pagContainer = document.querySelector('.pagination-container');
               if (pagContainer) {
-                  pagContainer.style.display = 'none';
+                  if (result.prev_page_url || result.next_page_url) {
+                      pagContainer.style.display = 'flex';
+                      pagContainer.innerHTML = `
+                          <ul class="pagination">
+                              <li class="page-item ${!result.prev_page_url ? 'disabled' : ''}">
+                                  ${result.prev_page_url 
+                                    ? `<a class="page-link" onclick="filterTasks(${result.current_page - 1})">« Previous</a>` 
+                                    : `<span class="page-link">« Previous</span>`}
+                              </li>
+                              <li class="page-item ${!result.next_page_url ? 'disabled' : ''}">
+                                  ${result.next_page_url 
+                                    ? `<a class="page-link" onclick="filterTasks(${result.current_page + 1})">Next »</a>` 
+                                    : `<span class="page-link">Next »</span>`}
+                              </li>
+                          </ul>`;
+                  } else {
+                      pagContainer.style.display = 'none';
+                  }
               }
 
               // Restart countdown timers for new search cards
@@ -508,6 +572,212 @@
       document.getElementById('filter-priority').value = '';
       document.getElementById('filter-status').value = '';
       filterTasks();
+    }
+
+    // Refresh active task page dynamically without full-page reloads!
+    function refreshTaskList() {
+      const query = document.getElementById('search-tasks').value.toLowerCase().trim();
+      const category = document.getElementById('filter-category').value;
+      const priority = document.getElementById('filter-priority').value;
+      const status = document.getElementById('filter-status').value;
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const page = urlParams.get('page') || 1;
+
+      axios.get('/tasks/api-search', {
+          params: {
+              search: query,
+              category_id: category,
+              priority: priority,
+              status: status,
+              active_nav: activePage,
+              page: page
+          }
+      })
+      .then(response => {
+          const result = response.data;
+          const tasks = result.data;
+          const container = document.querySelector('.tasks-list');
+          container.innerHTML = '';
+
+          if (tasks.length === 0) {
+              container.innerHTML = `
+                  <div style="grid-column: 1 / -1; text-align: center; padding: 60px 40px; color: var(--text-muted); font-family: var(--font-main);">
+                      <i class="fa-solid fa-folder-open" style="font-size: 3rem; margin-bottom: 16px; color: var(--border-color);"></i>
+                      <h3 style="margin: 0 0 8px 0; color: var(--text-main); font-size: 1.2rem;">No Tasks Found</h3>
+                      <p style="margin: 0; font-size: 0.9rem;">We couldn't find any tasks matching your filters.</p>
+                  </div>`;
+          } else {
+              tasks.forEach(task => {
+                  container.insertAdjacentHTML('beforeend', buildTaskHtml(task));
+              });
+          }
+
+          // Cache current rendered tasks HTML to prevent search reset from displaying stale/deleted tasks!
+          if (!query && !category && !priority && !status) {
+              initialTasksHtml = container.innerHTML;
+          }
+
+          // Rebuild pagination dynamic buttons
+          const pagContainer = document.querySelector('.pagination-container');
+          if (pagContainer) {
+              if (result.prev_page_url || result.next_page_url) {
+                  pagContainer.style.display = 'flex';
+                  const prevPage = result.prev_page_url ? new URL(result.prev_page_url).searchParams.get('page') : null;
+                  const nextPage = result.next_page_url ? new URL(result.next_page_url).searchParams.get('page') : null;
+
+                  pagContainer.innerHTML = `
+                      <ul class="pagination">
+                          <li class="page-item ${!prevPage ? 'disabled' : ''}">
+                              ${prevPage 
+                                ? `<a class="page-link" href="#" onclick="changePage(event, ${prevPage})">« Previous</a>` 
+                                : `<span class="page-link">« Previous</span>`}
+                          </li>
+                          <li class="page-item ${!nextPage ? 'disabled' : ''}">
+                              ${nextPage 
+                                ? `<a class="page-link" href="#" onclick="changePage(event, ${nextPage})">Next »</a>` 
+                                : `<span class="page-link">Next »</span>`}
+                          </li>
+                      </ul>`;
+                  
+                  if (!query && !category && !priority && !status) {
+                      initialPaginationHtml = pagContainer.innerHTML;
+                  }
+              } else {
+                  pagContainer.style.display = 'none';
+              }
+          }
+
+          if (typeof startCountdownTimers === 'function') {
+              startCountdownTimers();
+          }
+      })
+      .catch(error => {
+          console.error("Error refreshing task list:", error);
+      });
+    }
+
+    function changePage(event, page) {
+        if (event) event.preventDefault();
+        window.history.pushState({page: page}, '', `?page=${page}`);
+        refreshTaskList();
+    }
+
+    // ================== Bulk Select & Action Helpers ==================
+    function toggleSelectTask(checkbox) {
+        const card = checkbox.closest('.task');
+        if (checkbox.checked) {
+            card.classList.add('selected-for-bulk');
+        } else {
+            card.classList.remove('selected-for-bulk');
+        }
+        updateBulkActionBar();
+    }
+
+    function toggleSelectAll(selectAllCheckbox) {
+        const visibleCheckboxes = document.querySelectorAll('.tasks-list .task:not([style*="display: none"]) .task-select-checkbox');
+        visibleCheckboxes.forEach(cb => {
+            cb.checked = selectAllCheckbox.checked;
+            const card = cb.closest('.task');
+            if (cb.checked) {
+                card.classList.add('selected-for-bulk');
+            } else {
+                card.classList.remove('selected-for-bulk');
+            }
+        });
+        updateBulkActionBar();
+    }
+
+    function updateBulkActionBar() {
+        const checkedBoxes = document.querySelectorAll('.tasks-list .task .task-select-checkbox:checked');
+        const count = checkedBoxes.length;
+        
+        const selectAllCheckbox = document.getElementById('select-all-tasks');
+        const visibleCheckboxes = document.querySelectorAll('.tasks-list .task:not([style*="display: none"]) .task-select-checkbox');
+        
+        if (selectAllCheckbox && visibleCheckboxes.length > 0) {
+            selectAllCheckbox.checked = (checkedBoxes.length === visibleCheckboxes.length);
+        }
+
+        const bar = document.getElementById('bulk-action-bar');
+        const countSpan = document.getElementById('bulk-select-count');
+        if (bar && countSpan) {
+            countSpan.textContent = `${count} Selected`;
+            if (count > 0) {
+                bar.style.bottom = '30px'; // Slide up elegantly
+            } else {
+                bar.style.bottom = '-100px'; // Slide down hidden
+            }
+        }
+    }
+
+    function getSelectedIds() {
+        const checked = document.querySelectorAll('.tasks-list .task .task-select-checkbox:checked');
+        return Array.from(checked).map(cb => cb.dataset.id);
+    }
+
+    function bulkDelete() {
+        const ids = getSelectedIds();
+        if (ids.length === 0) return;
+        if (!confirm(`Are you sure you want to move these ${ids.length} selected tasks to the trash?`)) return;
+
+        axios.post('/tasks/bulk-delete', {
+            ids: ids,
+            _token: document.querySelector('input[name="_token"]').value
+        })
+        .then(() => {
+            refreshTaskList();
+            updateCounter(-ids.length);
+            resetBulkSelection();
+        })
+        .catch(error => {
+            alert("Error deleting tasks: " + (error.response?.data?.message || 'Unknown error'));
+        });
+    }
+
+    function bulkRestore() {
+        const ids = getSelectedIds();
+        if (ids.length === 0) return;
+        if (!confirm(`Are you sure you want to restore these ${ids.length} selected tasks?`)) return;
+
+        axios.post('/tasks/bulk-restore', {
+            ids: ids,
+            _token: document.querySelector('input[name="_token"]').value
+        })
+        .then(() => {
+            refreshTaskList();
+            updateCounter(ids.length);
+            resetBulkSelection();
+        })
+        .catch(error => {
+            alert("Error restoring tasks: " + (error.response?.data?.message || 'Unknown error'));
+        });
+    }
+
+    function bulkForceDelete() {
+        const ids = getSelectedIds();
+        if (ids.length === 0) return;
+        if (!confirm(`WARNING: Are you sure you want to PERMANENTLY delete these ${ids.length} selected tasks? This action CANNOT be undone!`)) return;
+
+        axios.post('/tasks/bulk-force-delete', {
+            ids: ids,
+            _token: document.querySelector('input[name="_token"]').value
+        })
+        .then(() => {
+            refreshTaskList();
+            resetBulkSelection();
+        })
+        .catch(error => {
+            alert("Error permanently deleting tasks: " + (error.response?.data?.message || 'Unknown error'));
+        });
+    }
+
+    function resetBulkSelection() {
+        document.querySelectorAll('.task-select-checkbox').forEach(cb => cb.checked = false);
+        document.querySelectorAll('.task').forEach(card => card.classList.remove('selected-for-bulk'));
+        const selectAll = document.getElementById('select-all-tasks');
+        if (selectAll) selectAll.checked = false;
+        updateBulkActionBar();
     }
 
     function openUpdateForm(task) {

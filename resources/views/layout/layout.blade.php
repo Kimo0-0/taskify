@@ -137,17 +137,6 @@
 
           axios.post("/tasks", taskData)
             .then((response) => {
-                const task = response.data.data;
-                // If we are on a page that has a task list, add it
-                const taskList = document.querySelector(".tasks-list");
-                if (taskList) {
-                    if (typeof buildTaskHtml === "function") {
-                        taskList.insertAdjacentHTML("afterbegin", buildTaskHtml(task));
-                    } else {
-                        location.reload(); // Fallback if buildTaskHtml isn't defined
-                    }
-                }
-
                 document.getElementById("addTaskForm").reset();
                 document.getElementById("subtask-list").innerHTML = '';
 
@@ -159,6 +148,23 @@
                 }
 
                 toggleAddForm();
+
+                // Clear all filters so the new task is visible, then refresh the list
+                const searchEl = document.getElementById('search-tasks');
+                const catEl = document.getElementById('filter-category');
+                const priEl = document.getElementById('filter-priority');
+                const statEl = document.getElementById('filter-status');
+                if (searchEl) searchEl.value = '';
+                if (catEl) catEl.value = '';
+                if (priEl) priEl.value = '';
+                if (statEl) statEl.value = '';
+
+                // Refresh list with fresh data from server (not stale cached HTML)
+                if (typeof refreshTaskList === 'function') {
+                    refreshTaskList();
+                } else {
+                    location.reload();
+                }
             })
             .catch((error) => {
                 alert("Error adding task: " + (error.response.data.message || 'Unknown error'));
@@ -191,6 +197,75 @@
 
       // Initialize Theme UI on DOMContentLoaded
       document.addEventListener('DOMContentLoaded', updateThemeUI);
+
+      // --- Profile Modal Logic ---
+      function openProfileModal() {
+          const form = document.getElementById('profileModal');
+          if (form) form.classList.add('active');
+      }
+
+      function closeProfileModal() {
+          const form = document.getElementById('profileModal');
+          if (form) form.classList.remove('active');
+      }
+
+      function previewProfileImage(event) {
+          const file = event.target.files[0];
+          if (file) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                  document.getElementById('profile-preview-img').src = e.target.result;
+              }
+              reader.readAsDataURL(file);
+          }
+      }
+
+      function updateProfile() {
+          const form = document.getElementById('updateProfileForm');
+          const formData = new FormData(form);
+
+          axios.post("/profile/update", formData)
+            .then((response) => {
+                if (response.data.success) {
+                    // Update Sidebar instantly
+                    const sidebarName = document.getElementById('sidebar-profile-name');
+                    const sidebarImg = document.getElementById('sidebar-profile-img');
+                    
+                    if(sidebarName) sidebarName.textContent = response.data.name;
+                    if(sidebarImg) sidebarImg.src = response.data.profile_image_url;
+
+                    closeProfileModal();
+                }
+            })
+            .catch((error) => {
+                alert("Error updating profile: " + (error.response?.data?.message || 'Unknown error'));
+            });
+      }
     </script>
+
+    {{-- Profile Edit Modal --}}
+    <div class="add_Task_Form" id="profileModal">
+        <form onsubmit="updateProfile(); return false;" id="updateProfileForm" class="add_Task" enctype="multipart/form-data">
+            @csrf
+            <h2 class="form-title">Edit Profile</h2>
+            <button type="button" onclick="closeProfileModal()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 16px;">
+                <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 3px solid var(--accent-color); position: relative; cursor: pointer;" onclick="document.getElementById('profile_image_input').click()">
+                    <img id="profile-preview-img" src="{{ Auth::user()->profile_image_url }}" alt="Profile Preview" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); padding: 4px; text-align: center; color: white;">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                </div>
+                <input type="file" id="profile_image_input" name="profile_image" accept="image/*" style="display: none;" onchange="previewProfileImage(event)">
+            </div>
+
+            <label>Name</label>
+            <input type="text" name="name" value="{{ Auth::user()->name }}" required>
+
+            <button type="button" onclick="updateProfile()" class="btn-aqua" style="justify-content: center; margin-top: 16px;">Save Changes</button>
+        </form>
+    </div>
+
 </body>
 </html>
