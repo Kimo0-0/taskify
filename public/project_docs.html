@@ -1,0 +1,3977 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>توثيق مشروع نظام إدارة المهام (Task Management API)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #0284c7;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: "Cairo", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .cover-page {
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+            page-break-after: always;
+        }
+        .cover-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .cover-subtitle {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 40px;
+        }
+        .cover-meta {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 8px;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            page-break-before: always;
+        }
+        .file-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+        }
+        .file-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .file-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .file-path {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-family: monospace;
+            direction: ltr;
+        }
+        .explanation {
+            background: #f1f5f9;
+            border-right: 4px solid var(--accent);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        .code-container {
+            border-radius: 8px;
+            overflow: hidden;
+            direction: ltr;
+            text-align: left;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        pre {
+            margin: 0 !important;
+        }
+        /* Print Styles */
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+            }
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+            .file-card {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                page-break-inside: avoid;
+            }
+            .code-container {
+                max-height: none;
+                overflow: visible;
+            }
+            .no-print {
+                display: none;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: "Cairo", sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            transition: all 0.2s;
+            z-index: 9999;
+        }
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <button class="print-btn no-print" onclick="window.print()">حفظ كـ PDF / طباعة</button>
+
+    <div class="container">
+        <!-- Cover Page -->
+        <div class="cover-page">
+            <h1 class="cover-title">توثيق الكود البرمجي الكامل</h1>
+            <h2 class="cover-subtitle">نظام إدارة المهام المتطور (Task Management System)</h2>
+            <p style="max-width: 600px; margin: 0 auto 40px auto; font-size: 1.1rem; color: var(--text-muted)">
+                وثيقة برمجية شاملة تحتوي على الشيفرات المصدرية لجميع ملفات المشروع الأساسية (Controllers, Models, Views, Routes, Migrations, CSS) مع شرح تفصيلي دقيق لكل ملف ودوره في النظام باللغة العربية.
+            </p>
+            <div class="cover-meta">
+                <p><strong>تطوير وإعداد:</strong> الذكاء الاصطناعي (Antigravity)</p>
+                <p><strong>التقنيات المستخدمة:</strong> Laravel 11, Blade, AJAX (Axios), Vanilla CSS, SQLite/MySQL</p>
+                <p><strong>التاريخ:</strong> 2026-05-18</p>
+            </div>
+        </div>
+
+        <!-- Table of Contents / هيكل المشروع -->
+        <div class="page-break">
+            <h2 class="section-title" style="page-break-before: avoid;">1. مقدمة وهيكل المشروع الأساسي</h2>
+            <div class="file-card">
+                <p>تم بناء هذا النظام باستخدام إطار العمل الشهير <strong>Laravel 11</strong> مع تطبيق أفضل الممارسات البرمجية لضمان السرعة، الأمان، والتجربة التفاعلية الممتازة للمستخدم (سلاسة عدم تحديث الصفحة عبر تقنية AJAX).</p>
+                <h3 style="color: var(--primary)">الأقسام الرئيسية للملفات الموثقة:</h3>
+                <ul>
+                    <li><strong>Controllers (المتحكمات):</strong> تمثل عقل التطبيق والمسؤولة عن معالجة الطلبات وإرجاع البيانات.</li>
+                    <li><strong>Models (النماذج):</strong> تمثل الجداول في قاعدة البيانات وتتحكم في العلاقات وتدفق البيانات.</li>
+                    <li><strong>Views (الواجهات):</strong> القوالب البصرية التفاعلية المبنية بـ Blade وجافاسكريبت.</li>
+                    <li><strong>Routes (المسارات):</strong> توجه الطلبات للمكان الصحيح.</li>
+                    <li><strong>Migrations (الهجرة):</strong> هيكل وتصميم قواعد البيانات.</li>
+                    <li><strong>CSS Stylesheet:</strong> التصميم الفريد والراقي والوضع المظلم.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 class="section-title">2. الأكواد المصدرية والشروحات التفصيلية</h2>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">TaskController (التحكم بالمهام)</span>
+                <span class="file-path">app/Http/Controllers/TaskController.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                يتحكم هذا الملف في جميع العمليات الخاصة بالمهام (إنشاء، تعديل، حذف، أرشفة، استرجاع، والبحث المتقدم). يحتوي على الدوال التي تتعامل مع الطلبات وتستدعي الـ TaskService لإتمام العمليات الحسابية وقاعدة البيانات ثم تعيد الاستجابة إما كـ JSON أو كـ View.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Task;
+use App\Services\TaskService;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
+class TaskController extends Controller
+{
+    use ApiResponse;
+
+    protected $taskService;
+
+    public function __construct(TaskService $taskService)
+    {
+        $this-&gt;taskService = $taskService;
+    }
+
+    /**
+     * Display Dashboard or list tasks.
+     */
+    public function index(Request $request)
+    {
+                // Get tasks for dashboard, excluding completed ones unless the user is on the Completed page
+        if ($request-&gt;filled(&#039;active_nav&#039;) &amp;&amp; $request-&gt;active_nav === &#039;Completed_nav&#039;) {
+            $tasks = Auth::user()-&gt;tasks()-&gt;with([&#039;category&#039;, &#039;subtasks&#039;])-&gt;orderBy(&#039;created_at&#039;, &#039;desc&#039;)-&gt;paginate(10);
+        } else {
+            $tasks = Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;!=&#039;, &#039;completed&#039;)-&gt;with([&#039;category&#039;, &#039;subtasks&#039;])-&gt;orderBy(&#039;created_at&#039;, &#039;desc&#039;)-&gt;paginate(10);
+        }
+
+        // Global stats for the user
+        $stats = [
+            &#039;total&#039; =&gt; Auth::user()-&gt;tasks()-&gt;count(),
+            &#039;completed&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;completed&#039;)-&gt;count(),
+            &#039;overdue&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;!=&#039;, &#039;completed&#039;)-&gt;where(&#039;due_date&#039;, &#039;&lt;&#039;, now())-&gt;count(),
+        ];
+
+        // If it&#039;s an AJAX request or expects JSON, return standardized response
+        if ($request-&gt;wantsJson()) {
+            return $this-&gt;success([&#039;tasks&#039; =&gt; $tasks, &#039;stats&#039; =&gt; $stats], &#039;Tasks retrieved successfully&#039;);
+        }
+
+        $categories = \App\Models\Category::all();
+
+        return view(&#039;Dashboard&#039;, compact(&#039;tasks&#039;, &#039;categories&#039;, &#039;stats&#039;));
+    }
+
+    /**
+     * Store a new task.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request-&gt;validate([
+            &#039;title&#039;       =&gt; &#039;required|string|max:255&#039;,
+            &#039;description&#039; =&gt; &#039;nullable|string&#039;,
+            &#039;due_date&#039;    =&gt; &#039;required|date&#039;,
+            &#039;category_id&#039; =&gt; &#039;nullable|exists:categories,id&#039;,
+            &#039;priority&#039;    =&gt; &#039;nullable|in:low,medium,high&#039;,
+            &#039;status&#039;      =&gt; &#039;nullable|in:pending,in progress,completed&#039;,
+            &#039;subtasks&#039;    =&gt; &#039;nullable|array&#039;,
+            &#039;subtasks.*&#039;  =&gt; &#039;string|max:255&#039;,
+        ]);
+
+        try {
+            $task = $this-&gt;taskService-&gt;createTask($validated);
+            return $this-&gt;success($task, &#039;Task created successfully&#039;, 201);
+        } catch (\Exception $e) {
+            return $this-&gt;error(&#039;Failed to create task&#039;, 500, [$e-&gt;getMessage()]);
+        }
+    }
+
+    /**
+     * Update an existing task.
+     */
+    public function update(Request $request, $id)
+    {
+        $task = Auth::user()-&gt;tasks()-&gt;find($id);
+
+        if (!$task) {
+            return $this-&gt;error(&#039;Task not found&#039;, 404);
+        }
+
+        $validated = $request-&gt;validate([
+            &#039;title&#039;       =&gt; &#039;sometimes|string|max:255&#039;,
+            &#039;description&#039; =&gt; &#039;nullable|string&#039;,
+            &#039;due_date&#039;    =&gt; &#039;sometimes|date&#039;,
+            &#039;category_id&#039; =&gt; &#039;nullable|exists:categories,id&#039;,
+            &#039;priority&#039;    =&gt; &#039;sometimes|in:low,medium,high&#039;,
+            &#039;status&#039;      =&gt; &#039;sometimes|in:pending,in progress,completed&#039;,
+            &#039;subtasks&#039;    =&gt; &#039;nullable|array&#039;,
+            &#039;subtasks.*&#039;  =&gt; &#039;string|max:255&#039;,
+        ]);
+
+        try {
+            $updatedTask = $this-&gt;taskService-&gt;updateTask($task, $validated);
+            return $this-&gt;success($updatedTask, &#039;Task updated successfully&#039;);
+        } catch (\Exception $e) {
+            return $this-&gt;error(&#039;Failed to update task&#039;, 500, [$e-&gt;getMessage()]);
+        }
+    }
+
+    /**
+     * Delete a task (Soft Delete).
+     */
+    public function destroy($id)
+    {
+        $task = Auth::user()-&gt;tasks()-&gt;find($id);
+
+        if (!$task) {
+            return $this-&gt;error(&#039;Task not found&#039;, 404);
+        }
+
+        try {
+            $this-&gt;taskService-&gt;deleteTask($task);
+            return $this-&gt;success(null, &#039;Task deleted successfully&#039;);
+        } catch (\Exception $e) {
+            return $this-&gt;error(&#039;Failed to delete task&#039;, 500, [$e-&gt;getMessage()]);
+        }
+    }
+
+    /**
+     * Show soft-deleted tasks.
+     */
+    public function trash()
+    {
+        $tasks = Auth::user()-&gt;tasks()-&gt;onlyTrashed()-&gt;with([&#039;category&#039;, &#039;subtasks&#039;])-&gt;orderBy(&#039;deleted_at&#039;, &#039;desc&#039;)-&gt;paginate(10);
+        $categories = \App\Models\Category::all();
+        $title = &#039;Recycle Bin&#039;;
+        $activeNav = &#039;Trash_nav&#039;;
+
+        $stats = [
+            &#039;total&#039; =&gt; Auth::user()-&gt;tasks()-&gt;count(),
+            &#039;completed&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;completed&#039;)-&gt;count(),
+            &#039;overdue&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;!=&#039;, &#039;completed&#039;)-&gt;where(&#039;due_date&#039;, &#039;&lt;&#039;, now())-&gt;count(),
+        ];
+
+        return view(&#039;Dashboard&#039;, compact(&#039;tasks&#039;, &#039;categories&#039;, &#039;title&#039;, &#039;activeNav&#039;, &#039;stats&#039;));
+    }
+
+    /**
+     * Restore a soft-deleted task.
+     */
+    public function restore($id)
+    {
+        $task = Auth::user()-&gt;tasks()-&gt;onlyTrashed()-&gt;find($id);
+
+        if (!$task) {
+            return $this-&gt;error(&#039;Task not found in trash&#039;, 404);
+        }
+
+        $task-&gt;restore();
+
+        return $this-&gt;success(null, &#039;Task restored successfully&#039;);
+    }
+
+    /**
+     * Permanently delete a task.
+     */
+    public function forceDelete($id)
+    {
+        $task = Auth::user()-&gt;tasks()-&gt;onlyTrashed()-&gt;find($id);
+
+        if (!$task) {
+            return $this-&gt;error(&#039;Task not found in trash&#039;, 404);
+        }
+
+        $task-&gt;subtasks()-&gt;delete();
+        $task-&gt;forceDelete();
+
+        return $this-&gt;success(null, &#039;Task permanently deleted&#039;);
+    }
+
+    /**
+     * API Endpoint for unpaginated real-time search &amp; multi-filtering.
+     */
+    public function apiSearch(Request $request)
+    {
+        $query = Auth::user()-&gt;tasks()-&gt;with([&#039;category&#039;, &#039;subtasks&#039;]);
+
+        // Check if we are searching within Trashed tasks
+        if ($request-&gt;active_nav === &#039;Trash_nav&#039;) {
+            $query-&gt;onlyTrashed();
+        } else {
+            // Apply standard scopes based on the active page filter
+            if ($request-&gt;active_nav === &#039;Today_nav&#039;) {
+                $query-&gt;whereDate(&#039;due_date&#039;, \Carbon\Carbon::today());
+            } elseif ($request-&gt;active_nav === &#039;Important_nav&#039;) {
+                $query-&gt;where(&#039;priority&#039;, &#039;high&#039;);
+            } elseif ($request-&gt;active_nav === &#039;Completed_nav&#039;) {
+                $query-&gt;where(&#039;status&#039;, &#039;completed&#039;);
+            }
+        }
+
+        // Apply Fuzzy Search Term
+        if ($request-&gt;filled(&#039;search&#039;)) {
+            $search = $request-&gt;search;
+            $query-&gt;where(function($q) use ($search) {
+                $q-&gt;where(&#039;title&#039;, &#039;like&#039;, &quot;%$search%&quot;)
+                  -&gt;orWhere(&#039;description&#039;, &#039;like&#039;, &quot;%$search%&quot;);
+            });
+        }
+
+        // Apply Category Filter
+        if ($request-&gt;filled(&#039;category_id&#039;)) {
+            $query-&gt;where(&#039;category_id&#039;, $request-&gt;category_id);
+        }
+
+        // Apply Priority Filter
+        if ($request-&gt;filled(&#039;priority&#039;)) {
+            $query-&gt;where(&#039;priority&#039;, $request-&gt;priority);
+        }
+
+        // Apply Status Filter
+        if ($request-&gt;filled(&#039;status&#039;)) {
+            $query-&gt;where(&#039;status&#039;, $request-&gt;status);
+        }
+
+        // Fetch all matching tasks with pagination (10 per page)
+        $tasks = $query-&gt;orderBy(&#039;due_date&#039;, &#039;asc&#039;)-&gt;paginate(10);
+
+        // Format to match exact response expectation of buildTaskHtml
+        $formattedTasks = collect($tasks-&gt;items())-&gt;map(function ($task) {
+            return [
+                &#039;id&#039; =&gt; $task-&gt;id,
+                &#039;title&#039; =&gt; $task-&gt;title,
+                &#039;description&#039; =&gt; $task-&gt;description,
+                &#039;due_date&#039; =&gt; $task-&gt;due_date,
+                &#039;status&#039; =&gt; $task-&gt;status,
+                &#039;priority&#039; =&gt; $task-&gt;priority,
+                &#039;category_id&#039; =&gt; $task-&gt;category_id,
+                &#039;category_name&#039; =&gt; $task-&gt;category ? $task-&gt;category-&gt;name : &#039;Uncategorized&#039;,
+                &#039;formatted_date&#039; =&gt; \Carbon\Carbon::parse($task-&gt;due_date)-&gt;format(&#039;M d, Y h:i A&#039;),
+                &#039;subtasks&#039; =&gt; $task-&gt;subtasks-&gt;map(function ($subtask) {
+                    return [
+                        &#039;id&#039; =&gt; $subtask-&gt;id,
+                        &#039;title&#039; =&gt; $subtask-&gt;title,
+                        &#039;is_completed&#039; =&gt; (bool)$subtask-&gt;is_completed,
+                    ];
+                })-&gt;toArray(),
+            ];
+        });
+
+        return response()-&gt;json([
+            &#039;current_page&#039; =&gt; $tasks-&gt;currentPage(),
+            &#039;last_page&#039; =&gt; $tasks-&gt;lastPage(),
+            &#039;prev_page_url&#039; =&gt; $tasks-&gt;previousPageUrl(),
+            &#039;next_page_url&#039; =&gt; $tasks-&gt;nextPageUrl(),
+            &#039;data&#039; =&gt; $formattedTasks
+        ]);
+    }
+
+    /**
+     * Soft delete multiple tasks.
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request-&gt;validate([
+            &#039;ids&#039; =&gt; &#039;required|array&#039;,
+            &#039;ids.*&#039; =&gt; &#039;exists:tasks,id&#039;
+        ]);
+
+        $deletedCount = Auth::user()-&gt;tasks()-&gt;whereIn(&#039;id&#039;, $request-&gt;ids)-&gt;delete();
+
+        return $this-&gt;success(null, &quot;$deletedCount tasks moved to trash&quot;);
+    }
+
+    /**
+     * Restore multiple soft-deleted tasks from the recycle bin.
+     */
+    public function bulkRestore(Request $request)
+    {
+        $request-&gt;validate([
+            &#039;ids&#039; =&gt; &#039;required|array&#039;
+        ]);
+
+        $restoredCount = Auth::user()-&gt;tasks()-&gt;onlyTrashed()-&gt;whereIn(&#039;id&#039;, $request-&gt;ids)-&gt;restore();
+
+        return $this-&gt;success(null, &quot;$restoredCount tasks restored successfully&quot;);
+    }
+
+    /**
+     * Permanently delete multiple soft-deleted tasks from the database.
+     */
+    public function bulkForceDelete(Request $request)
+    {
+        $request-&gt;validate([
+            &#039;ids&#039; =&gt; &#039;required|array&#039;
+        ]);
+
+        $tasks = Auth::user()-&gt;tasks()-&gt;onlyTrashed()-&gt;whereIn(&#039;id&#039;, $request-&gt;ids)-&gt;get();
+        foreach ($tasks as $task) {
+            $task-&gt;subtasks()-&gt;delete();
+            $task-&gt;forceDelete();
+        }
+
+        return $this-&gt;success(null, count($tasks) . &quot; tasks permanently deleted&quot;);
+    }
+
+    /**
+     * Permanently delete all soft-deleted tasks for the user.
+     */
+    public function emptyTrash()
+    {
+        try {
+            $tasks = Auth::user()-&gt;tasks()-&gt;onlyTrashed()-&gt;get();
+            foreach ($tasks as $task) {
+                $task-&gt;subtasks()-&gt;delete();
+                $task-&gt;forceDelete();
+            }
+            return $this-&gt;success(null, &#039;Recycle bin emptied successfully&#039;);
+        } catch (\Exception $e) {
+            return $this-&gt;error(&#039;Failed to empty recycle bin&#039;, 500, [$e-&gt;getMessage()]);
+        }
+    }
+
+    /**
+     * Show tasks for Today.
+     */
+    public function today()
+    {
+        $tasks = $this-&gt;taskService-&gt;getTodayTasks();
+        $categories = \App\Models\Category::all();
+        $title = &#039;Today\&#039;s Tasks&#039;;
+        $activeNav = &#039;Today_nav&#039;;
+
+        $stats = [
+            &#039;total&#039; =&gt; Auth::user()-&gt;tasks()-&gt;count(),
+            &#039;completed&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;completed&#039;)-&gt;count(),
+            &#039;overdue&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;!=&#039;, &#039;completed&#039;)-&gt;where(&#039;due_date&#039;, &#039;&lt;&#039;, now())-&gt;count(),
+        ];
+
+        return view(&#039;Dashboard&#039;, compact(&#039;tasks&#039;, &#039;categories&#039;, &#039;title&#039;, &#039;activeNav&#039;, &#039;stats&#039;));
+    }
+
+    /**
+     * Show Upcoming tasks.
+     */
+    public function upcoming()
+    {
+        $tasks = $this-&gt;taskService-&gt;getUpcomingTasks();
+        $categories = \App\Models\Category::all();
+        $title = &#039;Upcoming Tasks&#039;;
+        $activeNav = &#039;Upcoming_nav&#039;;
+
+        $stats = [
+            &#039;total&#039; =&gt; Auth::user()-&gt;tasks()-&gt;count(),
+            &#039;completed&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;completed&#039;)-&gt;count(),
+            &#039;overdue&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;!=&#039;, &#039;completed&#039;)-&gt;where(&#039;due_date&#039;, &#039;&lt;&#039;, now())-&gt;count(),
+        ];
+
+        return view(&#039;Dashboard&#039;, compact(&#039;tasks&#039;, &#039;categories&#039;, &#039;title&#039;, &#039;activeNav&#039;, &#039;stats&#039;));
+    }
+
+    /**
+     * Show Important tasks.
+     */
+    public function important()
+    {
+        $tasks = $this-&gt;taskService-&gt;getImportantTasks();
+        $categories = \App\Models\Category::all();
+        $title = &#039;Important Tasks&#039;;
+        $activeNav = &#039;Important_nav&#039;;
+
+        $stats = [
+            &#039;total&#039; =&gt; Auth::user()-&gt;tasks()-&gt;count(),
+            &#039;completed&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;completed&#039;)-&gt;count(),
+            &#039;overdue&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;!=&#039;, &#039;completed&#039;)-&gt;where(&#039;due_date&#039;, &#039;&lt;&#039;, now())-&gt;count(),
+        ];
+
+        return view(&#039;Dashboard&#039;, compact(&#039;tasks&#039;, &#039;categories&#039;, &#039;title&#039;, &#039;activeNav&#039;, &#039;stats&#039;));
+    }
+
+    /**
+     * Show Completed tasks.
+     */
+    public function completed()
+    {
+        $tasks = $this-&gt;taskService-&gt;getCompletedTasks();
+        $categories = \App\Models\Category::all();
+        $title = &#039;Completed Tasks&#039;;
+        $activeNav = &#039;Completed_nav&#039;;
+
+        $stats = [
+            &#039;total&#039; =&gt; Auth::user()-&gt;tasks()-&gt;count(),
+            &#039;completed&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;completed&#039;)-&gt;count(),
+            &#039;overdue&#039; =&gt; Auth::user()-&gt;tasks()-&gt;where(&#039;status&#039;, &#039;!=&#039;, &#039;completed&#039;)-&gt;where(&#039;due_date&#039;, &#039;&lt;&#039;, now())-&gt;count(),
+        ];
+
+        return view(&#039;Dashboard&#039;, compact(&#039;tasks&#039;, &#039;categories&#039;, &#039;title&#039;, &#039;activeNav&#039;, &#039;stats&#039;));
+    }
+
+    /**
+     * Show task details view.
+     */
+    public function show($id)
+    {
+        $task = Auth::user()-&gt;tasks()-&gt;with([&#039;category&#039;, &#039;subtasks&#039;])-&gt;find($id);
+
+        if (!$task) {
+            abort(404);
+        }
+
+        return view(&#039;task&#039;, compact(&#039;task&#039;));
+    }
+}
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">ProfileController (التحكم بالملف الشخصي)</span>
+                <span class="file-path">app/Http/Controllers/ProfileController.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                مسؤول عن إدارة حساب المستخدم. يحتوي على دالة التحديث التي تستقبل الاسم وصورة البروفايل عبر طلب AJAX، وتقوم برفع الصورة وحفظ المسار في قاعدة البيانات، بالإضافة إلى دالة حذف الحساب بالكامل.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
+
+class ProfileController extends Controller
+{
+    /**
+     * Display the user&#039;s profile form (kept for legacy route compatibility).
+     */
+    public function edit(Request $request): View
+    {
+        return view(&#039;profile.edit&#039;, [
+            &#039;user&#039; =&gt; $request-&gt;user(),
+        ]);
+    }
+
+    /**
+     * Update name and/or profile image via AJAX.
+     * Returns JSON so the sidebar can refresh without a page reload.
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $request-&gt;validate([
+            &#039;name&#039;          =&gt; [&#039;required&#039;, &#039;string&#039;, &#039;max:255&#039;],
+            &#039;profile_image&#039; =&gt; [&#039;nullable&#039;, &#039;image&#039;, &#039;mimes:jpg,jpeg,png,gif,webp&#039;, &#039;max:2048&#039;],
+        ]);
+
+        $user = $request-&gt;user();
+        $user-&gt;name = $request-&gt;name;
+
+        if ($request-&gt;hasFile(&#039;profile_image&#039;)) {
+            // Delete the old image if it exists
+            if ($user-&gt;profile_image) {
+                Storage::disk(&#039;public&#039;)-&gt;delete($user-&gt;profile_image);
+            }
+            $path = $request-&gt;file(&#039;profile_image&#039;)-&gt;store(&#039;profile-images&#039;, &#039;public&#039;);
+            $user-&gt;profile_image = $path;
+        }
+
+        $user-&gt;save();
+
+        return response()-&gt;json([
+            &#039;success&#039;           =&gt; true,
+            &#039;name&#039;              =&gt; $user-&gt;name,
+            &#039;profile_image_url&#039; =&gt; $user-&gt;profile_image_url,
+        ]);
+    }
+
+    /**
+     * Delete the user&#039;s account.
+     */
+    public function destroy(Request $request)
+    {
+        $request-&gt;validateWithBag(&#039;userDeletion&#039;, [
+            &#039;password&#039; =&gt; [&#039;required&#039;, &#039;current_password&#039;],
+        ]);
+
+        $user = $request-&gt;user();
+
+        Auth::logout();
+
+        \App\Models\User::destroy($user-&gt;id);
+
+        $request-&gt;session()-&gt;invalidate();
+        $request-&gt;session()-&gt;regenerateToken();
+
+        return Redirect::to(&#039;/&#039;);
+    }
+}
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">AttachmentController (التحكم بالمرفقات)</span>
+                <span class="file-path">app/Http/Controllers/AttachmentController.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                مسؤول عن رفع وإدارة ملفات المرفقات الخاصة بالمهام. يسمح للمستخدم برفع الصور والمستندات وربطها بالمهمة المطلوبة، مع التحقق من صحة الملفات وصيغها وحجمها.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Attachment;
+use App\Models\Task;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
+class AttachmentController extends Controller
+{
+    /**
+     * Upload and store an attachment for a task.
+     */
+    public function store(Request $request, $taskId)
+    {
+        $task = Auth::user()-&gt;tasks()-&gt;findOrFail($taskId);
+
+        $request-&gt;validate([
+            &#039;file&#039; =&gt; &#039;required|file|max:10240&#039;, // Max 10MB
+        ]);
+
+        $file = $request-&gt;file(&#039;file&#039;);
+        $originalName = $file-&gt;getClientOriginalName();
+        $fileSize = $file-&gt;getSize();
+        $mimeType = $file-&gt;getMimeType();
+
+        // Store file securely inside attachments/{task_id} folder on public disk
+        $path = $file-&gt;store(&quot;attachments/{$task-&gt;id}&quot;, &#039;public&#039;);
+
+        $attachment = Attachment::create([
+            &#039;task_id&#039; =&gt; $task-&gt;id,
+            &#039;file_path&#039; =&gt; $path,
+            &#039;file_name&#039; =&gt; $originalName,
+            &#039;file_size&#039; =&gt; $fileSize,
+            &#039;file_type&#039; =&gt; $mimeType,
+        ]);
+
+        return response()-&gt;json([
+            &#039;status&#039; =&gt; &#039;success&#039;,
+            &#039;message&#039; =&gt; &#039;Attachment uploaded successfully&#039;,
+            &#039;data&#039; =&gt; $attachment
+        ], 201);
+    }
+
+    /**
+     * Download an attachment securely.
+     */
+    public function download($id)
+    {
+        $attachment = Attachment::findOrFail($id);
+        
+        // Ensure the task belongs to the authenticated user
+        $task = Auth::user()-&gt;tasks()-&gt;findOrFail($attachment-&gt;task_id);
+
+        if (!Storage::disk(&#039;public&#039;)-&gt;exists($attachment-&gt;file_path)) {
+            return response()-&gt;json([&#039;message&#039; =&gt; &#039;File not found on server&#039;], 404);
+        }
+
+        $fullPath = Storage::disk(&#039;public&#039;)-&gt;path($attachment-&gt;file_path);
+
+        return response()-&gt;download($fullPath, $attachment-&gt;file_name);
+    }
+
+    /**
+     * Delete an attachment.
+     */
+    public function destroy($id)
+    {
+        $attachment = Attachment::findOrFail($id);
+        
+        // Ensure the task belongs to the authenticated user
+        $task = Auth::user()-&gt;tasks()-&gt;findOrFail($attachment-&gt;task_id);
+
+        // Delete from public storage disk
+        if (Storage::disk(&#039;public&#039;)-&gt;exists($attachment-&gt;file_path)) {
+            Storage::disk(&#039;public&#039;)-&gt;delete($attachment-&gt;file_path);
+        }
+
+        $attachment-&gt;delete();
+
+        return response()-&gt;json([
+            &#039;status&#039; =&gt; &#039;success&#039;,
+            &#039;message&#039; =&gt; &#039;Attachment deleted successfully&#039;
+        ], 200);
+    }
+}
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">SubtaskController (التحكم بالمهام الفرعية)</span>
+                <span class="file-path">app/Http/Controllers/SubtaskController.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                يدير المهام الفرعية المرتبطة بكل مهمة رئيسية. يسمح بإضافتها، تعديلها، وحذفها، وتحديث حالتها (مكتملة أو غير مكتملة) لحظياً عبر الـ Dashboard.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Subtask;
+use Illuminate\Http\Request;
+
+class SubtaskController extends Controller
+{
+    public function toggle($id)
+    {
+        $subtask = Subtask::findOrFail($id);
+        $subtask-&gt;is_completed = !$subtask-&gt;is_completed;
+        $subtask-&gt;save();
+
+        // Check if all subtasks for the parent task are completed
+        $task = $subtask-&gt;task;
+        $totalSubtasks = $task-&gt;subtasks()-&gt;count();
+        $completedSubtasks = $task-&gt;subtasks()-&gt;where(&#039;is_completed&#039;, true)-&gt;count();
+
+        if ($totalSubtasks &gt; 0) {
+            if ($completedSubtasks === $totalSubtasks) {
+                $task-&gt;status = &#039;completed&#039;;
+            } else {
+                $task-&gt;status = &#039;pending&#039;;
+            }
+            $task-&gt;save();
+        }
+
+        return response()-&gt;json([
+            &#039;status&#039; =&gt; &#039;success&#039;,
+            &#039;data&#039; =&gt; [
+                &#039;id&#039; =&gt; $subtask-&gt;id,
+                &#039;is_completed&#039; =&gt; $subtask-&gt;is_completed,
+                &#039;task_id&#039; =&gt; $subtask-&gt;task_id,
+                &#039;task_status&#039; =&gt; $task-&gt;status
+            ]
+        ]);
+    }
+}
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">User Model (نموذج المستخدم)</span>
+                <span class="file-path">app/Models/User.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                يمثل جدول المستخدمين في قاعدة البيانات. يحتوي على الحقول القابلة للتعبئة، وعلاقة المستخدم بالمهام (HasMany)، بالإضافة إلى الـ Accessor الخاص بجلب رابط صورة الملف الشخصي بديناميكية (حيث يرجع الصورة المرفوعة أو صورة افتراضية تعتمد على الحرف الأول من اسمه).
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    /** @use HasFactory&lt;UserFactory&gt; */
+    use HasFactory, Notifiable;
+
+    protected $fillable = [
+        &#039;name&#039;,
+        &#039;email&#039;,
+        &#039;password&#039;,
+        &#039;profile_image&#039;,
+    ];
+
+    protected $hidden = [
+        &#039;password&#039;,
+        &#039;remember_token&#039;,
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array&lt;string, string&gt;
+     */
+    protected function casts(): array
+    {
+        return [
+            &#039;email_verified_at&#039; =&gt; &#039;datetime&#039;,
+            &#039;password&#039; =&gt; &#039;hashed&#039;,
+        ];
+    }
+
+    public function tasks()
+    {
+        return $this-&gt;hasMany(\App\Models\Task::class);
+    }
+
+    /**
+     * Returns the URL for the user&#039;s profile image, falling back to a generated avatar.
+     */
+    public function getProfileImageUrlAttribute(): string
+    {
+        if ($this-&gt;profile_image &amp;&amp; file_exists(public_path(&#039;storage/&#039; . $this-&gt;profile_image))) {
+            return asset(&#039;storage/&#039; . $this-&gt;profile_image);
+        }
+        return &#039;https://ui-avatars.com/api/?name=&#039; . urlencode($this-&gt;name) . &#039;&amp;background=3b82f6&amp;color=fff&amp;size=128&#039;;
+    }
+}
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Task Model (نموذج المهمة)</span>
+                <span class="file-path">app/Models/Task.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                يمثل جدول المهام. يحتوي على ميزة الـ Soft Deletes (الحذف المؤقت إلى سلة المهملات)، وعلاقات المهمة مع التصنيف (BelongsTo)، والمستخدم (BelongsTo)، والمهام الفرعية (HasMany)، والمرفقات (HasMany).
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Task extends Model
+{
+    use SoftDeletes;
+
+    protected $table = &#039;tasks&#039;;
+    protected $fillable = [
+      &#039;title&#039;,
+      &#039;description&#039;,
+      &#039;due_date&#039;,
+      &#039;category_id&#039;,
+      &#039;priority&#039;,
+      &#039;status&#039;,
+      &#039;user_id&#039;,
+    ];
+
+    protected $appends = [&#039;formatted_date&#039;, &#039;category_name&#039;];
+
+    public function getFormattedDateAttribute()
+    {
+        return \Carbon\Carbon::parse($this-&gt;due_date)-&gt;format(&#039;d M Y&#039;);
+    }
+
+    public function getCategoryNameAttribute()
+    {
+        return $this-&gt;category?-&gt;name ?? &#039;بدون تصنيف&#039;;
+    }
+
+    public function subtasks()
+    {
+      return $this-&gt;hasMany(Subtask::class);
+    }
+    public function category()
+    {
+        return $this-&gt;belongsTo(Category::class);
+    }
+
+    public function user()
+    {
+        return $this-&gt;belongsTo(User::class);
+    }
+
+    public function attachments()
+    {
+        return $this-&gt;hasMany(Attachment::class);
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($task) {
+            if ($task-&gt;isForceDeleting()) {
+                foreach ($task-&gt;attachments as $attachment) {
+                    \Illuminate\Support\Facades\Storage::delete($attachment-&gt;file_path);
+                    $attachment-&gt;delete();
+                }
+            }
+        });
+    }
+}
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Attachment Model (نموذج المرفقات)</span>
+                <span class="file-path">app/Models/Attachment.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                يمثل جدول المرفقات في قاعدة البيانات، ويربط كل ملف مرفوع بالمهمة الخاصة به عبر علاقة BelongsTo.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+
+class Attachment extends Model
+{
+    protected $table = &#039;attachments&#039;;
+
+    protected $fillable = [
+        &#039;task_id&#039;,
+        &#039;file_path&#039;,
+        &#039;file_name&#039;,
+        &#039;file_size&#039;,
+        &#039;file_type&#039;,
+    ];
+
+    protected $appends = [&#039;file_url&#039;, &#039;formatted_size&#039;, &#039;is_image&#039;];
+
+    public function task()
+    {
+        return $this-&gt;belongsTo(Task::class);
+    }
+
+    public function getFileUrlAttribute()
+    {
+        return Storage::url($this-&gt;file_path);
+    }
+
+    public function getFormattedSizeAttribute()
+    {
+        $bytes = $this-&gt;file_size;
+        if ($bytes &gt;= 1073741824) {
+            return number_format($bytes / 1073741824, 2) . &#039; GB&#039;;
+        } elseif ($bytes &gt;= 1048576) {
+            return number_format($bytes / 1048576, 2) . &#039; MB&#039;;
+        } elseif ($bytes &gt;= 1024) {
+            return number_format($bytes / 1024, 2) . &#039; KB&#039;;
+        } elseif ($bytes &gt; 1) {
+            return $bytes . &#039; bytes&#039;;
+        } elseif ($bytes == 1) {
+            return &#039;1 byte&#039;;
+        } else {
+            return &#039;0 bytes&#039;;
+        }
+    }
+
+    public function getIsImageAttribute()
+    {
+        return str_starts_with($this-&gt;file_type, &#039;image/&#039;);
+    }
+}
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Category Model (نموذج التصنيف)</span>
+                <span class="file-path">app/Models/Category.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                يمثل جدول التصنيفات (الفئات) التي يتم تجميع المهام تحتها. يربط التصنيف بالمهام التابعة له عبر علاقة HasMany.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Category extends Model
+{
+    protected $table = &#039;categories&#039;;
+
+    protected $fillable = [&#039;name&#039;];
+
+    public function tasks()
+    {
+        return $this-&gt;hasMany(Task::class);
+    }
+}
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Subtask Model (نموذج المهام الفرعية)</span>
+                <span class="file-path">app/Models/Subtask.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                يمثل جدول المهام الفرعية ويرتبط بالمهمة الرئيسية التابع لها عبر علاقة BelongsTo.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Subtask extends Model
+{
+    protected $fillable = [&#039;task_id&#039;, &#039;title&#039;, &#039;is_completed&#039;];
+
+    public function task()
+    {
+        return $this-&gt;belongsTo(Task::class);
+    }
+}
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Web Routes (مسارات الويب)</span>
+                <span class="file-path">routes/web.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                يحتوي على جميع مسارات التطبيق الموجهة للمتصفح. يتضمن مسارات المصادقة (Auth)، ومسارات إدارة المهام، وتحديث البروفايل الشخصي، وحذف الحساب، والوصول لسلة المهملات.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
+use App\Models\Task;
+use App\Models\User;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubtaskController;
+use App\Http\Controllers\AttachmentController;
+
+Route::get(&#039;/&#039;, function () {
+    return redirect()-&gt;route(&#039;dashboard&#039;);
+});
+
+Route::middleware([&#039;auth&#039;, &#039;verified&#039;])-&gt;group(function () {
+  Route::get(&#039;/Dashboard&#039;, [TaskController::class, &#039;index&#039;])-&gt;name(&#039;dashboard&#039;);
+  Route::get(&#039;/Today&#039;, [TaskController::class, &#039;today&#039;])-&gt;name(&#039;today&#039;);
+  Route::get(&#039;/Upcoming&#039;, [TaskController::class, &#039;upcoming&#039;])-&gt;name(&#039;upcoming&#039;);
+  Route::get(&#039;/Important&#039;, [TaskController::class, &#039;important&#039;])-&gt;name(&#039;important&#039;);
+  Route::get(&#039;/Completed&#039;, [TaskController::class, &#039;completed&#039;])-&gt;name(&#039;completed&#039;);
+  Route::get(&#039;/profile&#039;, [ProfileController::class, &#039;edit&#039;])-&gt;name(&#039;profile.edit&#039;);
+  Route::post(&#039;/profile/update&#039;, [ProfileController::class, &#039;updateProfile&#039;])-&gt;name(&#039;profile.updateProfile&#039;);
+  Route::delete(&#039;/profile&#039;, [ProfileController::class, &#039;destroy&#039;])-&gt;name(&#039;profile.destroy&#039;);
+  Route::get(&#039;/Categories&#039;, [CategoryController::class, &#039;index&#039;])-&gt;name(&#039;categories.index&#039;);
+  Route::post(&#039;/categories&#039;, [CategoryController::class, &#039;store&#039;])-&gt;name(&#039;categories.store&#039;);
+  Route::delete(&#039;/categories/{id}&#039;, [CategoryController::class, &#039;destroy&#039;])-&gt;name(&#039;categories.destroy&#039;);
+  Route::get(&#039;/Trash&#039;, [TaskController::class, &#039;trash&#039;])-&gt;name(&#039;trash&#039;);
+  Route::get(&#039;/tasks/api-search&#039;, [TaskController::class, &#039;apiSearch&#039;])-&gt;name(&#039;tasks.apiSearch&#039;);
+  Route::post(&#039;/tasks/bulk-delete&#039;, [TaskController::class, &#039;bulkDelete&#039;])-&gt;name(&#039;tasks.bulkDelete&#039;);
+  Route::post(&#039;/tasks/bulk-restore&#039;, [TaskController::class, &#039;bulkRestore&#039;])-&gt;name(&#039;tasks.bulkRestore&#039;);
+  Route::post(&#039;/tasks/bulk-force-delete&#039;, [TaskController::class, &#039;bulkForceDelete&#039;])-&gt;name(&#039;tasks.bulkForceDelete&#039;);
+  Route::post(&#039;/tasks/empty-trash&#039;, [TaskController::class, &#039;emptyTrash&#039;])-&gt;name(&#039;tasks.emptyTrash&#039;);
+  Route::post(&#039;/tasks&#039;, [TaskController::class, &#039;store&#039;])-&gt;name(&#039;tasks.store&#039;);
+  Route::delete(&#039;/tasks/{id}&#039;, [TaskController::class, &#039;destroy&#039;])-&gt;name(&#039;tasks.destroy&#039;);
+  Route::put(&#039;/tasks/{id}&#039;, [TaskController::class, &#039;update&#039;])-&gt;name(&#039;tasks.update&#039;);
+  Route::post(&#039;/tasks/{id}/restore&#039;, [TaskController::class, &#039;restore&#039;])-&gt;name(&#039;tasks.restore&#039;);
+  Route::delete(&#039;/tasks/{id}/force-delete&#039;, [TaskController::class, &#039;forceDelete&#039;])-&gt;name(&#039;tasks.forceDelete&#039;);
+  Route::post(&#039;/subtasks/{id}/toggle&#039;, [SubtaskController::class, &#039;toggle&#039;])-&gt;name(&#039;subtasks.toggle&#039;);
+  
+  // Task Attachment Routes
+  Route::post(&#039;/tasks/{id}/attachments&#039;, [AttachmentController::class, &#039;store&#039;])-&gt;name(&#039;attachments.store&#039;);
+  Route::delete(&#039;/attachments/{id}&#039;, [AttachmentController::class, &#039;destroy&#039;])-&gt;name(&#039;attachments.destroy&#039;);
+  Route::get(&#039;/attachments/{id}/download&#039;, [AttachmentController::class, &#039;download&#039;])-&gt;name(&#039;attachments.download&#039;);
+
+  Route::get(&#039;/task/{id}&#039;, function ($id) {
+      // Load task with subtasks and attachments
+      $task = Task::with([&#039;subtasks&#039;, &#039;attachments&#039;])-&gt;findOrFail($id);
+      return view(&#039;task&#039;, [&#039;task&#039; =&gt; $task]);
+  });
+});
+
+Route::get(&#039;/logout&#039;, [AuthenticatedSessionController::class, &#039;destroy&#039;])-&gt;name(&#039;logout&#039;);
+
+
+
+
+
+
+require __DIR__.&#039;/auth.php&#039;;
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Attachment Migration (هجرة جدول المرفقات)</span>
+                <span class="file-path">database/migrations/2026_05_17_133403_create_attachments_table.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                المخطط البرمجي لإنشاء جدول المرفقات في قاعدة البيانات، ويشمل حقول مسار الملف، اسم الملف الأصلي، وحجمه، مع مفتاح خارجي يربطه بجدول المهام.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create(&#039;attachments&#039;, function (Blueprint $table) {
+            $table-&gt;id();
+            $table-&gt;foreignId(&#039;task_id&#039;)-&gt;constrained(&#039;tasks&#039;)-&gt;onDelete(&#039;cascade&#039;);
+            $table-&gt;string(&#039;file_path&#039;);
+            $table-&gt;string(&#039;file_name&#039;);
+            $table-&gt;unsignedBigInteger(&#039;file_size&#039;);
+            $table-&gt;string(&#039;file_type&#039;);
+            $table-&gt;timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists(&#039;attachments&#039;);
+    }
+};
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Profile Image Migration (تعديل جدول المستخدمين)</span>
+                <span class="file-path">database/migrations/2026_05_18_064016_add_profile_image_to_users_table.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                ملف هجرة مخصص لإضافة حقل صورة الملف الشخصي `profile_image` كحقل اختياري (nullable) إلى جدول المستخدمين الحالي.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table(&#039;users&#039;, function (Blueprint $table) {
+            $table-&gt;string(&#039;profile_image&#039;)-&gt;nullable()-&gt;after(&#039;name&#039;);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table(&#039;users&#039;, function (Blueprint $table) {
+            $table-&gt;dropColumn(&#039;profile_image&#039;);
+        });
+    }
+};
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Main Layout (القالب الأساسي)</span>
+                <span class="file-path">resources/views/layout/layout.blade.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                الملف الهيكلي الرئيسي لجميع صفحات التطبيق. يحتوي على الرأس (Head)، استدعاء ملفات الستايل والخطوط، مكتبات الجافاسكريبت مثل Axios و FontAwesome، والنوافذ المنبثقة (Modals) مثل نافذة تعديل البروفايل، بالإضافة إلى أكواد الجافاسكريبت التفاعلية.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;@yield(&#039;title&#039;)&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;/css/MCT.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;/css/style.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;/css/all.min.css&quot;&gt;
+    &lt;style&gt;
+      @yield(&#039;CustomCss&#039;);
+    &lt;/style&gt;
+    &lt;script&gt;
+        (function() {
+            const savedTheme = localStorage.getItem(&#039;theme&#039;);
+            const systemPrefersDark = window.matchMedia(&#039;(prefers-color-scheme: dark)&#039;).matches;
+            if (savedTheme === &#039;dark&#039; || (!savedTheme &amp;&amp; systemPrefersDark)) {
+                document.documentElement.classList.add(&#039;dark-mode&#039;);
+            }
+        })();
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    @include(&#039;layout.sidebar&#039;)
+    &lt;div class=&quot;page&quot;&gt;
+        @include(&#039;layout.navbar&#039;)
+        @yield(&#039;content&#039;)
+    &lt;/div&gt;
+    &lt;button class=&quot;fab-add lt-768&quot; onclick=&quot;toggleAddForm()&quot;&gt;&lt;i class=&quot;fa-solid fa-plus&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/axios@1.16.0/dist/axios.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;/js/MCT.js&quot;&gt;&lt;/script&gt;
+
+    {{-- Global Add Task Modal --}}
+    &lt;div class=&quot;add_Task_Form&quot;&gt;
+        &lt;form onsubmit=&quot;storeTask(); return false;&quot; id=&quot;addTaskForm&quot; class=&quot;add_Task&quot;&gt;
+            @csrf
+            &lt;h2 class=&quot;form-title&quot;&gt;Create New Task&lt;/h2&gt;
+            &lt;button type=&quot;button&quot; onclick=&quot;toggleAddForm()&quot; class=&quot;close-btn&quot;&gt;&lt;i class=&quot;fa-solid fa-xmark&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+
+            &lt;label&gt;Task Title&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;task-title&quot; name=&quot;title&quot; placeholder=&quot;What needs to be done?&quot;&gt;
+
+            &lt;label&gt;Description&lt;/label&gt;
+            &lt;textarea id=&quot;task-description&quot; name=&quot;description&quot; rows=&quot;3&quot; placeholder=&quot;Add details...&quot;&gt;&lt;/textarea&gt;
+
+            &lt;div class=&quot;subtasks-section&quot;&gt;
+                &lt;label&gt;Subtasks&lt;/label&gt;
+                &lt;div class=&quot;add-subtask&quot; style=&quot;display: flex; gap: 8px; margin-top: 8px;&quot;&gt;
+                    &lt;input type=&quot;text&quot; id=&quot;subtask-input&quot; style=&quot;flex-grow: 1;&quot; placeholder=&quot;Add a subtask&quot;&gt;
+                    &lt;button type=&quot;button&quot; id=&quot;add-subtask-btn&quot; class=&quot;btn-aqua&quot;&gt;&lt;i class=&quot;fa-solid fa-plus&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;subtask-list&quot; style=&quot;margin-top: 12px;&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;task-form-unique-grid&quot;&gt;
+                &lt;div&gt;
+                    &lt;label&gt;Due Date&lt;/label&gt;
+                    &lt;input type=&quot;datetime-local&quot; name=&quot;due_date&quot; id=&quot;task-due&quot; style=&quot;width: 100%;&quot;&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                    &lt;label&gt;Priority&lt;/label&gt;
+                    &lt;select name=&quot;priority&quot; id=&quot;task-priority&quot; style=&quot;width: 100%;&quot;&gt;
+                        &lt;option value=&quot;low&quot;&gt;Low&lt;/option&gt;
+                        &lt;option value=&quot;medium&quot; selected&gt;Medium&lt;/option&gt;
+                        &lt;option value=&quot;high&quot;&gt;High&lt;/option&gt;
+                    &lt;/select&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;label&gt;Category&lt;/label&gt;
+            &lt;select name=&quot;category_id&quot; id=&quot;category_id&quot;&gt;
+                &lt;option disabled selected&gt;Select Category&lt;/option&gt;
+                @php $global_categories = \App\Models\Category::all(); @endphp
+                @foreach ($global_categories as $category)
+                    &lt;option value=&quot;{{ $category-&gt;id }}&quot;&gt;{{ $category-&gt;name }}&lt;/option&gt;
+                @endforeach
+            &lt;/select&gt;
+
+            &lt;button type=&quot;button&quot; onclick=&quot;storeTask()&quot; class=&quot;btn-aqua&quot; style=&quot;justify-content: center; margin-top: 16px;&quot;&gt;Add Task&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+      function toggleSidebar() {
+        document.querySelector(&#039;.sidebar&#039;).classList.toggle(&#039;active&#039;);
+      }
+
+      function toggleAddForm() {
+          const form = document.querySelector(&#039;.add_Task_Form&#039;);
+          if (form) form.classList.toggle(&#039;active&#039;);
+      }
+
+      // Subtasks Logic for Global Modal
+      document.addEventListener(&#039;click&#039;, function(e) {
+          if (e.target &amp;&amp; e.target.id === &#039;add-subtask-btn&#039; || e.target.closest(&#039;#add-subtask-btn&#039;)) {
+              addSubtaskToList(&quot;subtask-input&quot;, &quot;subtask-list&quot;);
+          }
+      });
+
+      function addSubtaskToList(inputId, listId) {
+          const input = document.getElementById(inputId);
+          const list = document.getElementById(listId);
+          if (!input || !list) return;
+          const title = input.value.trim();
+          if (!title) return;
+
+          list.insertAdjacentHTML(&quot;beforeend&quot;, `
+              &lt;div class=&quot;subtask-item&quot; data-title=&quot;${title}&quot;&gt;
+                  &lt;span&gt;${title}&lt;/span&gt;
+                  &lt;button type=&quot;button&quot; class=&quot;task-action delete&quot; onclick=&quot;this.parentElement.remove()&quot;&gt;
+                      &lt;i class=&quot;fa-regular fa-trash-can&quot;&gt;&lt;/i&gt;
+                  &lt;/button&gt;
+              &lt;/div&gt;
+          `);
+          input.value = &#039;&#039;;
+      }
+
+      function getSubtasks(listId) {
+          const subtasks = [];
+          document.querySelectorAll(`#${listId} .subtask-item`).forEach(item =&gt; {
+              subtasks.push(item.dataset.title);
+          });
+          return subtasks;
+      }
+
+      function storeTask() {
+          const taskData = {
+              title: document.getElementById(&quot;task-title&quot;).value,
+              description: document.getElementById(&quot;task-description&quot;).value,
+              due_date: document.getElementById(&quot;task-due&quot;).value,
+              priority: document.getElementById(&quot;task-priority&quot;).value,
+              category_id: document.getElementById(&quot;category_id&quot;).value,
+              subtasks: getSubtasks(&quot;subtask-list&quot;),
+              _token: &#039;{{ csrf_token() }}&#039;,
+          };
+
+          axios.post(&quot;/tasks&quot;, taskData)
+            .then((response) =&gt; {
+                document.getElementById(&quot;addTaskForm&quot;).reset();
+                document.getElementById(&quot;subtask-list&quot;).innerHTML = &#039;&#039;;
+
+                // Update Total Counter if exists
+                const totalCount = document.getElementById(&quot;total-tasks-count&quot;);
+                if (totalCount) {
+                    let current = parseInt(totalCount.innerText) || 0;
+                    totalCount.innerText = current + 1;
+                }
+
+                toggleAddForm();
+
+                // Clear all filters so the new task is visible, then refresh the list
+                const searchEl = document.getElementById(&#039;search-tasks&#039;);
+                const catEl = document.getElementById(&#039;filter-category&#039;);
+                const priEl = document.getElementById(&#039;filter-priority&#039;);
+                const statEl = document.getElementById(&#039;filter-status&#039;);
+                if (searchEl) searchEl.value = &#039;&#039;;
+                if (catEl) catEl.value = &#039;&#039;;
+                if (priEl) priEl.value = &#039;&#039;;
+                if (statEl) statEl.value = &#039;&#039;;
+
+                // Refresh list with fresh data from server (not stale cached HTML)
+                if (typeof refreshTaskList === &#039;function&#039;) {
+                    refreshTaskList();
+                } else {
+                    location.reload();
+                }
+            })
+            .catch((error) =&gt; {
+                alert(&quot;Error adding task: &quot; + (error.response.data.message || &#039;Unknown error&#039;));
+            });
+      }
+
+      // Theme Toggle Logic
+      function updateThemeUI() {
+          const isDark = document.documentElement.classList.contains(&#039;dark-mode&#039;);
+          const toggleIcon = document.getElementById(&#039;theme-toggle-icon&#039;);
+          if (toggleIcon) {
+              if (isDark) {
+                  toggleIcon.className = &#039;fa-solid fa-sun&#039;;
+                  toggleIcon.style.color = &#039;#f59e0b&#039;;
+              } else {
+                  toggleIcon.className = &#039;fa-regular fa-moon&#039;;
+                  toggleIcon.style.color = &#039;var(--text-muted)&#039;;
+              }
+          }
+      }
+
+      function toggleTheme() {
+          const docEl = document.documentElement;
+          docEl.classList.toggle(&#039;dark-mode&#039;);
+
+          const isDark = docEl.classList.contains(&#039;dark-mode&#039;);
+          localStorage.setItem(&#039;theme&#039;, isDark ? &#039;dark&#039; : &#039;light&#039;);
+          updateThemeUI();
+      }
+
+      // Initialize Theme UI on DOMContentLoaded
+      document.addEventListener(&#039;DOMContentLoaded&#039;, updateThemeUI);
+
+      // --- Profile Modal Logic ---
+      function openProfileModal() {
+          const form = document.getElementById(&#039;profileModal&#039;);
+          if (form) form.classList.add(&#039;active&#039;);
+      }
+
+      function closeProfileModal() {
+          const form = document.getElementById(&#039;profileModal&#039;);
+          if (form) form.classList.remove(&#039;active&#039;);
+      }
+
+      function previewProfileImage(event) {
+          const file = event.target.files[0];
+          if (file) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                  document.getElementById(&#039;profile-preview-img&#039;).src = e.target.result;
+              }
+              reader.readAsDataURL(file);
+          }
+      }
+
+      function updateProfile() {
+          const form = document.getElementById(&#039;updateProfileForm&#039;);
+          const formData = new FormData(form);
+
+          axios.post(&quot;/profile/update&quot;, formData)
+            .then((response) =&gt; {
+                if (response.data.success) {
+                    // Update Sidebar instantly
+                    const sidebarName = document.getElementById(&#039;sidebar-profile-name&#039;);
+                    const sidebarImg = document.getElementById(&#039;sidebar-profile-img&#039;);
+                    
+                    if(sidebarName) sidebarName.textContent = response.data.name;
+                    if(sidebarImg) sidebarImg.src = response.data.profile_image_url;
+
+                    closeProfileModal();
+                }
+            })
+            .catch((error) =&gt; {
+                alert(&quot;Error updating profile: &quot; + (error.response?.data?.message || &#039;Unknown error&#039;));
+            });
+      }
+    &lt;/script&gt;
+
+    {{-- Profile Edit Modal --}}
+    &lt;div class=&quot;add_Task_Form&quot; id=&quot;profileModal&quot;&gt;
+        &lt;form onsubmit=&quot;updateProfile(); return false;&quot; id=&quot;updateProfileForm&quot; class=&quot;add_Task&quot; enctype=&quot;multipart/form-data&quot;&gt;
+            @csrf
+            &lt;h2 class=&quot;form-title&quot;&gt;Edit Profile&lt;/h2&gt;
+            &lt;button type=&quot;button&quot; onclick=&quot;closeProfileModal()&quot; class=&quot;close-btn&quot;&gt;&lt;i class=&quot;fa-solid fa-xmark&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+
+            &lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 16px;&quot;&gt;
+                &lt;div style=&quot;width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 3px solid var(--accent-color); position: relative; cursor: pointer;&quot; onclick=&quot;document.getElementById(&#039;profile_image_input&#039;).click()&quot;&gt;
+                    &lt;img id=&quot;profile-preview-img&quot; src=&quot;{{ Auth::user()-&gt;profile_image_url }}&quot; alt=&quot;Profile Preview&quot; style=&quot;width: 100%; height: 100%; object-fit: cover;&quot;&gt;
+                    &lt;div style=&quot;position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); padding: 4px; text-align: center; color: white;&quot;&gt;
+                        &lt;i class=&quot;fa-solid fa-camera&quot;&gt;&lt;/i&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;input type=&quot;file&quot; id=&quot;profile_image_input&quot; name=&quot;profile_image&quot; accept=&quot;image/*&quot; style=&quot;display: none;&quot; onchange=&quot;previewProfileImage(event)&quot;&gt;
+            &lt;/div&gt;
+
+            &lt;label&gt;Name&lt;/label&gt;
+            &lt;input type=&quot;text&quot; name=&quot;name&quot; value=&quot;{{ Auth::user()-&gt;name }}&quot; required&gt;
+
+            &lt;button type=&quot;button&quot; onclick=&quot;updateProfile()&quot; class=&quot;btn-aqua&quot; style=&quot;justify-content: center; margin-top: 16px;&quot;&gt;Save Changes&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Sidebar View (القائمة الجانبية)</span>
+                <span class="file-path">resources/views/layout/sidebar.blade.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                يمثل الشريط الجانبي للتطبيق. يعرض صورة الملف الشخصي والاسم للمستخدم الحالي بديناميكية مع زر التعديل، ويحتوي على روابط التنقل بين الأقسام المختلفة (المهام اليومية، المهمة، المكتملة، وسلة المهملات) مع العدادات الحية لكل قسم.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">&lt;div class=&quot;sidebar&quot;&gt;
+  &lt;button class=&quot;close-sidebar lt-768&quot; onclick=&quot;toggleSidebar()&quot;&gt;&lt;i class=&quot;fa-solid fa-xmark&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+  &lt;div class=&quot;profile&quot; onclick=&quot;openProfileModal()&quot; style=&quot;cursor: pointer;&quot; title=&quot;Edit Profile&quot;&gt;
+    &lt;div class=&quot;profile-avatar&quot; style=&quot;position: relative;&quot;&gt;
+      &lt;img id=&quot;sidebar-profile-img&quot; src=&quot;{{ Auth::user()-&gt;profile_image_url }}&quot; alt=&quot;Profile&quot;&gt;
+      &lt;div class=&quot;avatar-edit-overlay&quot;&gt;
+        &lt;i class=&quot;fa-solid fa-camera&quot;&gt;&lt;/i&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;span class=&quot;profile-name&quot; id=&quot;sidebar-profile-name&quot;&gt;{{ Auth::user()-&gt;name }}&lt;/span&gt;
+  &lt;/div&gt;
+  
+  &lt;div class=&quot;links&quot;&gt;
+    &lt;ul&gt;
+      &lt;li class=&quot;{{ Route::is(&#039;dashboard&#039;) ? &#039;active&#039; : &#039;&#039; }}&quot;&gt;
+        &lt;a href=&quot;{{ route(&#039;dashboard&#039;) }}&quot;&gt;
+          &lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fa-solid fa-house&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+          &lt;span class=&quot;title&quot;&gt;Dashboard&lt;/span&gt;
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class=&quot;{{ Route::is(&#039;today&#039;) ? &#039;active&#039; : &#039;&#039; }}&quot;&gt;
+        &lt;a href=&quot;{{ route(&#039;today&#039;) }}&quot;&gt;
+          &lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fa-solid fa-calendar-day&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+          &lt;span class=&quot;title&quot;&gt;Today&lt;/span&gt;
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class=&quot;{{ Route::is(&#039;upcoming&#039;) ? &#039;active&#039; : &#039;&#039; }}&quot;&gt;
+        &lt;a href=&quot;{{ route(&#039;upcoming&#039;) }}&quot;&gt;
+          &lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fa-solid fa-calendar-days&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+          &lt;span class=&quot;title&quot;&gt;Upcoming&lt;/span&gt;
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class=&quot;{{ Route::is(&#039;important&#039;) ? &#039;active&#039; : &#039;&#039; }}&quot;&gt;
+        &lt;a href=&quot;{{ route(&#039;important&#039;) }}&quot;&gt;
+          &lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fa-solid fa-star&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+          &lt;span class=&quot;title&quot;&gt;Important&lt;/span&gt;
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class=&quot;{{ Route::is(&#039;completed&#039;) ? &#039;active&#039; : &#039;&#039; }}&quot;&gt;
+        &lt;a href=&quot;{{ route(&#039;completed&#039;) }}&quot;&gt;
+          &lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fa-solid fa-circle-check&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+          &lt;span class=&quot;title&quot;&gt;Completed&lt;/span&gt;
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class=&quot;{{ Route::is(&#039;categories.index&#039;) ? &#039;active&#039; : &#039;&#039; }}&quot;&gt;
+        &lt;a href=&quot;{{ route(&#039;categories.index&#039;) }}&quot;&gt;
+          &lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fa-solid fa-folder&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+          &lt;span class=&quot;title&quot;&gt;Categories&lt;/span&gt;
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class=&quot;{{ Route::is(&#039;trash&#039;) ? &#039;active&#039; : &#039;&#039; }}&quot;&gt;
+        &lt;a href=&quot;{{ route(&#039;trash&#039;) }}&quot;&gt;
+          &lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fa-solid fa-trash-can&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+          &lt;span class=&quot;title&quot;&gt;Trash&lt;/span&gt;
+        &lt;/a&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Dashboard View (لوحة التحكم الرئيسية)</span>
+                <span class="file-path">resources/views/Dashboard.blade.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                الصفحة الأساسية التي يعرض فيها المستخدم مهامه. تحتوي على أشرطة الإحصائيات العلوية، الفلاتر المتطورة (البحث، التصنيف، الأهمية)، مساحة عرض الكروت الخاصة بالمهام، وآليات الإضافة السريعة والتعديل اللحظي بدون تحديث.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">@extends(&#039;layout.layout&#039;)
+@section(&#039;title&#039;, $title ?? &#039;Dashboard&#039;)
+@section($activeNav ?? &#039;Dashboard_nav&#039;, &#039;active&#039;)
+
+@if(isset($activeNav) &amp;&amp; $activeNav == &#039;Trash_nav&#039;)
+  @section(&#039;CustomCss&#039;)
+    #create-task-btn { display: none !important; }
+  @endsection
+@endif
+
+@section(&#039;content&#039;)
+  &lt;div style=&quot;margin: 24px 36px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;&quot;&gt;
+      &lt;h1 style=&quot;font-family: var(--font-accent); font-size: 1.8rem; margin: 0; color: var(--text-main);&quot;&gt;
+          {{ $title ?? &#039;Dashboard&#039; }}
+      &lt;/h1&gt;
+      @if(isset($activeNav) &amp;&amp; $activeNav == &#039;Trash_nav&#039; &amp;&amp; count($tasks) &gt; 0)
+        &lt;button onclick=&quot;emptyTrash()&quot; class=&quot;btn-danger&quot; style=&quot;display: flex; align-items: center; gap: 8px; background: var(--overdue-color); color: #fff; padding: 10px 20px; border: none; border-radius: 12px; font-weight: 600; font-family: var(--font-main); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);&quot;&gt;
+            &lt;i class=&quot;fa-solid fa-trash-can&quot;&gt;&lt;/i&gt; Empty Trash
+        &lt;/button&gt;
+      @endif
+  &lt;/div&gt;
+
+  &lt;div class=&quot;task-status&quot;&gt;
+    &lt;div class=&quot;total-tasks tasks-card&quot;&gt;
+      &lt;div class=&quot;status-info&quot;&gt;
+        &lt;span class=&quot;status-title&quot;&gt;Total Tasks&lt;/span&gt;
+        &lt;span class=&quot;status-number&quot; id=&quot;total-tasks-count&quot;&gt;{{ $stats[&#039;total&#039;] }}&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;status-icon&quot;&gt;
+        &lt;i class=&quot;fa-solid fa-list-check&quot;&gt;&lt;/i&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;completed-tasks tasks-card&quot;&gt;
+      &lt;div class=&quot;status-info&quot;&gt;
+        &lt;span class=&quot;status-title&quot;&gt;Completed&lt;/span&gt;
+        &lt;span class=&quot;status-number&quot;&gt;{{ $stats[&#039;completed&#039;] }}&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;status-icon&quot;&gt;
+        &lt;i class=&quot;fa-solid fa-check-double&quot;&gt;&lt;/i&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;overdue-tasks tasks-card&quot;&gt;
+      &lt;div class=&quot;status-info&quot;&gt;
+        &lt;span class=&quot;status-title&quot;&gt;Overdue&lt;/span&gt;
+        &lt;span class=&quot;status-number&quot;&gt;{{ $stats[&#039;overdue&#039;] }}&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;status-icon&quot;&gt;
+        &lt;i class=&quot;fa-solid fa-clock-rotate-left&quot;&gt;&lt;/i&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  {{-- Real-Time Search &amp; Multi-Filter Bar --}}
+  &lt;div class=&quot;filter-bar&quot; style=&quot;margin: 24px 36px; padding: 20px; background: var(--card-bg); border-radius: 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; border: 1px solid var(--border-color); transition: all 0.3s ease;&quot;&gt;
+      &lt;div style=&quot;flex: 1; min-width: 250px; position: relative;&quot;&gt;
+          &lt;i class=&quot;fa-solid fa-magnifying-glass&quot; style=&quot;position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.95rem;&quot;&gt;&lt;/i&gt;
+          &lt;input type=&quot;text&quot; id=&quot;search-tasks&quot; placeholder=&quot;Search tasks by title or description...&quot; oninput=&quot;if(event.isTrusted) filterTasks()&quot; autocomplete=&quot;off&quot; data-form-type=&quot;other&quot; data-lpignore=&quot;true&quot; style=&quot;width: 100%; padding: 12px 16px 12px 44px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; box-sizing: border-box; transition: all 0.3s ease;&quot;&gt;
+      &lt;/div&gt;
+      
+      &lt;div style=&quot;display: flex; flex-wrap: wrap; gap: 12px; width: auto;&quot;&gt;
+          &lt;select id=&quot;filter-category&quot; onchange=&quot;if(event.isTrusted) filterTasks()&quot; autocomplete=&quot;off&quot; data-form-type=&quot;other&quot; style=&quot;padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;&quot;&gt;
+              &lt;option value=&quot;&quot;&gt;All Categories&lt;/option&gt;
+              @foreach ($categories as $category)
+                  &lt;option value=&quot;{{ $category-&gt;id }}&quot;&gt;{{ $category-&gt;name }}&lt;/option&gt;
+              @endforeach
+          &lt;/select&gt;
+
+          &lt;select id=&quot;filter-priority&quot; onchange=&quot;if(event.isTrusted) filterTasks()&quot; autocomplete=&quot;off&quot; data-form-type=&quot;other&quot; style=&quot;padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;&quot;&gt;
+              &lt;option value=&quot;&quot;&gt;All Priorities&lt;/option&gt;
+              &lt;option value=&quot;low&quot;&gt;Low&lt;/option&gt;
+              &lt;option value=&quot;medium&quot;&gt;Medium&lt;/option&gt;
+              &lt;option value=&quot;high&quot;&gt;High&lt;/option&gt;
+          &lt;/select&gt;
+
+          &lt;select id=&quot;filter-status&quot; onchange=&quot;if(event.isTrusted) filterTasks()&quot; autocomplete=&quot;off&quot; data-form-type=&quot;other&quot; style=&quot;padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;&quot;&gt;
+              &lt;option value=&quot;&quot;&gt;All Statuses&lt;/option&gt;
+              &lt;option value=&quot;pending&quot;&gt;Pending&lt;/option&gt;
+              &lt;option value=&quot;in progress&quot;&gt;In Progress&lt;/option&gt;
+              &lt;option value=&quot;completed&quot;&gt;Completed&lt;/option&gt;
+          &lt;/select&gt;
+          
+          &lt;button onclick=&quot;resetFilters()&quot; style=&quot;padding: 12px 16px; background: var(--border-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;&quot;&gt;
+              &lt;i class=&quot;fa-solid fa-filter-circle-xmark&quot;&gt;&lt;/i&gt; Reset
+          &lt;/button&gt;
+      &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;tasks-list&quot;&gt;
+    @foreach ($tasks as $task)
+      @php
+        $totalSubtasks = count($task[&#039;subtasks&#039;]);
+        $completedSubtasks = collect($task[&#039;subtasks&#039;])-&gt;where(&#039;is_completed&#039;, true)-&gt;count();
+        $progress = $totalSubtasks &gt; 0 ? ($completedSubtasks / $totalSubtasks) * 100 : ($task[&#039;status&#039;] == &#039;completed&#039; ? 100 : 0);
+      @endphp
+      @php
+        $isOverdueTask = ($task[&#039;status&#039;] != &#039;completed&#039; &amp;&amp; \Carbon\Carbon::parse($task[&#039;due_date&#039;])-&gt;isPast());
+      @endphp
+      &lt;div class=&quot;task {{ $task[&#039;status&#039;] == &#039;completed&#039; ? &#039;completed&#039; : &#039;&#039; }} {{ $isOverdueTask ? &#039;overdue&#039; : &#039;&#039; }}&quot; id=&quot;task-{{ $task[&#039;id&#039;] }}&quot; data-priority=&quot;{{ strtolower($task[&#039;priority&#039;]) }}&quot; data-category=&quot;{{ $task[&#039;category_id&#039;] ?? &#039;&#039; }}&quot; data-status=&quot;{{ strtolower($task[&#039;status&#039;]) }}&quot; data-title=&quot;{{ strtolower($task[&#039;title&#039;]) }}&quot; data-desc=&quot;{{ strtolower($task[&#039;description&#039;] ?? &#039;&#039;) }}&quot;&gt;
+        &lt;div style=&quot;display: flex; justify-content: space-between; align-items: center; width: 100%;&quot;&gt;
+            &lt;div style=&quot;display: flex; align-items: center; gap: 10px;&quot;&gt;
+                &lt;input type=&quot;checkbox&quot; class=&quot;task-select-checkbox&quot; data-id=&quot;{{ $task[&#039;id&#039;] }}&quot; onchange=&quot;toggleSelectTask(this)&quot; style=&quot;width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent-color); border-radius: 4px; border: 1px solid var(--border-color); background: var(--input-bg); transition: all 0.3s ease;&quot;&gt;
+                &lt;div class=&quot;task-catigory&quot; style=&quot;margin: 0;&quot;&gt;
+                    &lt;span&gt;{{ $task[&#039;category_name&#039;] }}&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;span class=&quot;status-badge {{ $task[&#039;status&#039;] }}&quot;&gt;{{ $task[&#039;status&#039;] }}&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;task-title&quot;&gt;
+          &lt;a href=&quot;/task/{{ $task[&#039;id&#039;] }}&quot;&gt; {{ $task[&#039;title&#039;] }}&lt;/a&gt;
+          @if($isOverdueTask)
+            &lt;span class=&quot;overdue-badge&quot;&gt;&lt;i class=&quot;fa-solid fa-circle-exclamation&quot;&gt;&lt;/i&gt; Overdue&lt;/span&gt;
+          @endif
+        &lt;/div&gt;
+
+        &lt;div class=&quot;progress-container&quot; title=&quot;{{ $totalSubtasks &gt; 0 ? $completedSubtasks . &#039;/&#039; . $totalSubtasks . &#039; subtasks&#039; : ($task[&#039;status&#039;] == &#039;completed&#039; ? &#039;Completed&#039; : &#039;Pending&#039;) }}&quot;&gt;
+            &lt;div class=&quot;progress-bar&quot; style=&quot;width: {{ $progress }}%&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;task-countdown&quot; data-due=&quot;{{ $task[&#039;due_date&#039;] }}&quot; data-status=&quot;{{ $task[&#039;status&#039;] }}&quot;&gt;
+            @if($task[&#039;status&#039;] == &#039;completed&#039;)
+                &lt;i class=&quot;fa-solid fa-circle-check&quot;&gt;&lt;/i&gt; &lt;span class=&quot;countdown-text&quot;&gt;Completed&lt;/span&gt;
+            @else
+                &lt;i class=&quot;fa-solid fa-hourglass-half&quot;&gt;&lt;/i&gt; &lt;span class=&quot;countdown-text&quot;&gt;Calculating...&lt;/span&gt;
+            @endif
+        &lt;/div&gt;
+
+        &lt;div class=&quot;task-bar&quot;&gt;
+          &lt;div class=&quot;task-date&quot;&gt;
+            &lt;i class=&quot;fa-regular fa-calendar&quot;&gt;&lt;/i&gt; {{ $task[&#039;formatted_date&#039;] }}
+          &lt;/div&gt;
+          &lt;div class=&quot;task-actions&quot;&gt;
+            @if(isset($activeNav) &amp;&amp; $activeNav == &#039;Trash_nav&#039;)
+              &lt;button class=&quot;task-action restore&quot; onclick=&quot;restoreTask({{ $task[&#039;id&#039;] }})&quot; title=&quot;Restore Task&quot; style=&quot;color: var(--completed-color); font-size: 1.15rem; transition: transform 0.2s;&quot;&gt;
+                  &lt;i class=&quot;fa-solid fa-arrow-rotate-left&quot;&gt;&lt;/i&gt;
+              &lt;/button&gt;
+              &lt;button class=&quot;task-action delete-permanent&quot; onclick=&quot;forceDeleteTask({{ $task[&#039;id&#039;] }})&quot; title=&quot;Delete Permanently&quot; style=&quot;color: var(--overdue-color); font-size: 1.15rem; transition: transform 0.2s;&quot;&gt;
+                  &lt;i class=&quot;fa-solid fa-trash&quot;&gt;&lt;/i&gt;
+              &lt;/button&gt;
+            @else
+              &lt;button class=&quot;task-action complete&quot; onclick=&quot;toggleComplete({{ $task[&#039;id&#039;] }}, &#039;{{ $task[&#039;status&#039;] }}&#039;)&quot; title=&quot;Mark as {{ $task[&#039;status&#039;] == &#039;completed&#039; ? &#039;pending&#039; : &#039;completed&#039; }}&quot;&gt;
+                  &lt;i class=&quot;fa-solid {{ $task[&#039;status&#039;] == &#039;completed&#039; ? &#039;fa-circle-check&#039; : &#039;fa-circle&#039; }}&quot; style=&quot;{{ $task[&#039;status&#039;] == &#039;completed&#039; ? &#039;color: var(--completed-color);&#039; : &#039;&#039; }}&quot;&gt;&lt;/i&gt;
+              &lt;/button&gt;
+              &lt;button class=&quot;task-action important&quot; onclick=&quot;toggleImportant({{ $task[&#039;id&#039;] }}, &#039;{{ $task[&#039;priority&#039;] }}&#039;)&quot; title=&quot;Mark as {{ $task[&#039;priority&#039;] == &#039;high&#039; ? &#039;Normal&#039; : &#039;Important&#039; }}&quot;&gt;
+                  &lt;i class=&quot;{{ $task[&#039;priority&#039;] == &#039;high&#039; ? &#039;fa-solid&#039; : &#039;fa-regular&#039; }} fa-star&quot; style=&quot;{{ $task[&#039;priority&#039;] == &#039;high&#039; ? &#039;color: #f59e0b;&#039; : &#039;&#039; }}&quot;&gt;&lt;/i&gt;
+              &lt;/button&gt;
+              &lt;button class=&quot;task-action edit&quot; onclick=&#039;openUpdateForm({{ json_encode($task) }})&#039;&gt;
+                  &lt;i class=&quot;fa-regular fa-pen-to-square&quot;&gt;&lt;/i&gt;
+              &lt;/button&gt;
+              &lt;button class=&quot;task-action delete&quot; onclick=&quot;deleteTask({{ $task[&#039;id&#039;] }})&quot;&gt;
+                  &lt;i class=&quot;fa-regular fa-trash-can&quot;&gt;&lt;/i&gt;
+              &lt;/button&gt;
+            @endif
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    @endforeach
+  &lt;/div&gt;
+
+  &lt;div class=&quot;pagination-container&quot;&gt;
+      {{ $tasks-&gt;links(&#039;pagination::simple-bootstrap-4&#039;) }}
+  &lt;/div&gt;
+
+  {{-- Floating Bulk Action Bar --}}
+  &lt;div id=&quot;bulk-action-bar&quot; style=&quot;position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 14px 28px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35); display: flex; align-items: center; gap: 20px; z-index: 10000; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: #fff;&quot;&gt;
+      &lt;div style=&quot;display: flex; align-items: center; gap: 8px;&quot;&gt;
+          &lt;input type=&quot;checkbox&quot; id=&quot;select-all-tasks&quot; onchange=&quot;toggleSelectAll(this)&quot; style=&quot;width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent-color);&quot;&gt;
+          &lt;label for=&quot;select-all-tasks&quot; style=&quot;font-weight: 600; font-size: 0.95rem; cursor: pointer; font-family: var(--font-main);&quot;&gt;Select All&lt;/label&gt;
+      &lt;/div&gt;
+      &lt;div style=&quot;width: 1px; height: 24px; background: rgba(255, 255, 255, 0.2);&quot;&gt;&lt;/div&gt;
+      &lt;span id=&quot;bulk-select-count&quot; style=&quot;font-family: var(--font-accent); font-weight: 600; font-size: 0.95rem;&quot;&gt;0 Selected&lt;/span&gt;
+      &lt;div style=&quot;display: flex; gap: 12px;&quot;&gt;
+          @if(isset($activeNav) &amp;&amp; $activeNav == &#039;Trash_nav&#039;)
+              &lt;button onclick=&quot;bulkRestore()&quot; style=&quot;padding: 10px 16px; font-size: 0.9rem; background: var(--completed-color); color: #fff; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600;&quot;&gt;
+                  &lt;i class=&quot;fa-solid fa-arrow-rotate-left&quot;&gt;&lt;/i&gt; Restore Selected
+              &lt;/button&gt;
+              &lt;button onclick=&quot;bulkForceDelete()&quot; style=&quot;padding: 10px 16px; font-size: 0.9rem; background: var(--overdue-color); color: #fff; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600;&quot;&gt;
+                  &lt;i class=&quot;fa-solid fa-trash&quot;&gt;&lt;/i&gt; Delete Permanently
+              &lt;/button&gt;
+          @else
+              &lt;button onclick=&quot;bulkDelete()&quot; style=&quot;padding: 10px 16px; font-size: 0.9rem; background: var(--overdue-color); color: #fff; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600;&quot;&gt;
+                  &lt;i class=&quot;fa-regular fa-trash-can&quot;&gt;&lt;/i&gt; Delete Selected
+              &lt;/button&gt;
+          @endif
+      &lt;/div&gt;
+  &lt;/div&gt;
+
+  {{-- Update Task Form --}}
+
+  &lt;div class=&quot;update_Task_Form&quot;&gt;
+    &lt;form onsubmit=&quot;updateTask(); return false;&quot; id=&quot;updateTaskForm&quot; class=&quot;update_Task&quot;&gt;
+      @csrf
+      &lt;h2 class=&quot;form-title&quot;&gt;Update Task&lt;/h2&gt;
+      &lt;button type=&quot;button&quot; onclick=&quot;toggleUpdateForm()&quot; class=&quot;close-btn&quot;&gt;&lt;i class=&quot;fa-solid fa-xmark&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+
+      &lt;input type=&quot;hidden&quot; id=&quot;update-task-id&quot;&gt;
+
+      &lt;label&gt;Task Title&lt;/label&gt;
+      &lt;input type=&quot;text&quot; id=&quot;update-task-title&quot; name=&quot;title&quot;&gt;
+
+      &lt;label&gt;Description&lt;/label&gt;
+      &lt;textarea id=&quot;update-task-description&quot; name=&quot;description&quot; rows=&quot;3&quot;&gt;&lt;/textarea&gt;
+
+      &lt;div class=&quot;subtasks-section&quot;&gt;
+        &lt;label&gt;Subtasks&lt;/label&gt;
+        &lt;div class=&quot;add-subtask&quot; style=&quot;display: flex; gap: 8px; margin-top: 8px;&quot;&gt;
+          &lt;input type=&quot;text&quot; id=&quot;update-subtask-input&quot; style=&quot;flex-grow: 1;&quot;&gt;
+          &lt;button type=&quot;button&quot; id=&quot;update-add-subtask-btn&quot; class=&quot;btn-aqua&quot;&gt;&lt;i class=&quot;fa-solid fa-plus&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div id=&quot;update-subtask-list&quot; style=&quot;margin-top: 12px;&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div style=&quot;display: grid; grid-template-columns: 1fr 1fr; gap: 16px;&quot;&gt;
+          &lt;div&gt;
+              &lt;label&gt;Due Date&lt;/label&gt;
+              &lt;input type=&quot;datetime-local&quot; name=&quot;due_date&quot; id=&quot;update-task-due&quot; style=&quot;width: 100%;&quot;&gt;
+          &lt;/div&gt;
+          &lt;div&gt;
+              &lt;label&gt;Priority&lt;/label&gt;
+              &lt;select name=&quot;priority&quot; id=&quot;update-task-priority&quot; style=&quot;width: 100%;&quot;&gt;
+                  &lt;option value=&quot;low&quot;&gt;Low&lt;/option&gt;
+                  &lt;option value=&quot;medium&quot;&gt;Medium&lt;/option&gt;
+                  &lt;option value=&quot;high&quot;&gt;High&lt;/option&gt;
+              &lt;/select&gt;
+          &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;label&gt;Category&lt;/label&gt;
+      &lt;select name=&quot;category_id&quot; id=&quot;update-category-id&quot;&gt;
+        &lt;option disabled selected&gt;Select Category&lt;/option&gt;
+        @foreach ($categories as $category)
+          &lt;option value=&quot;{{ $category-&gt;id }}&quot;&gt;{{ $category-&gt;name }}&lt;/option&gt;
+        @endforeach
+      &lt;/select&gt;
+
+      &lt;button type=&quot;button&quot; onclick=&quot;updateTask()&quot; class=&quot;btn-aqua&quot; style=&quot;justify-content: center; margin-top: 16px;&quot;&gt;Update Task&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    // Global variable to know which page we are on
+    const activePage = &#039;{{ $activeNav ?? &quot;dashboard_nav&quot; }}&#039;;
+
+    // Cache the initial paginated tasks and pagination HTML to restore instantly on search reset
+    // Cache the initial paginated tasks and pagination HTML to restore instantly on search reset
+    let initialTasksHtml = document.querySelector(&#039;.tasks-list&#039;) ? document.querySelector(&#039;.tasks-list&#039;).innerHTML : &#039;&#039;;
+    let initialPaginationHtml = document.querySelector(&#039;.pagination-container&#039;) ? document.querySelector(&#039;.pagination-container&#039;).innerHTML : &#039;&#039;;
+
+    // Intercept standard pagination link clicks to make all transitions refresh-free!
+    document.addEventListener(&#039;DOMContentLoaded&#039;, () =&gt; {
+        document.addEventListener(&#039;click&#039;, function(e) {
+            const pageLink = e.target.closest(&#039;.pagination-container a&#039;);
+            if (pageLink) {
+                e.preventDefault();
+                const url = new URL(pageLink.href);
+                const page = url.searchParams.get(&#039;page&#039;) || 1;
+                window.history.pushState({page: page}, &#039;&#039;, `?page=${page}`);
+                refreshTaskList();
+            }
+        });
+    });
+
+    function buildTaskHtml(task) {
+      const isCompleted = task.status === &#039;completed&#039;;
+      const isHighPriority = task.priority.toLowerCase() === &#039;high&#039;;
+      const isOverdue = !isCompleted &amp;&amp; new Date(task.due_date) &lt; new Date();
+      const progress = task.subtasks.length &gt; 0
+        ? (task.subtasks.filter(s =&gt; s.is_completed).length / task.subtasks.length) * 100
+        : (isCompleted ? 100 : 0);
+
+      return `
+          &lt;div class=&quot;task ${isCompleted ? &#039;completed&#039; : &#039;&#039;} ${isOverdue ? &#039;overdue&#039; : &#039;&#039;}&quot; id=&quot;task-${task.id}&quot; data-priority=&quot;${task.priority.toLowerCase()}&quot; data-category=&quot;${task.category_id ?? &#039;&#039;}&quot; data-status=&quot;${task.status.toLowerCase()}&quot; data-title=&quot;${task.title.toLowerCase()}&quot; data-desc=&quot;${(task.description || &#039;&#039;).toLowerCase()}&quot;&gt;
+              &lt;div style=&quot;display: flex; justify-content: space-between; align-items: center; width: 100%;&quot;&gt;
+                  &lt;div style=&quot;display: flex; align-items: center; gap: 10px;&quot;&gt;
+                      &lt;input type=&quot;checkbox&quot; class=&quot;task-select-checkbox&quot; data-id=&quot;${task.id}&quot; onchange=&quot;toggleSelectTask(this)&quot; style=&quot;width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent-color); border-radius: 4px; border: 1px solid var(--border-color); background: var(--input-bg); transition: all 0.3s ease;&quot;&gt;
+                      &lt;div class=&quot;task-catigory&quot; style=&quot;margin: 0;&quot;&gt;&lt;span&gt;${task.category_name}&lt;/span&gt;&lt;/div&gt;
+                  &lt;/div&gt;
+                  &lt;span class=&quot;status-badge ${task.status}&quot;&gt;${task.status}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;task-title&quot;&gt;
+                  &lt;a href=&quot;/task/${task.id}&quot;&gt;${task.title}&lt;/a&gt;
+                  ${isOverdue ? &#039;&lt;span class=&quot;overdue-badge&quot;&gt;&lt;i class=&quot;fa-solid fa-circle-exclamation&quot;&gt;&lt;/i&gt; Overdue&lt;/span&gt;&#039; : &#039;&#039;}
+              &lt;/div&gt;
+              &lt;div class=&quot;progress-container&quot; title=&quot;${task.subtasks.length &gt; 0 ? `${task.subtasks.filter(s =&gt; s.is_completed).length}/${task.subtasks.length} subtasks` : (isCompleted ? &#039;Completed&#039; : &#039;Pending&#039;)}&quot;&gt;
+                  &lt;div class=&quot;progress-bar&quot; style=&quot;width: ${progress}%&quot;&gt;&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;task-countdown&quot; data-due=&quot;${task.due_date}&quot; data-status=&quot;${task.status}&quot;&gt;
+                  ${isCompleted 
+                    ? &#039;&lt;i class=&quot;fa-solid fa-circle-check&quot;&gt;&lt;/i&gt; &lt;span class=&quot;countdown-text&quot;&gt;Completed&lt;/span&gt;&#039; 
+                    : &#039;&lt;i class=&quot;fa-solid fa-hourglass-half&quot;&gt;&lt;/i&gt; &lt;span class=&quot;countdown-text&quot;&gt;Calculating...&lt;/span&gt;&#039;}
+              &lt;/div&gt;
+              &lt;div class=&quot;task-bar&quot;&gt;
+                  &lt;div class=&quot;task-date&quot;&gt;&lt;i class=&quot;fa-regular fa-calendar&quot;&gt;&lt;/i&gt; ${task.formatted_date}&lt;/div&gt;
+                  &lt;div class=&quot;task-actions&quot;&gt;
+                      &lt;button class=&quot;task-action complete&quot; onclick=&quot;toggleComplete(${task.id}, &#039;${task.status}&#039;)&quot;&gt;
+                          &lt;i class=&quot;fa-solid ${isCompleted ? &#039;fa-circle-check&#039; : &#039;fa-circle&#039;}&quot; style=&quot;${isCompleted ? &#039;color: var(--completed-color);&#039; : &#039;&#039;}&quot;&gt;&lt;/i&gt;
+                      &lt;/button&gt;
+                      &lt;button class=&quot;task-action important&quot; onclick=&quot;toggleImportant(${task.id}, &#039;${task.priority}&#039;)&quot;&gt;
+                          &lt;i class=&quot;${isHighPriority ? &#039;fa-solid&#039; : &#039;fa-regular&#039;} fa-star&quot; style=&quot;${isHighPriority ? &#039;color: #f59e0b;&#039; : &#039;&#039;}&quot;&gt;&lt;/i&gt;
+                      &lt;/button&gt;
+                      &lt;button class=&quot;task-action edit&quot; onclick=&#039;openUpdateForm(${JSON.stringify(task)})&#039;&gt;
+                          &lt;i class=&quot;fa-regular fa-pen-to-square&quot;&gt;&lt;/i&gt;
+                      &lt;/button&gt;
+                      &lt;button class=&quot;task-action delete&quot; onclick=&quot;deleteTask(${task.id})&quot;&gt;
+                          &lt;i class=&quot;fa-regular fa-trash-can&quot;&gt;&lt;/i&gt;
+                      &lt;/button&gt;
+                  &lt;/div&gt;
+              &lt;/div&gt;
+          &lt;/div&gt;`;
+    }
+
+    function toggleImportant(id, currentPriority) {
+      const newPriority = currentPriority.toLowerCase() === &#039;high&#039; ? &#039;medium&#039; : &#039;high&#039;;
+
+      axios.put(`/tasks/${id}`, {
+          priority: newPriority,
+          _token: document.querySelector(&#039;input[name=&quot;_token&quot;]&#039;).value
+        })
+        .then((response) =&gt; {
+          const task = response.data.data;
+          const taskEl = document.getElementById(`task-${task.id}`);
+
+          if (activePage.toLowerCase() === &#039;important_nav&#039; &amp;&amp; task.priority.toLowerCase() !== &#039;high&#039;) {
+              taskEl.remove();
+          } else {
+              taskEl.outerHTML = buildTaskHtml(task);
+              if (typeof updateCountdowns === &quot;function&quot;) updateCountdowns();
+          }
+        })
+        .catch((error) =&gt; {
+          alert(&quot;Error updating priority&quot;);
+        });
+    }
+
+    function toggleComplete(id, currentStatus) {
+      const newStatus = currentStatus === &#039;completed&#039; ? &#039;pending&#039; : &#039;completed&#039;;
+
+      axios.put(`/tasks/${id}`, {
+          status: newStatus,
+          _token: document.querySelector(&#039;input[name=&quot;_token&quot;]&#039;).value
+        })
+        .then((response) =&gt; {
+          const task = response.data.data;
+          const taskEl = document.getElementById(`task-${task.id}`);
+
+          if (activePage.toLowerCase() === &#039;completed_nav&#039; &amp;&amp; task.status !== &#039;completed&#039;) {
+              taskEl.remove();
+          } else {
+              taskEl.outerHTML = buildTaskHtml(task);
+              if (typeof updateCountdowns === &quot;function&quot;) updateCountdowns();
+          }
+
+          // Update stats on the fly
+          const completedCount = document.querySelector(&#039;.completed-tasks .status-number&#039;);
+          const overdueCount = document.querySelector(&#039;.overdue-tasks .status-number&#039;);
+
+          if(completedCount) {
+              let current = parseInt(completedCount.innerText);
+              completedCount.innerText = newStatus === &#039;completed&#039; ? current + 1 : current - 1;
+          }
+
+          if(overdueCount) {
+              const isPastDue = new Date(task.due_date) &lt; new Date();
+              if(isPastDue) {
+                  let current = parseInt(overdueCount.innerText) || 0;
+                  if (newStatus === &#039;completed&#039;) {
+                      overdueCount.innerText = Math.max(0, current - 1);
+                  } else {
+                      overdueCount.innerText = current + 1;
+                  }
+              }
+          }
+        })
+        .catch((error) =&gt; {
+          alert(&quot;Error updating status&quot;);
+        });
+    }
+
+    function updateCounter(amount) {
+      const countElement = document.getElementById(&quot;total-tasks-count&quot;);
+      if (countElement) {
+        let current = parseInt(countElement.innerText) || 0;
+        countElement.innerText = Math.max(0, current + amount);
+      }
+    }
+
+    function toggleUpdateForm() {
+        document.querySelector(&#039;.update_Task_Form&#039;).classList.toggle(&#039;active&#039;);
+    }
+
+    // ================== Tasks ==================
+
+    function deleteTask(id) {
+      if(!confirm(&#039;Are you sure you want to delete this task?&#039;)) return;
+
+      const taskEl = document.getElementById(`task-${id}`);
+      const isCompleted = taskEl.classList.contains(&#039;completed&#039;);
+      const isOverdue = taskEl.querySelector(&#039;.overdue-badge&#039;) !== null;
+
+      axios.delete(`/tasks/${id}`, {
+          headers: { &#039;X-CSRF-TOKEN&#039;: document.querySelector(&#039;input[name=&quot;_token&quot;]&#039;).value }
+        })
+        .then(() =&gt; {
+          // Dynamic slide up refresh!
+          refreshTaskList();
+
+          // Update Total
+          updateCounter(-1);
+
+          // Update Completed
+          if (isCompleted) {
+              const completedCount = document.querySelector(&#039;.completed-tasks .status-number&#039;);
+              if (completedCount) {
+                  let current = parseInt(completedCount.innerText) || 0;
+                  completedCount.innerText = Math.max(0, current - 1);
+              }
+          }
+
+          // Update Overdue
+          if (isOverdue) {
+              const overdueCount = document.querySelector(&#039;.overdue-tasks .status-number&#039;);
+              if (overdueCount) {
+                  let current = parseInt(overdueCount.innerText) || 0;
+                  overdueCount.innerText = Math.max(0, current - 1);
+              }
+          }
+        })
+        .catch((error) =&gt; {
+          alert(&quot;Error deleting task&quot;);
+        });
+    }
+
+    function restoreTask(id) {
+      if(!confirm(&#039;Are you sure you want to restore this task?&#039;)) return;
+
+      axios.post(`/tasks/${id}/restore`, {
+          _token: document.querySelector(&#039;input[name=&quot;_token&quot;]&#039;).value
+        })
+        .then(() =&gt; {
+          refreshTaskList();
+          updateCounter(1);
+        })
+        .catch((error) =&gt; {
+          alert(&quot;Error restoring task: &quot; + (error.response.data.message || &#039;Unknown error&#039;));
+        });
+    }
+
+    function forceDeleteTask(id) {
+      if(!confirm(&#039;WARNING: Are you sure you want to PERMANENTLY delete this task? This action cannot be undone!&#039;)) return;
+
+      axios.delete(`/tasks/${id}/force-delete`, {
+          headers: { &#039;X-CSRF-TOKEN&#039;: document.querySelector(&#039;input[name=&quot;_token&quot;]&#039;).value }
+        })
+        .then(() =&gt; {
+          refreshTaskList();
+        })
+        .catch((error) =&gt; {
+          alert(&quot;Error permanently deleting task: &quot; + (error.response.data.message || &#039;Unknown error&#039;));
+        });
+    }
+
+    function emptyTrash() {
+      if(!confirm(&#039;WARNING: Are you sure you want to PERMANENTLY delete ALL tasks in the recycle bin? This action CANNOT be undone!&#039;)) return;
+
+      axios.post(&#039;/tasks/empty-trash&#039;, {
+          _token: document.querySelector(&#039;input[name=&quot;_token&quot;]&#039;).value
+        })
+        .then(() =&gt; {
+          document.querySelectorAll(&#039;.tasks-list .task&#039;).forEach(el =&gt; el.remove());
+          updateCounter(0);
+          window.location.reload();
+        })
+        .catch((error) =&gt; {
+          alert(&quot;Error emptying recycle bin: &quot; + (error.response?.data?.message || &#039;Unknown error&#039;));
+        });
+    }
+
+    let searchDebounceTimeout = null;
+
+    function filterTasks(page = 1) {
+      const query = document.getElementById(&#039;search-tasks&#039;).value.toLowerCase().trim();
+      const category = document.getElementById(&#039;filter-category&#039;).value;
+      const priority = document.getElementById(&#039;filter-priority&#039;).value;
+      const status = document.getElementById(&#039;filter-status&#039;).value;
+
+      // If all filters are empty, instantly restore the initial paginated tasks &amp; pagination HTML
+      if (!query &amp;&amp; !category &amp;&amp; !priority &amp;&amp; !status) {
+          const container = document.querySelector(&#039;.tasks-list&#039;);
+          if (container &amp;&amp; initialTasksHtml) {
+              container.innerHTML = initialTasksHtml;
+          }
+          const pagContainer = document.querySelector(&#039;.pagination-container&#039;);
+          if (pagContainer &amp;&amp; initialPaginationHtml) {
+              pagContainer.innerHTML = initialPaginationHtml;
+              pagContainer.style.display = &#039;flex&#039;;
+          }
+          // Restart countdown timers for the active tasks
+          if (typeof startCountdownTimers === &#039;function&#039;) {
+              startCountdownTimers();
+          }
+          return;
+      }
+
+      // Perform paginated AJAX search &amp; multi-filtering across the entire database!
+      clearTimeout(searchDebounceTimeout);
+      searchDebounceTimeout = setTimeout(() =&gt; {
+          axios.get(&#039;/tasks/api-search&#039;, {
+              params: {
+                  search: query,
+                  category_id: category,
+                  priority: priority,
+                  status: status,
+                  active_nav: activePage,
+                  page: page
+              }
+          })
+          .then(response =&gt; {
+              const result = response.data;
+              const tasks = result.data;
+              const container = document.querySelector(&#039;.tasks-list&#039;);
+              container.innerHTML = &#039;&#039;;
+
+              if (tasks.length === 0) {
+                  container.innerHTML = `
+                      &lt;div style=&quot;grid-column: 1 / -1; text-align: center; padding: 60px 40px; color: var(--text-muted); font-family: var(--font-main);&quot;&gt;
+                          &lt;i class=&quot;fa-solid fa-folder-open&quot; style=&quot;font-size: 3rem; margin-bottom: 16px; color: var(--border-color);&quot;&gt;&lt;/i&gt;
+                          &lt;h3 style=&quot;margin: 0 0 8px 0; color: var(--text-main); font-size: 1.2rem;&quot;&gt;No Tasks Found&lt;/h3&gt;
+                          &lt;p style=&quot;margin: 0; font-size: 0.9rem;&quot;&gt;We couldn&#039;t find any tasks matching your filters across the database.&lt;/p&gt;
+                      &lt;/div&gt;`;
+              } else {
+                  tasks.forEach(task =&gt; {
+                      container.insertAdjacentHTML(&#039;beforeend&#039;, buildTaskHtml(task));
+                  });
+              }
+
+              // Dynamically render dynamic pagination links for current search result set
+              const pagContainer = document.querySelector(&#039;.pagination-container&#039;);
+              if (pagContainer) {
+                  if (result.prev_page_url || result.next_page_url) {
+                      pagContainer.style.display = &#039;flex&#039;;
+                      pagContainer.innerHTML = `
+                          &lt;ul class=&quot;pagination&quot;&gt;
+                              &lt;li class=&quot;page-item ${!result.prev_page_url ? &#039;disabled&#039; : &#039;&#039;}&quot;&gt;
+                                  ${result.prev_page_url 
+                                    ? `&lt;a class=&quot;page-link&quot; onclick=&quot;filterTasks(${result.current_page - 1})&quot;&gt;« Previous&lt;/a&gt;` 
+                                    : `&lt;span class=&quot;page-link&quot;&gt;« Previous&lt;/span&gt;`}
+                              &lt;/li&gt;
+                              &lt;li class=&quot;page-item ${!result.next_page_url ? &#039;disabled&#039; : &#039;&#039;}&quot;&gt;
+                                  ${result.next_page_url 
+                                    ? `&lt;a class=&quot;page-link&quot; onclick=&quot;filterTasks(${result.current_page + 1})&quot;&gt;Next »&lt;/a&gt;` 
+                                    : `&lt;span class=&quot;page-link&quot;&gt;Next »&lt;/span&gt;`}
+                              &lt;/li&gt;
+                          &lt;/ul&gt;`;
+                  } else {
+                      pagContainer.style.display = &#039;none&#039;;
+                  }
+              }
+
+              // Restart countdown timers for new search cards
+              if (typeof startCountdownTimers === &#039;function&#039;) {
+                  startCountdownTimers();
+              }
+          })
+          .catch(error =&gt; {
+              console.error(&quot;Error searching tasks:&quot;, error);
+          });
+      }, 250); // 250ms Debounce
+    }
+
+    function resetFilters() {
+      document.getElementById(&#039;search-tasks&#039;).value = &#039;&#039;;
+      document.getElementById(&#039;filter-category&#039;).value = &#039;&#039;;
+      document.getElementById(&#039;filter-priority&#039;).value = &#039;&#039;;
+      document.getElementById(&#039;filter-status&#039;).value = &#039;&#039;;
+      filterTasks();
+    }
+
+    // Refresh active task page dynamically without full-page reloads!
+    function refreshTaskList() {
+      const query = document.getElementById(&#039;search-tasks&#039;).value.toLowerCase().trim();
+      const category = document.getElementById(&#039;filter-category&#039;).value;
+      const priority = document.getElementById(&#039;filter-priority&#039;).value;
+      const status = document.getElementById(&#039;filter-status&#039;).value;
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const page = urlParams.get(&#039;page&#039;) || 1;
+
+      axios.get(&#039;/tasks/api-search&#039;, {
+          params: {
+              search: query,
+              category_id: category,
+              priority: priority,
+              status: status,
+              active_nav: activePage,
+              page: page
+          }
+      })
+      .then(response =&gt; {
+          const result = response.data;
+          const tasks = result.data;
+          const container = document.querySelector(&#039;.tasks-list&#039;);
+          container.innerHTML = &#039;&#039;;
+
+          if (tasks.length === 0) {
+              container.innerHTML = `
+                  &lt;div style=&quot;grid-column: 1 / -1; text-align: center; padding: 60px 40px; color: var(--text-muted); font-family: var(--font-main);&quot;&gt;
+                      &lt;i class=&quot;fa-solid fa-folder-open&quot; style=&quot;font-size: 3rem; margin-bottom: 16px; color: var(--border-color);&quot;&gt;&lt;/i&gt;
+                      &lt;h3 style=&quot;margin: 0 0 8px 0; color: var(--text-main); font-size: 1.2rem;&quot;&gt;No Tasks Found&lt;/h3&gt;
+                      &lt;p style=&quot;margin: 0; font-size: 0.9rem;&quot;&gt;We couldn&#039;t find any tasks matching your filters.&lt;/p&gt;
+                  &lt;/div&gt;`;
+          } else {
+              tasks.forEach(task =&gt; {
+                  container.insertAdjacentHTML(&#039;beforeend&#039;, buildTaskHtml(task));
+              });
+          }
+
+          // Cache current rendered tasks HTML to prevent search reset from displaying stale/deleted tasks!
+          if (!query &amp;&amp; !category &amp;&amp; !priority &amp;&amp; !status) {
+              initialTasksHtml = container.innerHTML;
+          }
+
+          // Rebuild pagination dynamic buttons
+          const pagContainer = document.querySelector(&#039;.pagination-container&#039;);
+          if (pagContainer) {
+              if (result.prev_page_url || result.next_page_url) {
+                  pagContainer.style.display = &#039;flex&#039;;
+                  const prevPage = result.prev_page_url ? new URL(result.prev_page_url).searchParams.get(&#039;page&#039;) : null;
+                  const nextPage = result.next_page_url ? new URL(result.next_page_url).searchParams.get(&#039;page&#039;) : null;
+
+                  pagContainer.innerHTML = `
+                      &lt;ul class=&quot;pagination&quot;&gt;
+                          &lt;li class=&quot;page-item ${!prevPage ? &#039;disabled&#039; : &#039;&#039;}&quot;&gt;
+                              ${prevPage 
+                                ? `&lt;a class=&quot;page-link&quot; href=&quot;#&quot; onclick=&quot;changePage(event, ${prevPage})&quot;&gt;« Previous&lt;/a&gt;` 
+                                : `&lt;span class=&quot;page-link&quot;&gt;« Previous&lt;/span&gt;`}
+                          &lt;/li&gt;
+                          &lt;li class=&quot;page-item ${!nextPage ? &#039;disabled&#039; : &#039;&#039;}&quot;&gt;
+                              ${nextPage 
+                                ? `&lt;a class=&quot;page-link&quot; href=&quot;#&quot; onclick=&quot;changePage(event, ${nextPage})&quot;&gt;Next »&lt;/a&gt;` 
+                                : `&lt;span class=&quot;page-link&quot;&gt;Next »&lt;/span&gt;`}
+                          &lt;/li&gt;
+                      &lt;/ul&gt;`;
+                  
+                  if (!query &amp;&amp; !category &amp;&amp; !priority &amp;&amp; !status) {
+                      initialPaginationHtml = pagContainer.innerHTML;
+                  }
+              } else {
+                  pagContainer.style.display = &#039;none&#039;;
+              }
+          }
+
+          if (typeof startCountdownTimers === &#039;function&#039;) {
+              startCountdownTimers();
+          }
+      })
+      .catch(error =&gt; {
+          console.error(&quot;Error refreshing task list:&quot;, error);
+      });
+    }
+
+    function changePage(event, page) {
+        if (event) event.preventDefault();
+        window.history.pushState({page: page}, &#039;&#039;, `?page=${page}`);
+        refreshTaskList();
+    }
+
+    // ================== Bulk Select &amp; Action Helpers ==================
+    function toggleSelectTask(checkbox) {
+        const card = checkbox.closest(&#039;.task&#039;);
+        if (checkbox.checked) {
+            card.classList.add(&#039;selected-for-bulk&#039;);
+        } else {
+            card.classList.remove(&#039;selected-for-bulk&#039;);
+        }
+        updateBulkActionBar();
+    }
+
+    function toggleSelectAll(selectAllCheckbox) {
+        const visibleCheckboxes = document.querySelectorAll(&#039;.tasks-list .task:not([style*=&quot;display: none&quot;]) .task-select-checkbox&#039;);
+        visibleCheckboxes.forEach(cb =&gt; {
+            cb.checked = selectAllCheckbox.checked;
+            const card = cb.closest(&#039;.task&#039;);
+            if (cb.checked) {
+                card.classList.add(&#039;selected-for-bulk&#039;);
+            } else {
+                card.classList.remove(&#039;selected-for-bulk&#039;);
+            }
+        });
+        updateBulkActionBar();
+    }
+
+    function updateBulkActionBar() {
+        const checkedBoxes = document.querySelectorAll(&#039;.tasks-list .task .task-select-checkbox:checked&#039;);
+        const count = checkedBoxes.length;
+        
+        const selectAllCheckbox = document.getElementById(&#039;select-all-tasks&#039;);
+        const visibleCheckboxes = document.querySelectorAll(&#039;.tasks-list .task:not([style*=&quot;display: none&quot;]) .task-select-checkbox&#039;);
+        
+        if (selectAllCheckbox &amp;&amp; visibleCheckboxes.length &gt; 0) {
+            selectAllCheckbox.checked = (checkedBoxes.length === visibleCheckboxes.length);
+        }
+
+        const bar = document.getElementById(&#039;bulk-action-bar&#039;);
+        const countSpan = document.getElementById(&#039;bulk-select-count&#039;);
+        if (bar &amp;&amp; countSpan) {
+            countSpan.textContent = `${count} Selected`;
+            if (count &gt; 0) {
+                bar.style.bottom = &#039;30px&#039;; // Slide up elegantly
+            } else {
+                bar.style.bottom = &#039;-100px&#039;; // Slide down hidden
+            }
+        }
+    }
+
+    function getSelectedIds() {
+        const checked = document.querySelectorAll(&#039;.tasks-list .task .task-select-checkbox:checked&#039;);
+        return Array.from(checked).map(cb =&gt; cb.dataset.id);
+    }
+
+    function bulkDelete() {
+        const ids = getSelectedIds();
+        if (ids.length === 0) return;
+        if (!confirm(`Are you sure you want to move these ${ids.length} selected tasks to the trash?`)) return;
+
+        axios.post(&#039;/tasks/bulk-delete&#039;, {
+            ids: ids,
+            _token: document.querySelector(&#039;input[name=&quot;_token&quot;]&#039;).value
+        })
+        .then(() =&gt; {
+            refreshTaskList();
+            updateCounter(-ids.length);
+            resetBulkSelection();
+        })
+        .catch(error =&gt; {
+            alert(&quot;Error deleting tasks: &quot; + (error.response?.data?.message || &#039;Unknown error&#039;));
+        });
+    }
+
+    function bulkRestore() {
+        const ids = getSelectedIds();
+        if (ids.length === 0) return;
+        if (!confirm(`Are you sure you want to restore these ${ids.length} selected tasks?`)) return;
+
+        axios.post(&#039;/tasks/bulk-restore&#039;, {
+            ids: ids,
+            _token: document.querySelector(&#039;input[name=&quot;_token&quot;]&#039;).value
+        })
+        .then(() =&gt; {
+            refreshTaskList();
+            updateCounter(ids.length);
+            resetBulkSelection();
+        })
+        .catch(error =&gt; {
+            alert(&quot;Error restoring tasks: &quot; + (error.response?.data?.message || &#039;Unknown error&#039;));
+        });
+    }
+
+    function bulkForceDelete() {
+        const ids = getSelectedIds();
+        if (ids.length === 0) return;
+        if (!confirm(`WARNING: Are you sure you want to PERMANENTLY delete these ${ids.length} selected tasks? This action CANNOT be undone!`)) return;
+
+        axios.post(&#039;/tasks/bulk-force-delete&#039;, {
+            ids: ids,
+            _token: document.querySelector(&#039;input[name=&quot;_token&quot;]&#039;).value
+        })
+        .then(() =&gt; {
+            refreshTaskList();
+            resetBulkSelection();
+        })
+        .catch(error =&gt; {
+            alert(&quot;Error permanently deleting tasks: &quot; + (error.response?.data?.message || &#039;Unknown error&#039;));
+        });
+    }
+
+    function resetBulkSelection() {
+        document.querySelectorAll(&#039;.task-select-checkbox&#039;).forEach(cb =&gt; cb.checked = false);
+        document.querySelectorAll(&#039;.task&#039;).forEach(card =&gt; card.classList.remove(&#039;selected-for-bulk&#039;));
+        const selectAll = document.getElementById(&#039;select-all-tasks&#039;);
+        if (selectAll) selectAll.checked = false;
+        updateBulkActionBar();
+    }
+
+    function openUpdateForm(task) {
+      document.getElementById(&quot;update-task-id&quot;).value = task.id;
+      document.getElementById(&quot;update-task-title&quot;).value = task.title;
+      document.getElementById(&quot;update-task-description&quot;).value = task.description;
+      document.getElementById(&quot;update-task-due&quot;).value = task.due_date;
+      document.getElementById(&quot;update-task-priority&quot;).value = task.priority.toLowerCase();
+
+      const list = document.getElementById(&quot;update-subtask-list&quot;);
+      list.innerHTML = &#039;&#039;;
+      if (task.subtasks) {
+        task.subtasks.forEach(subtask =&gt; {
+          list.insertAdjacentHTML(&quot;beforeend&quot;, `
+                &lt;div class=&quot;subtask-item&quot; data-title=&quot;${subtask.title}&quot;&gt;
+                    &lt;span&gt;${subtask.title}&lt;/span&gt;
+                    &lt;button type=&quot;button&quot; class=&quot;task-action delete&quot; onclick=&quot;this.parentElement.remove()&quot;&gt;
+                        &lt;i class=&quot;fa-regular fa-trash-can&quot;&gt;&lt;/i&gt;
+                    &lt;/button&gt;
+                &lt;/div&gt;
+            `);
+        });
+      }
+
+      setTimeout(() =&gt; {
+        document.getElementById(&quot;update-category-id&quot;).value = task.category_id;
+      }, 0);
+      toggleUpdateForm();
+    }
+
+    function updateTask() {
+      const id = document.getElementById(&quot;update-task-id&quot;).value;
+      const taskEl = document.getElementById(`task-${id}`);
+
+      // Capture old state
+      const wasCompleted = taskEl.classList.contains(&#039;completed&#039;);
+      const wasOverdue = taskEl.querySelector(&#039;.overdue-badge&#039;) !== null;
+
+      const taskData = {
+        title: document.getElementById(&quot;update-task-title&quot;).value,
+        description: document.getElementById(&quot;update-task-description&quot;).value,
+        due_date: document.getElementById(&quot;update-task-due&quot;).value,
+        priority: document.getElementById(&quot;update-task-priority&quot;).value,
+        category_id: document.getElementById(&quot;update-category-id&quot;).value,
+        subtasks: getSubtasks(&quot;update-subtask-list&quot;),
+        _token: document.querySelector(&#039;input[name=&quot;_token&quot;]&#039;).value,
+      };
+
+      axios.put(`/tasks/${id}`, taskData)
+        .then((response) =&gt; {
+          const task = response.data.data;
+          const isNowCompleted = task.status === &#039;completed&#039;;
+          const isNowOverdue = !isNowCompleted &amp;&amp; new Date(task.due_date) &lt; new Date();
+
+          // Update HTML
+          taskEl.outerHTML = buildTaskHtml(task);
+          if (typeof updateCountdowns === &quot;function&quot;) updateCountdowns();
+
+          // Update Completed Counter
+          if (wasCompleted !== isNowCompleted) {
+              const completedCount = document.querySelector(&#039;.completed-tasks .status-number&#039;);
+              if (completedCount) {
+                  let current = parseInt(completedCount.innerText) || 0;
+                  completedCount.innerText = Math.max(0, isNowCompleted ? current + 1 : current - 1);
+              }
+          }
+
+          // Update Overdue Counter
+          if (wasOverdue !== isNowOverdue) {
+              const overdueCount = document.querySelector(&#039;.overdue-tasks .status-number&#039;);
+              if (overdueCount) {
+                  let current = parseInt(overdueCount.innerText) || 0;
+                  overdueCount.innerText = Math.max(0, isNowOverdue ? current + 1 : current - 1);
+              }
+          }
+
+          toggleUpdateForm();
+        })
+        .catch((error) =&gt; {
+          alert(&quot;Error updating task&quot;);
+        });
+    }
+
+    // ================== Subtasks ==================
+    document.getElementById(&quot;update-add-subtask-btn&quot;).addEventListener(&quot;click&quot;, function() {
+      addSubtaskToList(&quot;update-subtask-input&quot;, &quot;update-subtask-list&quot;);
+    });
+
+    // ================== Countdown Timers ==================
+    // ================== Desktop &amp; In-App Notifications ==================
+    if (typeof Notification !== &#039;undefined&#039; &amp;&amp; Notification.permission === &#039;default&#039;) {
+        Notification.requestPermission();
+    }
+
+    function playNotificationBeep() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.type = &#039;sine&#039;;
+            oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+            oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
+            
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.4);
+        } catch (e) {
+            console.log(&quot;Audio play blocked or not supported&quot;);
+        }
+    }
+
+    function showInAppToast(message) {
+        let container = document.getElementById(&#039;toast-container&#039;);
+        if (!container) {
+            container = document.createElement(&#039;div&#039;);
+            container.id = &#039;toast-container&#039;;
+            container.style.cssText = `
+                position: fixed;
+                top: 24px;
+                right: 24px;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                pointer-events: none;
+            `;
+            document.body.appendChild(container);
+        }
+        
+        const toast = document.createElement(&#039;div&#039;);
+        toast.className = &#039;toast-notification&#039;;
+        toast.style.cssText = `
+            background: #ef4444;
+            color: #ffffff;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.35);
+            font-family: var(--font-main);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            opacity: 0;
+            transform: translateY(-20px) scale(0.9);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        `;
+        
+        toast.innerHTML = `&lt;i class=&quot;fa-solid fa-triangle-exclamation&quot; style=&quot;font-size: 1.2rem;&quot;&gt;&lt;/i&gt; &lt;span&gt;${message}&lt;/span&gt;`;
+        container.appendChild(toast);
+        
+        setTimeout(() =&gt; {
+            toast.style.opacity = &#039;1&#039;;
+            toast.style.transform = &#039;translateY(0) scale(1)&#039;;
+        }, 50);
+        
+        playNotificationBeep();
+
+        setTimeout(() =&gt; {
+            toast.style.opacity = &#039;0&#039;;
+            toast.style.transform = &#039;translateY(-20px) scale(0.9)&#039;;
+            setTimeout(() =&gt; {
+                toast.remove();
+            }, 300);
+        }, 5000);
+    }
+
+    function showTaskExpiredNotification(title) {
+        if (typeof Notification !== &#039;undefined&#039; &amp;&amp; Notification.permission === &#039;granted&#039;) {
+            new Notification(&quot;Taskify: Task Expired!&quot;, {
+                body: `The deadline for your task &quot;${title}&quot; has ended!`,
+            });
+        }
+        showInAppToast(`Task Expired: &quot;${title}&quot; deadline has ended!`);
+    }
+
+    // ================== Countdown Timers ==================
+    function updateCountdowns() {
+        document.querySelectorAll(&#039;.task-countdown&#039;).forEach(el =&gt; {
+            const dueDateStr = el.dataset.due;
+            const taskStatus = el.dataset.status;
+            const textEl = el.querySelector(&#039;.countdown-text&#039;);
+            const iconEl = el.querySelector(&#039;i&#039;);
+            
+            if (taskStatus === &#039;completed&#039;) {
+                el.style.display = &#039;flex&#039;;
+                el.classList.remove(&#039;urgent&#039;);
+                textEl.innerText = &#039;Completed&#039;;
+                if (iconEl) {
+                    iconEl.className = &#039;fa-solid fa-circle-check&#039;;
+                }
+                return;
+            }
+            
+            const dueDate = new Date(dueDateStr);
+            const now = new Date();
+            const diffMs = dueDate - now;
+            
+            if (diffMs &lt;= 0) {
+                // Task is overdue
+                el.classList.remove(&#039;urgent&#039;);
+                const taskCard = el.closest(&#039;.task&#039;);
+                if (taskCard) {
+                    if (!taskCard.classList.contains(&#039;overdue&#039;)) {
+                        taskCard.classList.add(&#039;overdue&#039;);
+                        const titleEl = taskCard.querySelector(&#039;.task-title&#039;);
+                        if (titleEl &amp;&amp; !titleEl.querySelector(&#039;.overdue-badge&#039;)) {
+                            titleEl.insertAdjacentHTML(&#039;beforeend&#039;, &#039;&lt;span class=&quot;overdue-badge&quot;&gt;&lt;i class=&quot;fa-solid fa-circle-exclamation&quot;&gt;&lt;/i&gt; Overdue&lt;/span&gt;&#039;);
+                        }
+                        
+                        // Just expired! Trigger notification
+                        const taskTitle = taskCard.querySelector(&#039;.task-title a&#039;).innerText;
+                        showTaskExpiredNotification(taskTitle);
+                    }
+                }
+                textEl.innerText = &#039;Overdue&#039;;
+                if (iconEl) {
+                    iconEl.className = &#039;fa-solid fa-circle-exclamation&#039;;
+                }
+                return;
+            }
+            
+            // Calculate time parts
+            const diffSecs = Math.floor(diffMs / 1000);
+            const days = Math.floor(diffSecs / 86400);
+            const hours = Math.floor((diffSecs % 86400) / 3600);
+            const minutes = Math.floor((diffSecs % 3600) / 60);
+            const seconds = diffSecs % 60;
+            
+            // Format output string
+            let timeStr = &#039;&#039;;
+            if (days &gt; 0) {
+                timeStr += `${days}d ${hours}h ${minutes}m`;
+            } else if (hours &gt; 0) {
+                timeStr += `${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                timeStr += `${minutes}m ${seconds}s remaining`;
+            }
+            
+            textEl.innerText = timeStr;
+            
+            // If less than 24 hours remaining, mark as urgent
+            if (diffMs &lt; 24 * 60 * 60 * 1000) {
+                el.classList.add(&#039;urgent&#039;);
+                if (iconEl) {
+                    iconEl.className = &#039;fa-solid fa-hourglass-start fa-spin&#039;;
+                }
+            } else {
+                el.classList.remove(&#039;urgent&#039;);
+                if (iconEl) {
+                    iconEl.className = &#039;fa-solid fa-hourglass-half&#039;;
+                }
+            }
+        });
+    }
+    
+    // Start interval
+    updateCountdowns();
+    setInterval(updateCountdowns, 1000);
+  &lt;/script&gt;
+@endsection
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Task Details View (تفاصيل المهمة)</span>
+                <span class="file-path">resources/views/task.blade.php</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                صفحة مستقلة لعرض تفاصيل مهمة معينة بدقة، تشمل الوصف، تاريخ الاستحقاق، الأولوية، المهام الفرعية، وقسم رفع واستعراض المرفقات مع دعم ميزة الـ Lightbox للصور.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-php">@extends(&#039;layout.layout&#039;)
+@section(&#039;title&#039;, $task[&#039;title&#039;])
+@section(&#039;Dashboard_nav&#039;, &#039;active&#039;)
+
+@section(&#039;CustomCss&#039;)
+  #create-task-btn { display: none !important; }
+  #Back-to-Dashboard { display: flex !important; }
+  
+  .task-details-card {
+      max-width: 800px;
+      margin: 40px auto;
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  @media (max-width: 768px) {
+      .task-details-card {
+          margin: 16px;
+          padding: 24px;
+      }
+  }
+  
+  .description-box {
+      color: var(--text-muted);
+      line-height: 1.6;
+      background: var(--subtask-bg);
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid var(--border-color);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .subtask-detail-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      border-radius: 12px;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .subtask-item.completed span {
+      text-decoration: line-through;
+      color: var(--text-muted);
+  }
+  
+  .custom-checkbox.checked {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+  }
+@endsection
+
+@section(&#039;content&#039;)
+  &lt;div class=&quot;task-details-card&quot;&gt;
+    &lt;div style=&quot;display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;&quot;&gt;
+        &lt;div&gt;
+            &lt;h1 style=&quot;font-family: var(--font-accent); font-size: 2.2rem; margin: 0 0 8px 0; color: var(--text-main);&quot;&gt;
+                {{ $task[&#039;title&#039;] }}
+            &lt;/h1&gt;
+            &lt;span class=&quot;task-catigory&quot;&gt;&lt;span&gt;{{ $task[&#039;category_name&#039;] }}&lt;/span&gt;&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div style=&quot;text-align: right;&quot;&gt;
+            &lt;div style=&quot;font-size: 0.9rem; color: var(--text-muted); font-weight: 500;&quot;&gt;DUE DATE&lt;/div&gt;
+            &lt;div style=&quot;font-family: var(--font-accent); font-weight: 600; color: var(--accent-color);&quot;&gt;
+                &lt;i class=&quot;fa-regular fa-calendar&quot;&gt;&lt;/i&gt; {{ $task-&gt;formatted_date }}
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    @php
+        $totalSubtasks = $task-&gt;subtasks-&gt;count();
+        $completedSubtasks = $task-&gt;subtasks-&gt;where(&#039;is_completed&#039;, true)-&gt;count();
+        $progress = $totalSubtasks &gt; 0 ? ($completedSubtasks / $totalSubtasks) * 100 : 0;
+    @endphp
+
+    &lt;div style=&quot;margin-bottom: 32px;&quot;&gt;
+        &lt;div style=&quot;display: flex; justify-content: space-between; margin-bottom: 8px;&quot;&gt;
+            &lt;span id=&quot;progress-text&quot; style=&quot;font-weight: 600; color: var(--text-muted);&quot;&gt;{{ round($progress) }}% Complete&lt;/span&gt;
+            &lt;span id=&quot;subtask-count&quot; style=&quot;font-size: 0.9rem; color: var(--text-muted);&quot;&gt;{{ $completedSubtasks }}/{{ $totalSubtasks }} Subtasks&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;progress-container&quot; style=&quot;height: 12px;&quot;&gt;
+            &lt;div id=&quot;main-progress-bar&quot; class=&quot;progress-bar&quot; style=&quot;width: {{ $progress }}%; height: 100%; border-radius: 6px;&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div style=&quot;margin-bottom: 32px;&quot;&gt;
+        &lt;h3 style=&quot;font-family: var(--font-accent); font-size: 1.2rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: var(--text-main);&quot;&gt;
+            &lt;i class=&quot;fa-solid fa-align-left&quot; style=&quot;color: var(--accent-color);&quot;&gt;&lt;/i&gt; Description
+        &lt;/h3&gt;
+        &lt;p class=&quot;description-box&quot;&gt;
+            {{ $task[&#039;description&#039;] ?: &#039;No description provided.&#039; }}
+        &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;subtasks-section&quot;&gt;
+        &lt;h3 style=&quot;font-family: var(--font-accent); font-size: 1.2rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-main);&quot;&gt;
+            &lt;i class=&quot;fa-solid fa-list-check&quot; style=&quot;color: var(--accent-color);&quot;&gt;&lt;/i&gt; Sub-tasks
+        &lt;/h3&gt;
+        &lt;div id=&quot;subtasks-list&quot; style=&quot;display: flex; flex-direction: column; gap: 12px;&quot;&gt;
+            @forelse ($task-&gt;subtasks as $subtask)
+                &lt;div class=&quot;subtask-item subtask-detail-item {{ $subtask-&gt;is_completed ? &#039;completed&#039; : &#039;&#039; }}&quot; id=&quot;subtask-{{ $subtask-&gt;id }}&quot;&gt;
+                    &lt;label style=&quot;display: flex; align-items: center; gap: 12px; cursor: pointer; width: 100%; color: var(--text-main);&quot; onclick=&quot;toggleSubtask({{ $subtask-&gt;id }})&quot;&gt;
+                        &lt;div class=&quot;custom-checkbox {{ $subtask-&gt;is_completed ? &#039;checked&#039; : &#039;&#039; }}&quot;&gt;&lt;/div&gt;
+                        &lt;span style=&quot;font-weight: 500;&quot;&gt;
+                            {{ $subtask[&#039;title&#039;] }}
+                        &lt;/span&gt;
+                    &lt;/label&gt;
+                &lt;/div&gt;
+            @empty
+                &lt;div style=&quot;text-align: center; color: var(--text-muted); padding: 20px;&quot;&gt;
+                    No sub-tasks for this task.
+                &lt;/div&gt;
+            @endforelse
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    {{-- File Attachments Section --}}
+    &lt;div class=&quot;attachments-section&quot; style=&quot;margin-top: 40px; border-top: 1px solid var(--border-color); padding-top: 32px;&quot;&gt;
+        &lt;h3 style=&quot;font-family: var(--font-accent); font-size: 1.2rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-main);&quot;&gt;
+            &lt;i class=&quot;fa-solid fa-paperclip&quot; style=&quot;color: var(--accent-color);&quot;&gt;&lt;/i&gt; Attachments
+        &lt;/h3&gt;
+
+        {{-- Premium Upload Dropzone --}}
+        &lt;div id=&quot;dropzone&quot; class=&quot;upload-dropzone&quot; style=&quot;border: 2px dashed var(--border-color); padding: 30px; border-radius: 16px; text-align: center; background: var(--subtask-bg); transition: all 0.3s ease; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px;&quot; onclick=&quot;document.getElementById(&#039;file-input&#039;).click()&quot;&gt;
+            &lt;i class=&quot;fa-solid fa-cloud-arrow-up&quot; style=&quot;font-size: 2.5rem; color: var(--accent-color); transition: transform 0.3s ease;&quot;&gt;&lt;/i&gt;
+            &lt;div style=&quot;font-weight: 600; color: var(--text-main); font-family: var(--font-main);&quot;&gt;Drag &amp; Drop your files here or &lt;span style=&quot;color: var(--accent-color);&quot;&gt;Browse&lt;/span&gt;&lt;/div&gt;
+            &lt;div style=&quot;font-size: 0.8rem; color: var(--text-muted);&quot;&gt;Supports Images, PDFs, and Documents (Max 10MB)&lt;/div&gt;
+            &lt;input type=&quot;file&quot; id=&quot;file-input&quot; style=&quot;display: none;&quot; onchange=&quot;uploadAttachment(this.files[0])&quot;&gt;
+        &lt;/div&gt;
+
+        {{-- Dynamic Attachments Grid for images (Lightbox Gallery) --}}
+        &lt;div id=&quot;attachments-grid&quot; style=&quot;display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; margin-bottom: 20px;&quot;&gt;
+            @foreach($task-&gt;attachments as $attachment)
+                @if($attachment-&gt;is_image)
+                    &lt;div class=&quot;attachment-card image-card&quot; id=&quot;attachment-{{ $attachment-&gt;id }}&quot; style=&quot;position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 1; border: 1px solid var(--border-color); cursor: pointer; transition: all 0.3s ease;&quot; onclick=&quot;openLightbox(&#039;{{ $attachment-&gt;file_url }}&#039;)&quot;&gt;
+                        &lt;img src=&quot;{{ $attachment-&gt;file_url }}&quot; style=&quot;width: 100%; height: 100%; object-fit: cover;&quot;&gt;
+                        &lt;div class=&quot;card-overlay&quot; style=&quot;position: absolute; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;&quot;&gt;
+                            &lt;i class=&quot;fa-solid fa-magnifying-glass-plus&quot; style=&quot;color: #fff; font-size: 1.4rem;&quot;&gt;&lt;/i&gt;
+                        &lt;/div&gt;
+                        &lt;button onclick=&quot;event.stopPropagation(); deleteAttachment({{ $attachment-&gt;id }})&quot; class=&quot;delete-attachment-btn&quot; style=&quot;position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(239, 68, 68, 0.95); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.15);&quot; title=&quot;Delete file&quot;&gt;
+                            &lt;i class=&quot;fa-solid fa-trash-can&quot; style=&quot;font-size: 0.8rem;&quot;&gt;&lt;/i&gt;
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+                @endif
+            @endforeach
+        &lt;/div&gt;
+
+        {{-- List for non-images (PDFs, Docs, etc) --}}
+        &lt;div id=&quot;attachments-list&quot; style=&quot;display: flex; flex-direction: column; gap: 12px;&quot;&gt;
+            @foreach($task-&gt;attachments as $attachment)
+                @if(!$attachment-&gt;is_image)
+                    @php
+                        $icon = &#039;fa-file&#039;;
+                        if(str_contains($attachment-&gt;file_type, &#039;pdf&#039;)) $icon = &#039;fa-file-pdf&#039;;
+                        elseif(str_contains($attachment-&gt;file_type, &#039;word&#039;) || str_contains($attachment-&gt;file_type, &#039;document&#039;)) $icon = &#039;fa-file-word&#039;;
+                        elseif(str_contains($attachment-&gt;file_type, &#039;excel&#039;) || str_contains($attachment-&gt;file_type, &#039;sheet&#039;)) $icon = &#039;fa-file-excel&#039;;
+                    @endphp
+                    &lt;div class=&quot;attachment-row&quot; id=&quot;attachment-{{ $attachment-&gt;id }}&quot; style=&quot;display: flex; align-items: center; justify-content: space-between; background: var(--subtask-bg); padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border-color); transition: all 0.3s ease;&quot;&gt;
+                        &lt;div style=&quot;display: flex; align-items: center; gap: 12px; min-width: 0; flex-grow: 1;&quot;&gt;
+                            &lt;i class=&quot;fa-solid {{ $icon }}&quot; style=&quot;font-size: 1.6rem; color: var(--accent-color);&quot;&gt;&lt;/i&gt;
+                            &lt;div style=&quot;min-width: 0;&quot;&gt;
+                                &lt;div style=&quot;font-weight: 600; color: var(--text-main); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-main);&quot;&gt;{{ $attachment-&gt;file_name }}&lt;/div&gt;
+                                &lt;div style=&quot;font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-accent);&quot;&gt;{{ $attachment-&gt;formatted_size }}&lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div style=&quot;display: flex; gap: 8px; flex-shrink: 0; margin-left: 12px;&quot;&gt;
+                            &lt;a href=&quot;/attachments/{{ $attachment-&gt;id }}/download&quot; class=&quot;btn-aqua&quot; style=&quot;padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; text-decoration: none; font-weight: 600;&quot;&gt;
+                                &lt;i class=&quot;fa-solid fa-cloud-arrow-down&quot;&gt;&lt;/i&gt; Download
+                            &lt;/a&gt;
+                            &lt;button onclick=&quot;deleteAttachment({{ $attachment-&gt;id }})&quot; style=&quot;padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; background: var(--overdue-color); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 600;&quot;&gt;
+                                &lt;i class=&quot;fa-solid fa-trash-can&quot;&gt;&lt;/i&gt; Delete
+                            &lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                @endif
+            @endforeach
+        &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  {{-- Fullscreen Lightbox Overlay --}}
+  &lt;div id=&quot;lightbox&quot; onclick=&quot;closeLightbox()&quot; style=&quot;position: fixed; inset: 0; background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 20000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer;&quot;&gt;
+      &lt;button onclick=&quot;closeLightbox()&quot; style=&quot;position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; transition: all 0.3s ease; z-index: 20001;&quot; title=&quot;Close Gallery&quot;&gt;
+          &lt;i class=&quot;fa-solid fa-xmark&quot;&gt;&lt;/i&gt;
+      &lt;/button&gt;
+      &lt;img id=&quot;lightbox-img&quot; src=&quot;&quot; style=&quot;max-width: 90%; max-height: 85%; object-fit: contain; border-radius: 12px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); transform: scale(0.95); transition: transform 0.3s ease;&quot; onclick=&quot;event.stopPropagation()&quot;&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    function toggleSubtask(id) {
+        axios.post(`/subtasks/${id}/toggle`, {
+            _token: &#039;{{ csrf_token() }}&#039;
+        })
+        .then(response =&gt; {
+            const subtask = response.data.data;
+            const item = document.getElementById(`subtask-${subtask.id}`);
+            const checkbox = item.querySelector(&#039;.custom-checkbox&#039;);
+            
+            if (subtask.is_completed) {
+                item.classList.add(&#039;completed&#039;);
+                checkbox.classList.add(&#039;checked&#039;);
+            } else {
+                item.classList.remove(&#039;completed&#039;);
+                checkbox.classList.remove(&#039;checked&#039;);
+            }
+            
+            updateProgressBar();
+        })
+        .catch(error =&gt; {
+            console.error(error);
+            alert(&#039;Error toggling subtask&#039;);
+        });
+    }
+
+    function updateProgressBar() {
+        const total = document.querySelectorAll(&#039;.subtask-item&#039;).length;
+        const completed = document.querySelectorAll(&#039;.subtask-item.completed&#039;).length;
+        const progress = total &gt; 0 ? (completed / total) * 100 : 0;
+        
+        document.getElementById(&#039;main-progress-bar&#039;).style.width = `${progress}%`;
+        document.getElementById(&#039;progress-text&#039;).innerText = `${Math.round(progress)}% Complete`;
+        document.getElementById(&#039;subtask-count&#039;).innerText = `${completed}/${total} Subtasks`;
+    }
+
+    // ================== Task Attachment Handlers ==================
+    const dropzone = document.getElementById(&#039;dropzone&#039;);
+
+    // Drag and Drop interactive effects
+    if (dropzone) {
+        [&#039;dragenter&#039;, &#039;dragover&#039;].forEach(eventName =&gt; {
+            dropzone.addEventListener(eventName, (e) =&gt; {
+                e.preventDefault();
+                dropzone.style.borderColor = &#039;var(--accent-color)&#039;;
+                dropzone.style.background = &#039;var(--bg-hover)&#039;;
+                dropzone.querySelector(&#039;i&#039;).style.transform = &#039;scale(1.15)&#039;;
+            }, false);
+        });
+
+        [&#039;dragleave&#039;, &#039;drop&#039;].forEach(eventName =&gt; {
+            dropzone.addEventListener(eventName, (e) =&gt; {
+                e.preventDefault();
+                dropzone.style.borderColor = &#039;var(--border-color)&#039;;
+                dropzone.style.background = &#039;var(--subtask-bg)&#039;;
+                dropzone.querySelector(&#039;i&#039;).style.transform = &#039;scale(1)&#039;;
+            }, false);
+        });
+
+        dropzone.addEventListener(&#039;drop&#039;, (e) =&gt; {
+            const dt = e.dataTransfer;
+            const file = dt.files[0];
+            if (file) uploadAttachment(file);
+        }, false);
+    }
+
+    function uploadAttachment(file) {
+        if (!file) return;
+
+        // Size check (10MB maximum)
+        if (file.size &gt; 10 * 1024 * 1024) {
+            alert(&#039;File size exceeds the 10MB limit!&#039;);
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append(&#039;file&#039;, file);
+        formData.append(&#039;_token&#039;, &#039;{{ csrf_token() }}&#039;);
+
+        // Show uploading feedback state
+        const dropzoneText = dropzone.querySelector(&#039;div&#039;);
+        const originalText = dropzoneText.innerHTML;
+        dropzoneText.innerHTML = &#039;&lt;i class=&quot;fa-solid fa-spinner fa-spin&quot;&gt;&lt;/i&gt; Uploading file... Please wait.&#039;;
+        dropzone.style.pointerEvents = &#039;none&#039;;
+
+        axios.post(&#039;/tasks/{{ $task-&gt;id }}/attachments&#039;, formData, {
+            headers: {
+                &#039;Content-Type&#039;: &#039;multipart/form-data&#039;
+            }
+        })
+        .then(response =&gt; {
+            const attachment = response.data.data;
+            
+            // Build dynamic markup based on file type
+            if (attachment.is_image) {
+                const grid = document.getElementById(&#039;attachments-grid&#039;);
+                const imageCard = `
+                    &lt;div class=&quot;attachment-card image-card&quot; id=&quot;attachment-${attachment.id}&quot; style=&quot;position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 1; border: 1px solid var(--border-color); cursor: pointer; opacity: 0; transform: translateY(10px); transition: all 0.4s ease;&quot; onclick=&quot;openLightbox(&#039;${attachment.file_url}&#039;)&quot;&gt;
+                        &lt;img src=&quot;${attachment.file_url}&quot; style=&quot;width: 100%; height: 100%; object-fit: cover;&quot;&gt;
+                        &lt;div class=&quot;card-overlay&quot; style=&quot;position: absolute; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;&quot;&gt;
+                            &lt;i class=&quot;fa-solid fa-magnifying-glass-plus&quot; style=&quot;color: #fff; font-size: 1.4rem;&quot;&gt;&lt;/i&gt;
+                        &lt;/div&gt;
+                        &lt;button onclick=&quot;event.stopPropagation(); deleteAttachment(${attachment.id})&quot; class=&quot;delete-attachment-btn&quot; style=&quot;position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(239, 68, 68, 0.95); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.15);&quot; title=&quot;Delete file&quot;&gt;
+                            &lt;i class=&quot;fa-solid fa-trash-can&quot; style=&quot;font-size: 0.8rem;&quot;&gt;&lt;/i&gt;
+                        &lt;/button&gt;
+                    &lt;/div&gt;`;
+                grid.insertAdjacentHTML(&#039;beforeend&#039;, imageCard);
+                // Trigger smooth fade in entry
+                setTimeout(() =&gt; {
+                    const el = document.getElementById(`attachment-${attachment.id}`);
+                    el.style.opacity = &#039;1&#039;;
+                    el.style.transform = &#039;translateY(0)&#039;;
+                }, 50);
+            } else {
+                const list = document.getElementById(&#039;attachments-list&#039;);
+                let icon = &#039;fa-file&#039;;
+                if (attachment.file_type.includes(&#039;pdf&#039;)) icon = &#039;fa-file-pdf&#039;;
+                else if (attachment.file_type.includes(&#039;word&#039;) || attachment.file_type.includes(&#039;document&#039;)) icon = &#039;fa-file-word&#039;;
+                else if (attachment.file_type.includes(&#039;excel&#039;) || attachment.file_type.includes(&#039;sheet&#039;)) icon = &#039;fa-file-excel&#039;;
+
+                const docRow = `
+                    &lt;div class=&quot;attachment-row&quot; id=&quot;attachment-${attachment.id}&quot; style=&quot;display: flex; align-items: center; justify-content: space-between; background: var(--subtask-bg); padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border-color); opacity: 0; transform: translateY(10px); transition: all 0.4s ease;&quot;&gt;
+                        &lt;div style=&quot;display: flex; align-items: center; gap: 12px; min-width: 0; flex-grow: 1;&quot;&gt;
+                            &lt;i class=&quot;fa-solid ${icon}&quot; style=&quot;font-size: 1.6rem; color: var(--accent-color);&quot;&gt;&lt;/i&gt;
+                            &lt;div style=&quot;min-width: 0;&quot;&gt;
+                                &lt;div style=&quot;font-weight: 600; color: var(--text-main); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-main);&quot;&gt;${attachment.file_name}&lt;/div&gt;
+                                &lt;div style=&quot;font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-accent);&quot;&gt;${attachment.formatted_size}&lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div style=&quot;display: flex; gap: 8px; flex-shrink: 0; margin-left: 12px;&quot;&gt;
+                            &lt;a href=&quot;/attachments/${attachment.id}/download&quot; class=&quot;btn-aqua&quot; style=&quot;padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; text-decoration: none; font-weight: 600;&quot;&gt;
+                                &lt;i class=&quot;fa-solid fa-cloud-arrow-down&quot;&gt;&lt;/i&gt; Download
+                            &lt;/a&gt;
+                            &lt;button onclick=&quot;deleteAttachment(${attachment.id})&quot; style=&quot;padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; background: var(--overdue-color); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 600;&quot;&gt;
+                                &lt;i class=&quot;fa-solid fa-trash-can&quot;&gt;&lt;/i&gt; Delete
+                            &lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;`;
+                list.insertAdjacentHTML(&#039;beforeend&#039;, docRow);
+                // Trigger smooth fade in entry
+                setTimeout(() =&gt; {
+                    const el = document.getElementById(`attachment-${attachment.id}`);
+                    el.style.opacity = &#039;1&#039;;
+                    el.style.transform = &#039;translateY(0)&#039;;
+                }, 50);
+            }
+        })
+        .catch(error =&gt; {
+            console.error(error);
+            alert(&#039;Error uploading attachment: &#039; + (error.response?.data?.message || &#039;Unknown error&#039;));
+        })
+        .finally(() =&gt; {
+            // Restore dropzone state
+            dropzoneText.innerHTML = originalText;
+            dropzone.style.pointerEvents = &#039;auto&#039;;
+            document.getElementById(&#039;file-input&#039;).value = &#039;&#039;;
+        });
+    }
+
+    function deleteAttachment(id) {
+        if (!confirm(&#039;Are you sure you want to delete this attachment permanently?&#039;)) return;
+
+        axios.delete(`/attachments/${id}`, {
+            data: { _token: &#039;{{ csrf_token() }}&#039; }
+        })
+        .then(() =&gt; {
+            const el = document.getElementById(`attachment-${id}`);
+            if (el) {
+                el.style.opacity = &#039;0&#039;;
+                el.style.transform = &#039;scale(0.9)&#039;;
+                setTimeout(() =&gt; el.remove(), 300);
+            }
+        })
+        .catch(error =&gt; {
+            console.error(error);
+            alert(&#039;Error deleting attachment: &#039; + (error.response?.data?.message || &#039;Unknown error&#039;));
+        });
+    }
+
+    // ================== Lightbox Gallery Handlers ==================
+    function openLightbox(src) {
+        const lightbox = document.getElementById(&#039;lightbox&#039;);
+        const img = document.getElementById(&#039;lightbox-img&#039;);
+        if (lightbox &amp;&amp; img) {
+            img.src = src;
+            lightbox.style.display = &#039;flex&#039;;
+            setTimeout(() =&gt; {
+                lightbox.style.opacity = &#039;1&#039;;
+                img.style.transform = &#039;scale(1)&#039;;
+            }, 50);
+        }
+    }
+
+    function closeLightbox() {
+        const lightbox = document.getElementById(&#039;lightbox&#039;);
+        const img = document.getElementById(&#039;lightbox-img&#039;);
+        if (lightbox &amp;&amp; img) {
+            lightbox.style.opacity = &#039;0&#039;;
+            img.style.transform = &#039;scale(0.95)&#039;;
+            setTimeout(() =&gt; {
+                lightbox.style.display = &#039;none&#039;;
+                img.src = &#039;&#039;;
+            }, 300);
+        }
+    }
+  &lt;/script&gt;
+@endsection
+</code></pre>
+            </div>
+        </div>
+        <div class="file-card page-break">
+            <div class="file-header">
+                <span class="file-name">Custom Stylesheet (ملف الستايل المخصص)</span>
+                <span class="file-path">public/css/style.css</span>
+            </div>
+            <div class="explanation">
+                <strong>الشرح البرمجي:</strong><br>
+                يحتوي على كافة التنسيقات البصرية للمشروع. يدعم الألوان الحديثة، ميزة الوضع المظلم (Dark Mode)، تصميم الـ Glassmorphism، الواجهات المتجاوبة مع الشاشات المختلفة، والتأثيرات الحركية (Transitions) التي تمنح التطبيق طابعاً فاخراً وسلساً.
+            </div>
+            <div class="code-container">
+                <pre><code class="language-css">@import url(&quot;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Outfit:wght@400;500;600;700&amp;display=swap&quot;);
+:root {
+  --total-tasks-color: #3f75ef;
+  --completed-color: #2da669;
+  --overdue-color: #db3d42;
+  --bg-color: #f4f7fe;
+  --sidebar-color: #111827;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --card-bg: #ffffff;
+  --accent-color: #3b82f6;
+  --border-color: #f3f4f6;
+  --progress-bg: #e5e7eb;
+  --input-bg: #ffffff;
+  --close-btn-bg: #f3f4f6;
+  --close-btn-hover: #e5e7eb;
+  --subtask-bg: #f9fafb;
+  --nav-bg: #ffffff;
+  --font-main: &quot;Inter&quot;, sans-serif;
+  --font-accent: &quot;Outfit&quot;, sans-serif;
+}
+
+html.dark-mode {
+  --bg-color: #0b0f19;
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --card-bg: #111827;
+  --sidebar-color: #030712;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --progress-bg: #374151;
+  --input-bg: #1f2937;
+  --close-btn-bg: #1f2937;
+  --close-btn-hover: #374151;
+  --subtask-bg: #1f2937;
+  --nav-bg: #111827;
+}
+
+body {
+  display: flex;
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  margin: 0;
+  color: var(--text-main);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-height: 100vh;
+} /* Sidebar */
+.sidebar {
+  z-index: 1000;
+  width: 260px;
+  background-color: var(--sidebar-color);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  color: #fff;
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  box-sizing: border-box;
+}
+.sidebar .profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px;
+  margin-bottom: 40px;
+}
+.sidebar .profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-color);
+  overflow: hidden;
+  margin-bottom: 12px;
+  position: relative;
+}
+.sidebar .avatar-edit-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.sidebar .profile-avatar:hover .avatar-edit-overlay {
+  opacity: 1;
+}
+.sidebar .profile-name {
+  font-family: var(--font-accent);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.sidebar ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.sidebar ul li {
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #9ca3af;
+  border-left: 4px solid transparent;
+  padding: 0;
+}
+.sidebar ul li:hover,
+.sidebar ul li.active {
+  background: rgba(59, 130, 246, 0.1);
+  color: #fff;
+  border-left-color: var(--accent-color);
+}
+.sidebar ul li .icon {
+  font-size: 1.2rem;
+  width: 24px;
+  display: flex;
+  justify-content: center;
+}
+.sidebar a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 24px;
+}
+.sidebar .close-sidebar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Visibility Utilities */
+@media (min-width: 769px) {
+  .lt-768 {
+    display: none !important;
+  }
+}
+@media (max-width: 768px) {
+  .gt-768 {
+    display: none !important;
+  }
+}
+
+.fab-add {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+  cursor: pointer;
+  z-index: 999;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.fab-add:active {
+  transform: scale(0.9);
+}
+.task-form-unique-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 500px) {
+  .task-status {
+    grid-template-columns: 1fr;
+    margin: 16px;
+    gap: 16px;
+  }
+  .task-form-unique-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Navbar */
+nav {
+  padding: 16px 20px;
+  background: var(--nav-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+@media (max-width: 400px) {
+  nav {
+    padding: 12px 16px;
+  }
+  .btn-aqua {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  .nav-profile span {
+    display: none;
+  }
+}
+.btn-aqua {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+.btn-aqua:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+} /* Stats Cards */
+.task-status {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin: 36px;
+}
+.tasks-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  transition:
+    transform 0.3s,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+.tasks-card:hover {
+  transform: translateY(-5px);
+}
+.tasks-card .status-title {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+.tasks-card .status-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: var(--font-accent);
+}
+.tasks-card .status-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+.total-tasks .status-icon {
+  background: rgba(63, 117, 239, 0.1);
+  color: var(--total-tasks-color);
+}
+.completed-tasks .status-icon {
+  background: rgba(45, 166, 105, 0.1);
+  color: var(--completed-color);
+}
+.overdue-tasks .status-icon {
+  background: rgba(219, 61, 66, 0.1);
+  color: var(--overdue-color);
+} /* Task List */
+.tasks-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  padding: 0 36px 36px;
+  gap: 24px;
+}
+
+@media (max-width: 400px) {
+  .tasks-list {
+    grid-template-columns: 1fr;
+    padding: 0 16px 16px;
+    gap: 16px;
+  }
+}
+.task {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-top: 4px solid transparent;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.task:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+} /* Priority Indicators */
+.task[data-priority=&quot;high&quot;] {
+  border-top-color: #ef4444;
+}
+.task[data-priority=&quot;medium&quot;] {
+  border-top-color: #f59e0b;
+}
+.task.completed {
+  opacity: 0.7;
+  border-top-color: #d1d5db !important;
+  order: 10;
+}
+
+.task.completed .task-title a {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+.task-catigory span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: var(--border-color);
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+.task-title a {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  text-decoration: none;
+}
+.task-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+.task-date {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.task-actions {
+  display: flex;
+  gap: 8px;
+}
+.task-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: color 0.2s;
+  font-size: 1rem;
+}
+.task-action.edit:hover {
+  color: var(--accent-color);
+}
+.task-action.delete:hover {
+  color: var(--overdue-color);
+}
+.task-action.important:hover {
+  color: #f59e0b;
+} /* Progress Bar */
+.progress-container {
+  height: 8px;
+  background: var(--progress-bg);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  transition: width 0.4s ease;
+} /* Forms */
+.add_Task_Form,
+.update_Task_Form {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+.add_Task_Form.active,
+.update_Task_Form.active {
+  display: flex;
+}
+form.add_Task,
+form.update_Task {
+  background: var(--card-bg);
+  padding: 24px;
+  border-radius: 20px;
+  width: 95%;
+  max-width: 500px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 95vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: none;
+  transition: background-color 0.3s ease;
+}
+
+@media (max-width: 350px) {
+  form.add_Task,
+  form.update_Task {
+    padding: 16px;
+  }
+  .form-title {
+    font-size: 1.2rem;
+  }
+}
+form input,
+form textarea,
+form select {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-main);
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+form label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  margin-bottom: -8px;
+}
+.form-title {
+  font-family: var(--font-accent);
+  font-size: 1.5rem;
+  margin: 0 0 8px 0;
+  color: var(--text-main);
+  text-align: center;
+}
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: var(--close-btn-bg);
+  color: var(--text-main);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.close-btn:hover {
+  background: var(--close-btn-hover);
+} /* Checkboxes */
+.subtasks-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.subtask-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--subtask-bg);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  margin: 12px 0;
+}
+.status-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.status-badge.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid #f59e0b;
+}
+
+.status-badge.completed {
+  background: rgba(45, 166, 105, 0.1);
+  color: var(--completed-color);
+  border: 1px solid var(--completed-color);
+}
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+}
+.custom-checkbox.checked {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}
+.custom-checkbox.checked::after {
+  content: &quot;✓&quot;;
+  color: #fff;
+  font-size: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0;
+    padding: 0;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transition: width 0.3s ease;
+    z-index: 10001;
+  }
+  .sidebar.active {
+    width: 260px;
+    padding: 24px 0;
+  }
+  .task-status {
+    margin: 16px;
+  }
+  .tasks-list {
+    padding: 0 16px;
+  }
+}
+
+textarea#update-task-description,
+textarea#task-description {
+  min-height: 200px;
+}
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Overdue Tasks Styling */
+.task.overdue {
+  border-top-color: var(--overdue-color) !important;
+  background: #fff5f5;
+  border-left: 1px solid rgba(219, 61, 66, 0.15);
+  border-right: 1px solid rgba(219, 61, 66, 0.15);
+  border-bottom: 1px solid rgba(219, 61, 66, 0.15);
+  box-shadow: 0 4px 6px rgba(219, 61, 66, 0.02);
+  order: 9;
+}
+.task.overdue:hover {
+  box-shadow: 0 10px 15px -3px rgba(219, 61, 66, 0.1);
+  background: #fff3f3;
+}
+.task.overdue .task-date {
+  color: var(--overdue-color);
+  font-weight: 600;
+}
+.overdue-badge {
+  background: rgba(219, 61, 66, 0.1);
+  color: var(--overdue-color);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  border: 1px solid rgba(219, 61, 66, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+/* Task Countdown Timer Styling */
+.task-countdown {
+  font-size: 0.8rem;
+  font-weight: 550;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 8px 0;
+  background: rgba(0, 0, 0, 0.02);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+.task.completed .task-countdown {
+  background: rgba(45, 166, 105, 0.06);
+  color: var(--completed-color);
+  border-color: rgba(45, 166, 105, 0.12);
+  font-weight: 600;
+}
+.task.overdue .task-countdown {
+  background: rgba(219, 61, 66, 0.05);
+  color: var(--overdue-color);
+  border-color: rgba(219, 61, 66, 0.12);
+  font-weight: 600;
+}
+.task-countdown.urgent {
+  background: rgba(245, 158, 11, 0.08);
+  color: #d97706;
+  border-color: rgba(245, 158, 11, 0.18);
+  font-weight: 600;
+  animation: pulse-countdown 2.5s infinite ease-in-out;
+}
+@keyframes pulse-countdown {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 rgba(245, 158, 11, 0);
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.1);
+  }
+}
+
+/* Dark Mode Overdue &amp; Countdown Overrides */
+html.dark-mode .task.overdue {
+  background: rgba(219, 61, 66, 0.08) !important;
+  border-left-color: rgba(219, 61, 66, 0.3) !important;
+  border-right-color: rgba(219, 61, 66, 0.3) !important;
+  border-bottom-color: rgba(219, 61, 66, 0.3) !important;
+}
+html.dark-mode .task.overdue:hover {
+  background: rgba(219, 61, 66, 0.12) !important;
+}
+html.dark-mode .task-countdown {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Sort completed subtasks to the bottom of the list */
+.subtask-item.subtask-detail-item.completed {
+  order: 10;
+}
+
+/* Premium Custom Pagination Styling */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin: 36px 0;
+  width: 100%;
+}
+.pagination {
+  display: flex;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.page-item {
+  display: inline-block;
+}
+.page-item .page-link,
+.page-item span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+  user-select: none;
+}
+.page-item a.page-link:hover {
+  background: var(--accent-color);
+  color: #fff;
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(59, 130, 246, 0.25);
+}
+.page-item.disabled span.page-link {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--border-color);
+  color: var(--text-muted);
+  box-shadow: none;
+}
+
+/* Premium Filter Bar focus and hover transitions */
+.filter-bar input:focus,
+.filter-bar select:focus {
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+.filter-bar select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url(&quot;data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=&#039;http://www.w3.org/2000/svg&#039; viewBox=&#039;0 0 24 24&#039; fill=&#039;none&#039; stroke=&#039;%236b7280&#039; stroke-width=&#039;2&#039; stroke-linecap=&#039;round&#039; stroke-linejoin=&#039;round&#039;%3E%3Cpolyline points=&#039;6 9 12 15 18 9&#039;%3E%3C/polyline%3E%3C/svg%3E&quot;);
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  padding-right: 40px !important;
+}
+.filter-bar button:hover {
+  background: var(--text-main) !important;
+  color: var(--card-bg) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+@media (max-width: 768px) {
+  .filter-bar {
+    margin: 16px !important;
+    padding: 16px !important;
+  }
+  .filter-bar div {
+    width: 100% !important;
+  }
+}
+
+/* Premium Bulk Select Highlight States */
+.task.selected-for-bulk {
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.12) !important;
+  background: var(--bg-hover) !important;
+  transform: translateY(-2px);
+}
+.task-select-checkbox:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Premium Task Attachments UI */
+.upload-dropzone:hover {
+  background: var(--bg-hover) !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+.upload-dropzone i {
+  transition: transform 0.3s ease;
+}
+.upload-dropzone:hover i {
+  transform: scale(1.1) translateY(-2px);
+}
+
+.image-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
+}
+.image-card:hover .card-overlay {
+  opacity: 1 !important;
+}
+
+.attachment-row:hover {
+  transform: translateX(4px);
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.delete-attachment-btn:hover {
+  transform: scale(1.1);
+  background: #dc2626 !important;
+}
+
+/* Lightbox close button transitions */
+#lightbox button:hover {
+  background: rgba(255,255,255,0.2) !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  transform: scale(1.05);
+}
+</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
