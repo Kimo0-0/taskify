@@ -18,18 +18,26 @@ class Task extends Model
       'priority',
       'status',
       'user_id',
+      'share_token',
+      'share_can_edit',
+      'share_can_complete',
     ];
 
-    protected $appends = ['formatted_date', 'category_name'];
+    protected $appends = ['formatted_date', 'category_name', 'share_url'];
 
     public function getFormattedDateAttribute()
     {
         return \Carbon\Carbon::parse($this->due_date)->format('d M Y');
     }
 
+    public function getShareUrlAttribute()
+    {
+        return $this->share_token ? url('/shared/task/' . $this->share_token) : null;
+    }
+
     public function getCategoryNameAttribute()
     {
-        return $this->category?->name ?? 'بدون تصنيف';
+        return $this->category?->name ?? 'no category';
     }
 
     public function subtasks()

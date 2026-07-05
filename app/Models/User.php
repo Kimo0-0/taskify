@@ -18,7 +18,12 @@ class User extends Authenticatable
         'email',
         'password',
         'profile_image',
+        'share_token',
+        'share_can_edit',
+        'share_can_complete',
     ];
+
+    protected $appends = ['profile_image_url', 'share_url'];
 
     protected $hidden = [
         'password',
@@ -49,8 +54,13 @@ class User extends Authenticatable
     public function getProfileImageUrlAttribute(): string
     {
         if ($this->profile_image && file_exists(public_path('storage/' . $this->profile_image))) {
-            return asset('storage/' . $this->profile_image);
+            return '/storage/' . $this->profile_image;
         }
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=3b82f6&color=fff&size=128';
+    }
+
+    public function getShareUrlAttribute()
+    {
+        return $this->share_token ? url('/shared/user/' . $this->share_token) : null;
     }
 }

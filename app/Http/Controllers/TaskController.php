@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Services\TaskService;
 use App\Traits\ApiResponse;
+use App\Events\TaskCreated;
+use App\Events\TaskUpdated;
+use App\Events\TaskDeleted;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -27,9 +30,9 @@ class TaskController extends Controller
     {
                 // Get tasks for dashboard, excluding completed ones unless the user is on the Completed page
         if ($request->filled('active_nav') && $request->active_nav === 'Completed_nav') {
-            $tasks = Auth::user()->tasks()->with(['category', 'subtasks'])->orderBy('created_at', 'desc')->paginate(10);
+            $tasks = Auth::user()->tasks()->with(['category', 'subtasks'])->orderBy('updated_at', 'desc')->paginate(10);
         } else {
-            $tasks = Auth::user()->tasks()->where('status', '!=', 'completed')->with(['category', 'subtasks'])->orderBy('created_at', 'desc')->paginate(10);
+            $tasks = Auth::user()->tasks()->where('status', '!=', 'completed')->with(['category', 'subtasks'])->orderBy('due_date', 'asc')->paginate(10);
         }
 
         // Global stats for the user
@@ -67,6 +70,7 @@ class TaskController extends Controller
 
         try {
             $task = $this->taskService->createTask($validated);
+            broadcast(new TaskCreated($task))->toOthers();
             return $this->success($task, 'Task created successfully', 201);
         } catch (\Exception $e) {
             return $this->error('Failed to create task', 500, [$e->getMessage()]);
@@ -97,6 +101,7 @@ class TaskController extends Controller
 
         try {
             $updatedTask = $this->taskService->updateTask($task, $validated);
+            broadcast(new TaskUpdated($updatedTask))->toOthers();
             return $this->success($updatedTask, 'Task updated successfully');
         } catch (\Exception $e) {
             return $this->error('Failed to update task', 500, [$e->getMessage()]);
@@ -115,7 +120,11 @@ class TaskController extends Controller
         }
 
         try {
+            $taskId = $task->id;
+            $userId = $task->user_id;
+            $categoryId = $task->category_id;
             $this->taskService->deleteTask($task);
+            broadcast(new TaskDeleted($taskId, $userId, $categoryId))->toOthers();
             return $this->success(null, 'Task deleted successfully');
         } catch (\Exception $e) {
             return $this->error('Failed to delete task', 500, [$e->getMessage()]);
@@ -195,6 +204,11 @@ class TaskController extends Controller
             }
         }
 
+        // Strict exclusion of completed tasks from non-completed and non-trash navigations
+        if ($request->active_nav !== 'Completed_nav' && $request->active_nav !== 'Trash_nav') {
+            $query->where('status', '!=', 'completed');
+        }
+
         // Apply Fuzzy Search Term
         if ($request->filled('search')) {
             $search = $request->search;
@@ -232,8 +246,10 @@ class TaskController extends Controller
                 'status' => $task->status,
                 'priority' => $task->priority,
                 'category_id' => $task->category_id,
-                'category_name' => $task->category ? $task->category->name : 'Uncategorized',
+                'category_name' => $task->category_name,
                 'formatted_date' => \Carbon\Carbon::parse($task->due_date)->format('M d, Y h:i A'),
+                'share_token' => $task->share_token,
+                'share_url' => $task->share_url,
                 'subtasks' => $task->subtasks->map(function ($subtask) {
                     return [
                         'id' => $subtask->id,
@@ -405,5 +421,59 @@ class TaskController extends Controller
         }
 
         return view('task', compact('task'));
+    }
+
+    /**
+     * Toggle public sharing on/off for a task, and update permissions.
+     */
+    public function toggleShare(Request $request, $id)
+    {
+        $task = Auth::user()->tasks()->findOrFail($id);
+
+        if ($request->has('disable') && $request->disable) {
+            $task->share_token = null;
+            $task->share_can_edit = false;
+            $task->share_can_complete = false;
+            $task->save();
+            return response()->json([
+                'status' => 'success',
+                'shared' => false,
+                'message' => 'Sharing disabled successfully'
+            ]);
+        }
+
+        if ($task->share_token && !$request->has('share_can_edit') && !$request->has('share_can_complete')) {
+            $task->share_token = null;
+            $task->share_can_edit = false;
+            $task->share_can_complete = false;
+            $task->save();
+            return response()->json([
+                'status' => 'success',
+                'shared' => false,
+                'message' => 'Sharing disabled successfully'
+            ]);
+        }
+
+        if (!$task->share_token) {
+            $task->share_token = \Illuminate\Support\Str::random(32);
+        }
+
+        if ($request->has('share_can_edit')) {
+            $task->share_can_edit = (bool)$request->share_can_edit;
+        }
+        if ($request->has('share_can_complete')) {
+            $task->share_can_complete = (bool)$request->share_can_complete;
+        }
+
+        $task->save();
+
+        return response()->json([
+            'status' => 'success',
+            'shared' => true,
+            'share_url' => $task->share_url,
+            'share_can_edit' => (bool)$task->share_can_edit,
+            'share_can_complete' => (bool)$task->share_can_complete,
+            'message' => 'Share settings updated successfully'
+        ]);
     }
 }

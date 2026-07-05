@@ -4,8 +4,12 @@ function toggleSidebar() {
 
 function toggleAddForm() {
   document.querySelector(".add_Task_Form").classList.toggle("active");
+
 }
 
 const toggleUpdateForm = () => {
   document.querySelector(".update_Task_Form").classList.toggle("active");
 };
+
+
+

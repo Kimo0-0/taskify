@@ -14,4 +14,9 @@ class Category extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    public function shares()
+    {
+        return $this->hasMany(CategoryShare::class);
+    }
 }

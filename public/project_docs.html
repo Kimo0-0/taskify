@@ -1,211 +1,260 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>توثيق مشروع نظام إدارة المهام (Task Management API)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --primary: #0f172a;
-            --accent: #0284c7;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-        }
+      :root {
+        --primary: #0f172a;
+        --accent: #0284c7;
+        --bg: #f8fafc;
+        --card-bg: #ffffff;
+        --text: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+      }
+      body {
+        font-family: "Cairo", sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        line-height: 1.8;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+      .cover-page {
+        height: 90vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border-bottom: 2px solid var(--border);
+        page-break-after: always;
+      }
+      .cover-title {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 10px;
+      }
+      .cover-subtitle {
+        font-size: 1.5rem;
+        color: var(--accent);
+        margin-bottom: 40px;
+      }
+      .cover-meta {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+      }
+      .section-title {
+        font-size: 2rem;
+        color: var(--primary);
+        border-bottom: 3px solid var(--accent);
+        padding-bottom: 8px;
+        margin-top: 50px;
+        margin-bottom: 20px;
+        page-break-before: always;
+      }
+      .file-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+      }
+      .file-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+      }
+      .file-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--accent);
+      }
+      .file-path {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-family: monospace;
+        direction: ltr;
+      }
+      .explanation {
+        background: #f1f5f9;
+        border-right: 4px solid var(--accent);
+        padding: 16px;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 20px;
+        font-size: 1.05rem;
+      }
+      .code-container {
+        border-radius: 8px;
+        overflow: hidden;
+        direction: ltr;
+        text-align: left;
+        max-height: 600px;
+        overflow-y: auto;
+      }
+      pre {
+        margin: 0 !important;
+      }
+      /* Print Styles */
+      @media print {
         body {
-            font-family: "Cairo", sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            line-height: 1.8;
+          background: #fff;
+          color: #000;
         }
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        .cover-page {
-            height: 90vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            border-bottom: 2px solid var(--border);
-            page-break-after: always;
-        }
-        .cover-title {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-        .cover-subtitle {
-            font-size: 1.5rem;
-            color: var(--accent);
-            margin-bottom: 40px;
-        }
-        .cover-meta {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-        }
-        .section-title {
-            font-size: 2rem;
-            color: var(--primary);
-            border-bottom: 3px solid var(--accent);
-            padding-bottom: 8px;
-            margin-top: 50px;
-            margin-bottom: 20px;
-            page-break-before: always;
+          max-width: 100%;
+          padding: 0;
         }
         .file-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
-        }
-        .file-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
-            margin-bottom: 16px;
-        }
-        .file-name {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-        .file-path {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-family: monospace;
-            direction: ltr;
-        }
-        .explanation {
-            background: #f1f5f9;
-            border-right: 4px solid var(--accent);
-            padding: 16px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 20px;
-            font-size: 1.05rem;
+          border: none;
+          box-shadow: none;
+          padding: 0;
+          page-break-inside: avoid;
         }
         .code-container {
-            border-radius: 8px;
-            overflow: hidden;
-            direction: ltr;
-            text-align: left;
-            max-height: 600px;
-            overflow-y: auto;
+          max-height: none;
+          overflow: visible;
         }
-        pre {
-            margin: 0 !important;
+        .no-print {
+          display: none;
         }
-        /* Print Styles */
-        @media print {
-            body {
-                background: #fff;
-                color: #000;
-            }
-            .container {
-                max-width: 100%;
-                padding: 0;
-            }
-            .file-card {
-                border: none;
-                box-shadow: none;
-                padding: 0;
-                page-break-inside: avoid;
-            }
-            .code-container {
-                max-height: none;
-                overflow: visible;
-            }
-            .no-print {
-                display: none;
-            }
-            .page-break {
-                page-break-before: always;
-            }
+        .page-break {
+          page-break-before: always;
         }
-        .print-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-family: "Cairo", sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            transition: all 0.2s;
-            z-index: 9999;
-        }
-        .print-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-        }
+      }
+      .print-btn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-family: "Cairo", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        transition: all 0.2s;
+        z-index: 9999;
+      }
+      .print-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+      }
     </style>
-</head>
-<body>
-
-    <button class="print-btn no-print" onclick="window.print()">حفظ كـ PDF / طباعة</button>
+  </head>
+  <body>
+    <button class="print-btn no-print" onclick="window.print()">
+      حفظ كـ PDF / طباعة
+    </button>
 
     <div class="container">
-        <!-- Cover Page -->
-        <div class="cover-page">
-            <h1 class="cover-title">توثيق الكود البرمجي الكامل</h1>
-            <h2 class="cover-subtitle">نظام إدارة المهام المتطور (Task Management System)</h2>
-            <p style="max-width: 600px; margin: 0 auto 40px auto; font-size: 1.1rem; color: var(--text-muted)">
-                وثيقة برمجية شاملة تحتوي على الشيفرات المصدرية لجميع ملفات المشروع الأساسية (Controllers, Models, Views, Routes, Migrations, CSS) مع شرح تفصيلي دقيق لكل ملف ودوره في النظام باللغة العربية.
-            </p>
-            <div class="cover-meta">
-                <p><strong>تطوير وإعداد:</strong> الذكاء الاصطناعي (Antigravity)</p>
-                <p><strong>التقنيات المستخدمة:</strong> Laravel 11, Blade, AJAX (Axios), Vanilla CSS, SQLite/MySQL</p>
-                <p><strong>التاريخ:</strong> 2026-05-18</p>
-            </div>
+      <!-- Cover Page -->
+      <div class="cover-page">
+        <h1 class="cover-title">توثيق الكود البرمجي الكامل</h1>
+        <h2 class="cover-subtitle">
+          نظام إدارة المهام المتطور (Task Management System)
+        </h2>
+        <p
+          style="
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+          "
+        >
+          وثيقة برمجية شاملة تحتوي على الشيفرات المصدرية لجميع ملفات المشروع
+          الأساسية (Controllers, Models, Views, Routes, Migrations, CSS) مع شرح
+          تفصيلي دقيق لكل ملف ودوره في النظام باللغة العربية.
+        </p>
+        <div class="cover-meta">
+          <p><strong>تطوير وإعداد:</strong> الذكاء الاصطناعي (Antigravity)</p>
+          <p>
+            <strong>التقنيات المستخدمة:</strong> Laravel 11, Blade, AJAX
+            (Axios), Vanilla CSS, SQLite/MySQL
+          </p>
+          <p><strong>التاريخ:</strong> 2026-05-18</p>
         </div>
+      </div>
 
-        <!-- Table of Contents / هيكل المشروع -->
-        <div class="page-break">
-            <h2 class="section-title" style="page-break-before: avoid;">1. مقدمة وهيكل المشروع الأساسي</h2>
-            <div class="file-card">
-                <p>تم بناء هذا النظام باستخدام إطار العمل الشهير <strong>Laravel 11</strong> مع تطبيق أفضل الممارسات البرمجية لضمان السرعة، الأمان، والتجربة التفاعلية الممتازة للمستخدم (سلاسة عدم تحديث الصفحة عبر تقنية AJAX).</p>
-                <h3 style="color: var(--primary)">الأقسام الرئيسية للملفات الموثقة:</h3>
-                <ul>
-                    <li><strong>Controllers (المتحكمات):</strong> تمثل عقل التطبيق والمسؤولة عن معالجة الطلبات وإرجاع البيانات.</li>
-                    <li><strong>Models (النماذج):</strong> تمثل الجداول في قاعدة البيانات وتتحكم في العلاقات وتدفق البيانات.</li>
-                    <li><strong>Views (الواجهات):</strong> القوالب البصرية التفاعلية المبنية بـ Blade وجافاسكريبت.</li>
-                    <li><strong>Routes (المسارات):</strong> توجه الطلبات للمكان الصحيح.</li>
-                    <li><strong>Migrations (الهجرة):</strong> هيكل وتصميم قواعد البيانات.</li>
-                    <li><strong>CSS Stylesheet:</strong> التصميم الفريد والراقي والوضع المظلم.</li>
-                </ul>
-            </div>
+      <!-- Table of Contents / هيكل المشروع -->
+      <div class="page-break">
+        <h2 class="section-title" style="page-break-before: avoid">
+          1. مقدمة وهيكل المشروع الأساسي
+        </h2>
+        <div class="file-card">
+          <p>
+            تم بناء هذا النظام باستخدام إطار العمل الشهير
+            <strong>Laravel 11</strong> مع تطبيق أفضل الممارسات البرمجية لضمان
+            السرعة، الأمان، والتجربة التفاعلية الممتازة للمستخدم (سلاسة عدم
+            تحديث الصفحة عبر تقنية AJAX).
+          </p>
+          <h3 style="color: var(--primary)">
+            الأقسام الرئيسية للملفات الموثقة:
+          </h3>
+          <ul>
+            <li>
+              <strong>Controllers (المتحكمات):</strong> تمثل عقل التطبيق
+              والمسؤولة عن معالجة الطلبات وإرجاع البيانات.
+            </li>
+            <li>
+              <strong>Models (النماذج):</strong> تمثل الجداول في قاعدة البيانات
+              وتتحكم في العلاقات وتدفق البيانات.
+            </li>
+            <li>
+              <strong>Views (الواجهات):</strong> القوالب البصرية التفاعلية
+              المبنية بـ Blade وجافاسكريبت.
+            </li>
+            <li>
+              <strong>Routes (المسارات):</strong> توجه الطلبات للمكان الصحيح.
+            </li>
+            <li>
+              <strong>Migrations (الهجرة):</strong> هيكل وتصميم قواعد البيانات.
+            </li>
+            <li>
+              <strong>CSS Stylesheet:</strong> التصميم الفريد والراقي والوضع
+              المظلم.
+            </li>
+          </ul>
         </div>
+      </div>
 
-        <h2 class="section-title">2. الأكواد المصدرية والشروحات التفصيلية</h2>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">TaskController (التحكم بالمهام)</span>
-                <span class="file-path">app/Http/Controllers/TaskController.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                يتحكم هذا الملف في جميع العمليات الخاصة بالمهام (إنشاء، تعديل، حذف، أرشفة، استرجاع، والبحث المتقدم). يحتوي على الدوال التي تتعامل مع الطلبات وتستدعي الـ TaskService لإتمام العمليات الحسابية وقاعدة البيانات ثم تعيد الاستجابة إما كـ JSON أو كـ View.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      <h2 class="section-title">2. الأكواد المصدرية والشروحات التفصيلية</h2>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">TaskController (التحكم بالمهام)</span>
+          <span class="file-path">app/Http/Controllers/TaskController.php</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          يتحكم هذا الملف في جميع العمليات الخاصة بالمهام (إنشاء، تعديل، حذف،
+          أرشفة، استرجاع، والبحث المتقدم). يحتوي على الدوال التي تتعامل مع
+          الطلبات وتستدعي الـ TaskService لإتمام العمليات الحسابية وقاعدة
+          البيانات ثم تعيد الاستجابة إما كـ JSON أو كـ View.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 namespace App\Http\Controllers;
 
@@ -615,19 +664,25 @@ class TaskController extends Controller
     }
 }
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">ProfileController (التحكم بالملف الشخصي)</span>
-                <span class="file-path">app/Http/Controllers/ProfileController.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                مسؤول عن إدارة حساب المستخدم. يحتوي على دالة التحديث التي تستقبل الاسم وصورة البروفايل عبر طلب AJAX، وتقوم برفع الصورة وحفظ المسار في قاعدة البيانات، بالإضافة إلى دالة حذف الحساب بالكامل.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name"
+            >ProfileController (التحكم بالملف الشخصي)</span
+          >
+          <span class="file-path"
+            >app/Http/Controllers/ProfileController.php</span
+          >
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          مسؤول عن إدارة حساب المستخدم. يحتوي على دالة التحديث التي تستقبل الاسم
+          وصورة البروفايل عبر طلب AJAX، وتقوم برفع الصورة وحفظ المسار في قاعدة
+          البيانات، بالإضافة إلى دالة حذف الحساب بالكامل.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 namespace App\Http\Controllers;
 
@@ -704,19 +759,23 @@ class ProfileController extends Controller
     }
 }
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">AttachmentController (التحكم بالمرفقات)</span>
-                <span class="file-path">app/Http/Controllers/AttachmentController.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                مسؤول عن رفع وإدارة ملفات المرفقات الخاصة بالمهام. يسمح للمستخدم برفع الصور والمستندات وربطها بالمهمة المطلوبة، مع التحقق من صحة الملفات وصيغها وحجمها.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">AttachmentController (التحكم بالمرفقات)</span>
+          <span class="file-path"
+            >app/Http/Controllers/AttachmentController.php</span
+          >
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          مسؤول عن رفع وإدارة ملفات المرفقات الخاصة بالمهام. يسمح للمستخدم برفع
+          الصور والمستندات وربطها بالمهمة المطلوبة، مع التحقق من صحة الملفات
+          وصيغها وحجمها.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 namespace App\Http\Controllers;
 
@@ -736,7 +795,7 @@ class AttachmentController extends Controller
         $task = Auth::user()-&gt;tasks()-&gt;findOrFail($taskId);
 
         $request-&gt;validate([
-            &#039;file&#039; =&gt; &#039;required|file|max:10240&#039;, // Max 10MB
+            &#039;file&#039; =&gt; &#039;required|file|max:51200&#039;, // Max 50MB
         ]);
 
         $file = $request-&gt;file(&#039;file&#039;);
@@ -768,7 +827,7 @@ class AttachmentController extends Controller
     public function download($id)
     {
         $attachment = Attachment::findOrFail($id);
-        
+
         // Ensure the task belongs to the authenticated user
         $task = Auth::user()-&gt;tasks()-&gt;findOrFail($attachment-&gt;task_id);
 
@@ -787,7 +846,7 @@ class AttachmentController extends Controller
     public function destroy($id)
     {
         $attachment = Attachment::findOrFail($id);
-        
+
         // Ensure the task belongs to the authenticated user
         $task = Auth::user()-&gt;tasks()-&gt;findOrFail($attachment-&gt;task_id);
 
@@ -805,19 +864,24 @@ class AttachmentController extends Controller
     }
 }
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">SubtaskController (التحكم بالمهام الفرعية)</span>
-                <span class="file-path">app/Http/Controllers/SubtaskController.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                يدير المهام الفرعية المرتبطة بكل مهمة رئيسية. يسمح بإضافتها، تعديلها، وحذفها، وتحديث حالتها (مكتملة أو غير مكتملة) لحظياً عبر الـ Dashboard.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name"
+            >SubtaskController (التحكم بالمهام الفرعية)</span
+          >
+          <span class="file-path"
+            >app/Http/Controllers/SubtaskController.php</span
+          >
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          يدير المهام الفرعية المرتبطة بكل مهمة رئيسية. يسمح بإضافتها، تعديلها،
+          وحذفها، وتحديث حالتها (مكتملة أو غير مكتملة) لحظياً عبر الـ Dashboard.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 namespace App\Http\Controllers;
 
@@ -858,19 +922,22 @@ class SubtaskController extends Controller
     }
 }
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">User Model (نموذج المستخدم)</span>
-                <span class="file-path">app/Models/User.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                يمثل جدول المستخدمين في قاعدة البيانات. يحتوي على الحقول القابلة للتعبئة، وعلاقة المستخدم بالمهام (HasMany)، بالإضافة إلى الـ Accessor الخاص بجلب رابط صورة الملف الشخصي بديناميكية (حيث يرجع الصورة المرفوعة أو صورة افتراضية تعتمد على الحرف الأول من اسمه).
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">User Model (نموذج المستخدم)</span>
+          <span class="file-path">app/Models/User.php</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          يمثل جدول المستخدمين في قاعدة البيانات. يحتوي على الحقول القابلة
+          للتعبئة، وعلاقة المستخدم بالمهام (HasMany)، بالإضافة إلى الـ Accessor
+          الخاص بجلب رابط صورة الملف الشخصي بديناميكية (حيث يرجع الصورة المرفوعة
+          أو صورة افتراضية تعتمد على الحرف الأول من اسمه).
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 namespace App\Models;
 
@@ -927,19 +994,21 @@ class User extends Authenticatable
     }
 }
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Task Model (نموذج المهمة)</span>
-                <span class="file-path">app/Models/Task.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                يمثل جدول المهام. يحتوي على ميزة الـ Soft Deletes (الحذف المؤقت إلى سلة المهملات)، وعلاقات المهمة مع التصنيف (BelongsTo)، والمستخدم (BelongsTo)، والمهام الفرعية (HasMany)، والمرفقات (HasMany).
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">Task Model (نموذج المهمة)</span>
+          <span class="file-path">app/Models/Task.php</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          يمثل جدول المهام. يحتوي على ميزة الـ Soft Deletes (الحذف المؤقت إلى
+          سلة المهملات)، وعلاقات المهمة مع التصنيف (BelongsTo)، والمستخدم
+          (BelongsTo)، والمهام الفرعية (HasMany)، والمرفقات (HasMany).
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 namespace App\Models;
 
@@ -1005,19 +1074,20 @@ class Task extends Model
     }
 }
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Attachment Model (نموذج المرفقات)</span>
-                <span class="file-path">app/Models/Attachment.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                يمثل جدول المرفقات في قاعدة البيانات، ويربط كل ملف مرفوع بالمهمة الخاصة به عبر علاقة BelongsTo.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">Attachment Model (نموذج المرفقات)</span>
+          <span class="file-path">app/Models/Attachment.php</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          يمثل جدول المرفقات في قاعدة البيانات، ويربط كل ملف مرفوع بالمهمة
+          الخاصة به عبر علاقة BelongsTo.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 namespace App\Models;
 
@@ -1072,19 +1142,20 @@ class Attachment extends Model
     }
 }
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Category Model (نموذج التصنيف)</span>
-                <span class="file-path">app/Models/Category.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                يمثل جدول التصنيفات (الفئات) التي يتم تجميع المهام تحتها. يربط التصنيف بالمهام التابعة له عبر علاقة HasMany.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">Category Model (نموذج التصنيف)</span>
+          <span class="file-path">app/Models/Category.php</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          يمثل جدول التصنيفات (الفئات) التي يتم تجميع المهام تحتها. يربط التصنيف
+          بالمهام التابعة له عبر علاقة HasMany.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 namespace App\Models;
 
@@ -1102,19 +1173,20 @@ class Category extends Model
     }
 }
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Subtask Model (نموذج المهام الفرعية)</span>
-                <span class="file-path">app/Models/Subtask.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                يمثل جدول المهام الفرعية ويرتبط بالمهمة الرئيسية التابع لها عبر علاقة BelongsTo.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">Subtask Model (نموذج المهام الفرعية)</span>
+          <span class="file-path">app/Models/Subtask.php</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          يمثل جدول المهام الفرعية ويرتبط بالمهمة الرئيسية التابع لها عبر علاقة
+          BelongsTo.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 namespace App\Models;
 
@@ -1130,19 +1202,21 @@ class Subtask extends Model
     }
 }
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Web Routes (مسارات الويب)</span>
-                <span class="file-path">routes/web.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                يحتوي على جميع مسارات التطبيق الموجهة للمتصفح. يتضمن مسارات المصادقة (Auth)، ومسارات إدارة المهام، وتحديث البروفايل الشخصي، وحذف الحساب، والوصول لسلة المهملات.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">Web Routes (مسارات الويب)</span>
+          <span class="file-path">routes/web.php</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          يحتوي على جميع مسارات التطبيق الموجهة للمتصفح. يتضمن مسارات المصادقة
+          (Auth)، ومسارات إدارة المهام، وتحديث البروفايل الشخصي، وحذف الحساب،
+          والوصول لسلة المهملات.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -1182,7 +1256,7 @@ Route::middleware([&#039;auth&#039;, &#039;verified&#039;])-&gt;group(function (
   Route::post(&#039;/tasks/{id}/restore&#039;, [TaskController::class, &#039;restore&#039;])-&gt;name(&#039;tasks.restore&#039;);
   Route::delete(&#039;/tasks/{id}/force-delete&#039;, [TaskController::class, &#039;forceDelete&#039;])-&gt;name(&#039;tasks.forceDelete&#039;);
   Route::post(&#039;/subtasks/{id}/toggle&#039;, [SubtaskController::class, &#039;toggle&#039;])-&gt;name(&#039;subtasks.toggle&#039;);
-  
+
   // Task Attachment Routes
   Route::post(&#039;/tasks/{id}/attachments&#039;, [AttachmentController::class, &#039;store&#039;])-&gt;name(&#039;attachments.store&#039;);
   Route::delete(&#039;/attachments/{id}&#039;, [AttachmentController::class, &#039;destroy&#039;])-&gt;name(&#039;attachments.destroy&#039;);
@@ -1204,19 +1278,24 @@ Route::get(&#039;/logout&#039;, [AuthenticatedSessionController::class, &#039;de
 
 require __DIR__.&#039;/auth.php&#039;;
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Attachment Migration (هجرة جدول المرفقات)</span>
-                <span class="file-path">database/migrations/2026_05_17_133403_create_attachments_table.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                المخطط البرمجي لإنشاء جدول المرفقات في قاعدة البيانات، ويشمل حقول مسار الملف، اسم الملف الأصلي، وحجمه، مع مفتاح خارجي يربطه بجدول المهام.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name"
+            >Attachment Migration (هجرة جدول المرفقات)</span
+          >
+          <span class="file-path"
+            >database/migrations/2026_05_17_133403_create_attachments_table.php</span
+          >
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          المخطط البرمجي لإنشاء جدول المرفقات في قاعدة البيانات، ويشمل حقول مسار
+          الملف، اسم الملف الأصلي، وحجمه، مع مفتاح خارجي يربطه بجدول المهام.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -1249,19 +1328,24 @@ return new class extends Migration
     }
 };
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Profile Image Migration (تعديل جدول المستخدمين)</span>
-                <span class="file-path">database/migrations/2026_05_18_064016_add_profile_image_to_users_table.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                ملف هجرة مخصص لإضافة حقل صورة الملف الشخصي `profile_image` كحقل اختياري (nullable) إلى جدول المستخدمين الحالي.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;?php
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name"
+            >Profile Image Migration (تعديل جدول المستخدمين)</span
+          >
+          <span class="file-path"
+            >database/migrations/2026_05_18_064016_add_profile_image_to_users_table.php</span
+          >
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          ملف هجرة مخصص لإضافة حقل صورة الملف الشخصي `profile_image` كحقل
+          اختياري (nullable) إلى جدول المستخدمين الحالي.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -1290,19 +1374,22 @@ return new class extends Migration
     }
 };
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Main Layout (القالب الأساسي)</span>
-                <span class="file-path">resources/views/layout/layout.blade.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                الملف الهيكلي الرئيسي لجميع صفحات التطبيق. يحتوي على الرأس (Head)، استدعاء ملفات الستايل والخطوط، مكتبات الجافاسكريبت مثل Axios و FontAwesome، والنوافذ المنبثقة (Modals) مثل نافذة تعديل البروفايل، بالإضافة إلى أكواد الجافاسكريبت التفاعلية.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;!DOCTYPE html&gt;
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">Main Layout (القالب الأساسي)</span>
+          <span class="file-path">resources/views/layout/layout.blade.php</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          الملف الهيكلي الرئيسي لجميع صفحات التطبيق. يحتوي على الرأس (Head)،
+          استدعاء ملفات الستايل والخطوط، مكتبات الجافاسكريبت مثل Axios و
+          FontAwesome، والنوافذ المنبثقة (Modals) مثل نافذة تعديل البروفايل،
+          بالإضافة إلى أكواد الجافاسكريبت التفاعلية.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
     &lt;meta charset=&quot;UTF-8&quot;&gt;
@@ -1534,7 +1621,7 @@ return new class extends Migration
                     // Update Sidebar instantly
                     const sidebarName = document.getElementById(&#039;sidebar-profile-name&#039;);
                     const sidebarImg = document.getElementById(&#039;sidebar-profile-img&#039;);
-                    
+
                     if(sidebarName) sidebarName.textContent = response.data.name;
                     if(sidebarImg) sidebarImg.src = response.data.profile_image_url;
 
@@ -1574,19 +1661,24 @@ return new class extends Migration
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Sidebar View (القائمة الجانبية)</span>
-                <span class="file-path">resources/views/layout/sidebar.blade.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                يمثل الشريط الجانبي للتطبيق. يعرض صورة الملف الشخصي والاسم للمستخدم الحالي بديناميكية مع زر التعديل، ويحتوي على روابط التنقل بين الأقسام المختلفة (المهام اليومية، المهمة، المكتملة، وسلة المهملات) مع العدادات الحية لكل قسم.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">&lt;div class=&quot;sidebar&quot;&gt;
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">Sidebar View (القائمة الجانبية)</span>
+          <span class="file-path"
+            >resources/views/layout/sidebar.blade.php</span
+          >
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          يمثل الشريط الجانبي للتطبيق. يعرض صورة الملف الشخصي والاسم للمستخدم
+          الحالي بديناميكية مع زر التعديل، ويحتوي على روابط التنقل بين الأقسام
+          المختلفة (المهام اليومية، المهمة، المكتملة، وسلة المهملات) مع العدادات
+          الحية لكل قسم.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">&lt;div class=&quot;sidebar&quot;&gt;
   &lt;button class=&quot;close-sidebar lt-768&quot; onclick=&quot;toggleSidebar()&quot;&gt;&lt;i class=&quot;fa-solid fa-xmark&quot;&gt;&lt;/i&gt;&lt;/button&gt;
   &lt;div class=&quot;profile&quot; onclick=&quot;openProfileModal()&quot; style=&quot;cursor: pointer;&quot; title=&quot;Edit Profile&quot;&gt;
     &lt;div class=&quot;profile-avatar&quot; style=&quot;position: relative;&quot;&gt;
@@ -1597,7 +1689,7 @@ return new class extends Migration
     &lt;/div&gt;
     &lt;span class=&quot;profile-name&quot; id=&quot;sidebar-profile-name&quot;&gt;{{ Auth::user()-&gt;name }}&lt;/span&gt;
   &lt;/div&gt;
-  
+
   &lt;div class=&quot;links&quot;&gt;
     &lt;ul&gt;
       &lt;li class=&quot;{{ Route::is(&#039;dashboard&#039;) ? &#039;active&#039; : &#039;&#039; }}&quot;&gt;
@@ -1646,19 +1738,22 @@ return new class extends Migration
   &lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Dashboard View (لوحة التحكم الرئيسية)</span>
-                <span class="file-path">resources/views/Dashboard.blade.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                الصفحة الأساسية التي يعرض فيها المستخدم مهامه. تحتوي على أشرطة الإحصائيات العلوية، الفلاتر المتطورة (البحث، التصنيف، الأهمية)، مساحة عرض الكروت الخاصة بالمهام، وآليات الإضافة السريعة والتعديل اللحظي بدون تحديث.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">@extends(&#039;layout.layout&#039;)
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">Dashboard View (لوحة التحكم الرئيسية)</span>
+          <span class="file-path">resources/views/Dashboard.blade.php</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          الصفحة الأساسية التي يعرض فيها المستخدم مهامه. تحتوي على أشرطة
+          الإحصائيات العلوية، الفلاتر المتطورة (البحث، التصنيف، الأهمية)، مساحة
+          عرض الكروت الخاصة بالمهام، وآليات الإضافة السريعة والتعديل اللحظي بدون
+          تحديث.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">@extends(&#039;layout.layout&#039;)
 @section(&#039;title&#039;, $title ?? &#039;Dashboard&#039;)
 @section($activeNav ?? &#039;Dashboard_nav&#039;, &#039;active&#039;)
 
@@ -1716,7 +1811,7 @@ return new class extends Migration
           &lt;i class=&quot;fa-solid fa-magnifying-glass&quot; style=&quot;position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.95rem;&quot;&gt;&lt;/i&gt;
           &lt;input type=&quot;text&quot; id=&quot;search-tasks&quot; placeholder=&quot;Search tasks by title or description...&quot; oninput=&quot;if(event.isTrusted) filterTasks()&quot; autocomplete=&quot;off&quot; data-form-type=&quot;other&quot; data-lpignore=&quot;true&quot; style=&quot;width: 100%; padding: 12px 16px 12px 44px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; box-sizing: border-box; transition: all 0.3s ease;&quot;&gt;
       &lt;/div&gt;
-      
+
       &lt;div style=&quot;display: flex; flex-wrap: wrap; gap: 12px; width: auto;&quot;&gt;
           &lt;select id=&quot;filter-category&quot; onchange=&quot;if(event.isTrusted) filterTasks()&quot; autocomplete=&quot;off&quot; data-form-type=&quot;other&quot; style=&quot;padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;&quot;&gt;
               &lt;option value=&quot;&quot;&gt;All Categories&lt;/option&gt;
@@ -1738,7 +1833,7 @@ return new class extends Migration
               &lt;option value=&quot;in progress&quot;&gt;In Progress&lt;/option&gt;
               &lt;option value=&quot;completed&quot;&gt;Completed&lt;/option&gt;
           &lt;/select&gt;
-          
+
           &lt;button onclick=&quot;resetFilters()&quot; style=&quot;padding: 12px 16px; background: var(--border-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;&quot;&gt;
               &lt;i class=&quot;fa-solid fa-filter-circle-xmark&quot;&gt;&lt;/i&gt; Reset
           &lt;/button&gt;
@@ -1944,8 +2039,8 @@ return new class extends Migration
                   &lt;div class=&quot;progress-bar&quot; style=&quot;width: ${progress}%&quot;&gt;&lt;/div&gt;
               &lt;/div&gt;
               &lt;div class=&quot;task-countdown&quot; data-due=&quot;${task.due_date}&quot; data-status=&quot;${task.status}&quot;&gt;
-                  ${isCompleted 
-                    ? &#039;&lt;i class=&quot;fa-solid fa-circle-check&quot;&gt;&lt;/i&gt; &lt;span class=&quot;countdown-text&quot;&gt;Completed&lt;/span&gt;&#039; 
+                  ${isCompleted
+                    ? &#039;&lt;i class=&quot;fa-solid fa-circle-check&quot;&gt;&lt;/i&gt; &lt;span class=&quot;countdown-text&quot;&gt;Completed&lt;/span&gt;&#039;
                     : &#039;&lt;i class=&quot;fa-solid fa-hourglass-half&quot;&gt;&lt;/i&gt; &lt;span class=&quot;countdown-text&quot;&gt;Calculating...&lt;/span&gt;&#039;}
               &lt;/div&gt;
               &lt;div class=&quot;task-bar&quot;&gt;
@@ -2200,13 +2295,13 @@ return new class extends Migration
                       pagContainer.innerHTML = `
                           &lt;ul class=&quot;pagination&quot;&gt;
                               &lt;li class=&quot;page-item ${!result.prev_page_url ? &#039;disabled&#039; : &#039;&#039;}&quot;&gt;
-                                  ${result.prev_page_url 
-                                    ? `&lt;a class=&quot;page-link&quot; onclick=&quot;filterTasks(${result.current_page - 1})&quot;&gt;« Previous&lt;/a&gt;` 
+                                  ${result.prev_page_url
+                                    ? `&lt;a class=&quot;page-link&quot; onclick=&quot;filterTasks(${result.current_page - 1})&quot;&gt;« Previous&lt;/a&gt;`
                                     : `&lt;span class=&quot;page-link&quot;&gt;« Previous&lt;/span&gt;`}
                               &lt;/li&gt;
                               &lt;li class=&quot;page-item ${!result.next_page_url ? &#039;disabled&#039; : &#039;&#039;}&quot;&gt;
-                                  ${result.next_page_url 
-                                    ? `&lt;a class=&quot;page-link&quot; onclick=&quot;filterTasks(${result.current_page + 1})&quot;&gt;Next »&lt;/a&gt;` 
+                                  ${result.next_page_url
+                                    ? `&lt;a class=&quot;page-link&quot; onclick=&quot;filterTasks(${result.current_page + 1})&quot;&gt;Next »&lt;/a&gt;`
                                     : `&lt;span class=&quot;page-link&quot;&gt;Next »&lt;/span&gt;`}
                               &lt;/li&gt;
                           &lt;/ul&gt;`;
@@ -2240,7 +2335,7 @@ return new class extends Migration
       const category = document.getElementById(&#039;filter-category&#039;).value;
       const priority = document.getElementById(&#039;filter-priority&#039;).value;
       const status = document.getElementById(&#039;filter-status&#039;).value;
-      
+
       const urlParams = new URLSearchParams(window.location.search);
       const page = urlParams.get(&#039;page&#039;) || 1;
 
@@ -2289,17 +2384,17 @@ return new class extends Migration
                   pagContainer.innerHTML = `
                       &lt;ul class=&quot;pagination&quot;&gt;
                           &lt;li class=&quot;page-item ${!prevPage ? &#039;disabled&#039; : &#039;&#039;}&quot;&gt;
-                              ${prevPage 
-                                ? `&lt;a class=&quot;page-link&quot; href=&quot;#&quot; onclick=&quot;changePage(event, ${prevPage})&quot;&gt;« Previous&lt;/a&gt;` 
+                              ${prevPage
+                                ? `&lt;a class=&quot;page-link&quot; href=&quot;#&quot; onclick=&quot;changePage(event, ${prevPage})&quot;&gt;« Previous&lt;/a&gt;`
                                 : `&lt;span class=&quot;page-link&quot;&gt;« Previous&lt;/span&gt;`}
                           &lt;/li&gt;
                           &lt;li class=&quot;page-item ${!nextPage ? &#039;disabled&#039; : &#039;&#039;}&quot;&gt;
-                              ${nextPage 
-                                ? `&lt;a class=&quot;page-link&quot; href=&quot;#&quot; onclick=&quot;changePage(event, ${nextPage})&quot;&gt;Next »&lt;/a&gt;` 
+                              ${nextPage
+                                ? `&lt;a class=&quot;page-link&quot; href=&quot;#&quot; onclick=&quot;changePage(event, ${nextPage})&quot;&gt;Next »&lt;/a&gt;`
                                 : `&lt;span class=&quot;page-link&quot;&gt;Next »&lt;/span&gt;`}
                           &lt;/li&gt;
                       &lt;/ul&gt;`;
-                  
+
                   if (!query &amp;&amp; !category &amp;&amp; !priority &amp;&amp; !status) {
                       initialPaginationHtml = pagContainer.innerHTML;
                   }
@@ -2351,10 +2446,10 @@ return new class extends Migration
     function updateBulkActionBar() {
         const checkedBoxes = document.querySelectorAll(&#039;.tasks-list .task .task-select-checkbox:checked&#039;);
         const count = checkedBoxes.length;
-        
+
         const selectAllCheckbox = document.getElementById(&#039;select-all-tasks&#039;);
         const visibleCheckboxes = document.querySelectorAll(&#039;.tasks-list .task:not([style*=&quot;display: none&quot;]) .task-select-checkbox&#039;);
-        
+
         if (selectAllCheckbox &amp;&amp; visibleCheckboxes.length &gt; 0) {
             selectAllCheckbox.checked = (checkedBoxes.length === visibleCheckboxes.length);
         }
@@ -2537,17 +2632,17 @@ return new class extends Migration
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
-            
+
             oscillator.type = &#039;sine&#039;;
             oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
             oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
-            
+
             gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-            
+
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
-            
+
             oscillator.start();
             oscillator.stop(audioCtx.currentTime + 0.4);
         } catch (e) {
@@ -2572,7 +2667,7 @@ return new class extends Migration
             `;
             document.body.appendChild(container);
         }
-        
+
         const toast = document.createElement(&#039;div&#039;);
         toast.className = &#039;toast-notification&#039;;
         toast.style.cssText = `
@@ -2592,15 +2687,15 @@ return new class extends Migration
             transform: translateY(-20px) scale(0.9);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         `;
-        
+
         toast.innerHTML = `&lt;i class=&quot;fa-solid fa-triangle-exclamation&quot; style=&quot;font-size: 1.2rem;&quot;&gt;&lt;/i&gt; &lt;span&gt;${message}&lt;/span&gt;`;
         container.appendChild(toast);
-        
+
         setTimeout(() =&gt; {
             toast.style.opacity = &#039;1&#039;;
             toast.style.transform = &#039;translateY(0) scale(1)&#039;;
         }, 50);
-        
+
         playNotificationBeep();
 
         setTimeout(() =&gt; {
@@ -2628,7 +2723,7 @@ return new class extends Migration
             const taskStatus = el.dataset.status;
             const textEl = el.querySelector(&#039;.countdown-text&#039;);
             const iconEl = el.querySelector(&#039;i&#039;);
-            
+
             if (taskStatus === &#039;completed&#039;) {
                 el.style.display = &#039;flex&#039;;
                 el.classList.remove(&#039;urgent&#039;);
@@ -2638,11 +2733,11 @@ return new class extends Migration
                 }
                 return;
             }
-            
+
             const dueDate = new Date(dueDateStr);
             const now = new Date();
             const diffMs = dueDate - now;
-            
+
             if (diffMs &lt;= 0) {
                 // Task is overdue
                 el.classList.remove(&#039;urgent&#039;);
@@ -2654,7 +2749,7 @@ return new class extends Migration
                         if (titleEl &amp;&amp; !titleEl.querySelector(&#039;.overdue-badge&#039;)) {
                             titleEl.insertAdjacentHTML(&#039;beforeend&#039;, &#039;&lt;span class=&quot;overdue-badge&quot;&gt;&lt;i class=&quot;fa-solid fa-circle-exclamation&quot;&gt;&lt;/i&gt; Overdue&lt;/span&gt;&#039;);
                         }
-                        
+
                         // Just expired! Trigger notification
                         const taskTitle = taskCard.querySelector(&#039;.task-title a&#039;).innerText;
                         showTaskExpiredNotification(taskTitle);
@@ -2666,14 +2761,14 @@ return new class extends Migration
                 }
                 return;
             }
-            
+
             // Calculate time parts
             const diffSecs = Math.floor(diffMs / 1000);
             const days = Math.floor(diffSecs / 86400);
             const hours = Math.floor((diffSecs % 86400) / 3600);
             const minutes = Math.floor((diffSecs % 3600) / 60);
             const seconds = diffSecs % 60;
-            
+
             // Format output string
             let timeStr = &#039;&#039;;
             if (days &gt; 0) {
@@ -2683,9 +2778,9 @@ return new class extends Migration
             } else {
                 timeStr += `${minutes}m ${seconds}s remaining`;
             }
-            
+
             textEl.innerText = timeStr;
-            
+
             // If less than 24 hours remaining, mark as urgent
             if (diffMs &lt; 24 * 60 * 60 * 1000) {
                 el.classList.add(&#039;urgent&#039;);
@@ -2700,33 +2795,35 @@ return new class extends Migration
             }
         });
     }
-    
+
     // Start interval
     updateCountdowns();
     setInterval(updateCountdowns, 1000);
   &lt;/script&gt;
 @endsection
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Task Details View (تفاصيل المهمة)</span>
-                <span class="file-path">resources/views/task.blade.php</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                صفحة مستقلة لعرض تفاصيل مهمة معينة بدقة، تشمل الوصف، تاريخ الاستحقاق، الأولوية، المهام الفرعية، وقسم رفع واستعراض المرفقات مع دعم ميزة الـ Lightbox للصور.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-php">@extends(&#039;layout.layout&#039;)
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">Task Details View (تفاصيل المهمة)</span>
+          <span class="file-path">resources/views/task.blade.php</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          صفحة مستقلة لعرض تفاصيل مهمة معينة بدقة، تشمل الوصف، تاريخ الاستحقاق،
+          الأولوية، المهام الفرعية، وقسم رفع واستعراض المرفقات مع دعم ميزة الـ
+          Lightbox للصور.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-php">@extends(&#039;layout.layout&#039;)
 @section(&#039;title&#039;, $task[&#039;title&#039;])
 @section(&#039;Dashboard_nav&#039;, &#039;active&#039;)
 
 @section(&#039;CustomCss&#039;)
   #create-task-btn { display: none !important; }
   #Back-to-Dashboard { display: flex !important; }
-  
+
   .task-details-card {
       max-width: 800px;
       margin: 40px auto;
@@ -2742,7 +2839,7 @@ return new class extends Migration
           padding: 24px;
       }
   }
-  
+
   .description-box {
       color: var(--text-muted);
       line-height: 1.6;
@@ -2760,12 +2857,12 @@ return new class extends Migration
       border-radius: 12px;
       transition: background-color 0.3s ease, border-color 0.3s ease;
   }
-  
+
   .subtask-item.completed span {
       text-decoration: line-through;
       color: var(--text-muted);
   }
-  
+
   .custom-checkbox.checked {
       background: var(--accent-color);
       border-color: var(--accent-color);
@@ -2846,7 +2943,7 @@ return new class extends Migration
         &lt;div id=&quot;dropzone&quot; class=&quot;upload-dropzone&quot; style=&quot;border: 2px dashed var(--border-color); padding: 30px; border-radius: 16px; text-align: center; background: var(--subtask-bg); transition: all 0.3s ease; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px;&quot; onclick=&quot;document.getElementById(&#039;file-input&#039;).click()&quot;&gt;
             &lt;i class=&quot;fa-solid fa-cloud-arrow-up&quot; style=&quot;font-size: 2.5rem; color: var(--accent-color); transition: transform 0.3s ease;&quot;&gt;&lt;/i&gt;
             &lt;div style=&quot;font-weight: 600; color: var(--text-main); font-family: var(--font-main);&quot;&gt;Drag &amp; Drop your files here or &lt;span style=&quot;color: var(--accent-color);&quot;&gt;Browse&lt;/span&gt;&lt;/div&gt;
-            &lt;div style=&quot;font-size: 0.8rem; color: var(--text-muted);&quot;&gt;Supports Images, PDFs, and Documents (Max 10MB)&lt;/div&gt;
+            &lt;div style=&quot;font-size: 0.8rem; color: var(--text-muted);&quot;&gt;Supports Images, PDFs, and Documents (Max 50MB)&lt;/div&gt;
             &lt;input type=&quot;file&quot; id=&quot;file-input&quot; style=&quot;display: none;&quot; onchange=&quot;uploadAttachment(this.files[0])&quot;&gt;
         &lt;/div&gt;
 
@@ -2917,7 +3014,7 @@ return new class extends Migration
             const subtask = response.data.data;
             const item = document.getElementById(`subtask-${subtask.id}`);
             const checkbox = item.querySelector(&#039;.custom-checkbox&#039;);
-            
+
             if (subtask.is_completed) {
                 item.classList.add(&#039;completed&#039;);
                 checkbox.classList.add(&#039;checked&#039;);
@@ -2925,7 +3022,7 @@ return new class extends Migration
                 item.classList.remove(&#039;completed&#039;);
                 checkbox.classList.remove(&#039;checked&#039;);
             }
-            
+
             updateProgressBar();
         })
         .catch(error =&gt; {
@@ -2938,7 +3035,7 @@ return new class extends Migration
         const total = document.querySelectorAll(&#039;.subtask-item&#039;).length;
         const completed = document.querySelectorAll(&#039;.subtask-item.completed&#039;).length;
         const progress = total &gt; 0 ? (completed / total) * 100 : 0;
-        
+
         document.getElementById(&#039;main-progress-bar&#039;).style.width = `${progress}%`;
         document.getElementById(&#039;progress-text&#039;).innerText = `${Math.round(progress)}% Complete`;
         document.getElementById(&#039;subtask-count&#039;).innerText = `${completed}/${total} Subtasks`;
@@ -2977,9 +3074,9 @@ return new class extends Migration
     function uploadAttachment(file) {
         if (!file) return;
 
-        // Size check (10MB maximum)
-        if (file.size &gt; 10 * 1024 * 1024) {
-            alert(&#039;File size exceeds the 10MB limit!&#039;);
+        // Size check (50MB maximum)
+        if (file.size &gt; 50 * 1024 * 1024) {
+            alert(&#039;File size exceeds the 50MB limit!&#039;);
             return;
         }
 
@@ -3000,7 +3097,7 @@ return new class extends Migration
         })
         .then(response =&gt; {
             const attachment = response.data.data;
-            
+
             // Build dynamic markup based on file type
             if (attachment.is_image) {
                 const grid = document.getElementById(&#039;attachments-grid&#039;);
@@ -3116,19 +3213,22 @@ return new class extends Migration
   &lt;/script&gt;
 @endsection
 </code></pre>
-            </div>
         </div>
-        <div class="file-card page-break">
-            <div class="file-header">
-                <span class="file-name">Custom Stylesheet (ملف الستايل المخصص)</span>
-                <span class="file-path">public/css/style.css</span>
-            </div>
-            <div class="explanation">
-                <strong>الشرح البرمجي:</strong><br>
-                يحتوي على كافة التنسيقات البصرية للمشروع. يدعم الألوان الحديثة، ميزة الوضع المظلم (Dark Mode)، تصميم الـ Glassmorphism، الواجهات المتجاوبة مع الشاشات المختلفة، والتأثيرات الحركية (Transitions) التي تمنح التطبيق طابعاً فاخراً وسلساً.
-            </div>
-            <div class="code-container">
-                <pre><code class="language-css">@import url(&quot;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Outfit:wght@400;500;600;700&amp;display=swap&quot;);
+      </div>
+      <div class="file-card page-break">
+        <div class="file-header">
+          <span class="file-name">Custom Stylesheet (ملف الستايل المخصص)</span>
+          <span class="file-path">public/css/style.css</span>
+        </div>
+        <div class="explanation">
+          <strong>الشرح البرمجي:</strong><br />
+          يحتوي على كافة التنسيقات البصرية للمشروع. يدعم الألوان الحديثة، ميزة
+          الوضع المظلم (Dark Mode)، تصميم الـ Glassmorphism، الواجهات المتجاوبة
+          مع الشاشات المختلفة، والتأثيرات الحركية (Transitions) التي تمنح
+          التطبيق طابعاً فاخراً وسلساً.
+        </div>
+        <div class="code-container">
+          <pre><code class="language-css">@import url(&quot;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Outfit:wght@400;500;600;700&amp;display=swap&quot;);
 :root {
   --total-tasks-color: #3f75ef;
   --completed-color: #2da669;
@@ -3967,11 +4067,11 @@ html.dark-mode .task-countdown {
   transform: scale(1.05);
 }
 </code></pre>
-            </div>
         </div>
+      </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-</body>
+  </body>
 </html>

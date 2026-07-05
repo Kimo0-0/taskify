@@ -3,9 +3,7 @@
 @section($activeNav ?? 'Dashboard_nav', 'active')
 
 @if(isset($activeNav) && $activeNav == 'Trash_nav')
-  @section('CustomCss')
-    #create-task-btn { display: none !important; }
-  @endsection
+  @section('body-class', 'page-trash')
 @endif
 
 @section('content')
@@ -56,7 +54,7 @@
           <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.95rem;"></i>
           <input type="text" id="search-tasks" placeholder="Search tasks by title or description..." oninput="if(event.isTrusted) filterTasks()" autocomplete="off" data-form-type="other" data-lpignore="true" style="width: 100%; padding: 12px 16px 12px 44px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; box-sizing: border-box; transition: all 0.3s ease;">
       </div>
-      
+
       <div style="display: flex; flex-wrap: wrap; gap: 12px; width: auto;">
           <select id="filter-category" onchange="if(event.isTrusted) filterTasks()" autocomplete="off" data-form-type="other" style="padding: 12px 16px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease;">
               <option value="">All Categories</option>
@@ -78,7 +76,7 @@
               <option value="in progress">In Progress</option>
               <option value="completed">Completed</option>
           </select>
-          
+
           <button onclick="resetFilters()" style="padding: 12px 16px; background: var(--border-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 12px; font-family: var(--font-main); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;">
               <i class="fa-solid fa-filter-circle-xmark"></i> Reset
           </button>
@@ -143,6 +141,9 @@
               <button class="task-action important" onclick="toggleImportant({{ $task['id'] }}, '{{ $task['priority'] }}')" title="Mark as {{ $task['priority'] == 'high' ? 'Normal' : 'Important' }}">
                   <i class="{{ $task['priority'] == 'high' ? 'fa-solid' : 'fa-regular' }} fa-star" style="{{ $task['priority'] == 'high' ? 'color: #f59e0b;' : '' }}"></i>
               </button>
+              <button class="task-action share" onclick="openShareModal({{ $task['id'] }}, {{ $task['share_token'] ? 'true' : 'false' }}, '{{ $task['share_url'] ?? '' }}', {{ $task['share_can_edit'] ? 'true' : 'false' }}, {{ $task['share_can_complete'] ? 'true' : 'false' }})" title="Share Task">
+                  <i class="fa-solid fa-share-nodes" style="{{ $task['share_token'] ? 'color: var(--accent-color);' : '' }}"></i>
+              </button>
               <button class="task-action edit" onclick='openUpdateForm({{ json_encode($task) }})'>
                   <i class="fa-regular fa-pen-to-square"></i>
               </button>
@@ -181,6 +182,47 @@
                   <i class="fa-regular fa-trash-can"></i> Delete Selected
               </button>
           @endif
+      </div>
+  </div>
+
+  {{-- Global Share Modal --}}
+  <div id="share-modal-overlay" onclick="closeShareModal()" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 15000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
+      <div onclick="event.stopPropagation()" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 24px; padding: 32px; width: 90%; max-width: 460px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); transform: scale(0.95); transition: transform 0.3s ease;" id="share-modal-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+              <h3 style="margin: 0; font-family: var(--font-accent); font-size: 1.3rem; color: var(--text-main); display: flex; align-items: center; gap: 10px;">
+                  <i class="fa-solid fa-share-nodes" style="color: var(--accent-color);"></i> Share Task
+              </h3>
+              <button onclick="closeShareModal()" style="background: var(--close-btn-bg); border: 1px solid var(--border-color); color: var(--text-main); width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Close">
+                  <i class="fa-solid fa-xmark"></i>
+              </button>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0 0 20px 0; line-height: 1.5;">Allow anyone with the link to view this task and its attachments without logging in.</p>
+          
+          <div id="share-modal-link-section" style="display: none; margin-bottom: 20px; background: var(--subtask-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: none; flex-direction: column; gap: 12px;">
+              <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Public Link</div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                  <input type="text" id="share-modal-url" value="" readonly style="flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; font-family: var(--font-main); outline: none;" onclick="this.select()">
+                  <button onclick="copyShareModalUrl()" class="btn-aqua" style="padding: 10px 16px; border-radius: 10px; font-size: 0.85rem; border: none; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 6px; cursor: pointer;" id="share-modal-copy-btn">
+                      <i class="fa-regular fa-copy"></i> Copy
+                  </button>
+              </div>
+              <div style="border-top: 1px solid var(--border-color); padding-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+                  <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Link Permissions:</div>
+                  <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-main); cursor: pointer;">
+                      <input type="checkbox" id="share-modal-can-complete" onchange="updateShareModalPermission('share_can_complete', this)" style="width: 14px; height: 14px; accent-color: var(--accent-color);">
+                      Allow Completion (Complete Subtasks & Task)
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-main); cursor: pointer;">
+                      <input type="checkbox" id="share-modal-can-edit" onchange="updateShareModalPermission('share_can_edit', this)" style="width: 14px; height: 14px; accent-color: var(--accent-color);">
+                      Allow Editing (Edit Title, Description, etc.)
+                  </label>
+              </div>
+          </div>
+
+          <input type="hidden" id="share-modal-task-id" value="">
+          <button id="share-modal-toggle-btn" onclick="toggleShareFromModal()" class="btn-aqua" style="width: 100%; justify-content: center; padding: 14px; border-radius: 14px; font-size: 0.95rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-link"></i> Enable Public Link
+          </button>
       </div>
   </div>
 
@@ -226,7 +268,7 @@
 
       <label>Category</label>
       <select name="category_id" id="update-category-id">
-        <option disabled selected>Select Category</option>
+        <option value="" selected>Select Category (No Category)</option>
         @foreach ($categories as $category)
           <option value="{{ $category->id }}">{{ $category->name }}</option>
         @endforeach
@@ -284,8 +326,8 @@
                   <div class="progress-bar" style="width: ${progress}%"></div>
               </div>
               <div class="task-countdown" data-due="${task.due_date}" data-status="${task.status}">
-                  ${isCompleted 
-                    ? '<i class="fa-solid fa-circle-check"></i> <span class="countdown-text">Completed</span>' 
+                  ${isCompleted
+                    ? '<i class="fa-solid fa-circle-check"></i> <span class="countdown-text">Completed</span>'
                     : '<i class="fa-solid fa-hourglass-half"></i> <span class="countdown-text">Calculating...</span>'}
               </div>
               <div class="task-bar">
@@ -296,6 +338,9 @@
                       </button>
                       <button class="task-action important" onclick="toggleImportant(${task.id}, '${task.priority}')">
                           <i class="${isHighPriority ? 'fa-solid' : 'fa-regular'} fa-star" style="${isHighPriority ? 'color: #f59e0b;' : ''}"></i>
+                      </button>
+                      <button class="task-action share" onclick="openShareModal(${task.id}, ${task.share_token ? 'true' : 'false'}, '${task.share_url || ''}', ${task.share_can_edit ? 'true' : 'false'}, ${task.share_can_complete ? 'true' : 'false'})" title="Share Task">
+                          <i class="fa-solid fa-share-nodes" style="${task.share_token ? 'color: var(--accent-color);' : ''}"></i>
                       </button>
                       <button class="task-action edit" onclick='openUpdateForm(${JSON.stringify(task)})'>
                           <i class="fa-regular fa-pen-to-square"></i>
@@ -540,13 +585,13 @@
                       pagContainer.innerHTML = `
                           <ul class="pagination">
                               <li class="page-item ${!result.prev_page_url ? 'disabled' : ''}">
-                                  ${result.prev_page_url 
-                                    ? `<a class="page-link" onclick="filterTasks(${result.current_page - 1})">« Previous</a>` 
+                                  ${result.prev_page_url
+                                    ? `<a class="page-link" onclick="filterTasks(${result.current_page - 1})">« Previous</a>`
                                     : `<span class="page-link">« Previous</span>`}
                               </li>
                               <li class="page-item ${!result.next_page_url ? 'disabled' : ''}">
-                                  ${result.next_page_url 
-                                    ? `<a class="page-link" onclick="filterTasks(${result.current_page + 1})">Next »</a>` 
+                                  ${result.next_page_url
+                                    ? `<a class="page-link" onclick="filterTasks(${result.current_page + 1})">Next »</a>`
                                     : `<span class="page-link">Next »</span>`}
                               </li>
                           </ul>`;
@@ -580,7 +625,7 @@
       const category = document.getElementById('filter-category').value;
       const priority = document.getElementById('filter-priority').value;
       const status = document.getElementById('filter-status').value;
-      
+
       const urlParams = new URLSearchParams(window.location.search);
       const page = urlParams.get('page') || 1;
 
@@ -629,17 +674,17 @@
                   pagContainer.innerHTML = `
                       <ul class="pagination">
                           <li class="page-item ${!prevPage ? 'disabled' : ''}">
-                              ${prevPage 
-                                ? `<a class="page-link" href="#" onclick="changePage(event, ${prevPage})">« Previous</a>` 
+                              ${prevPage
+                                ? `<a class="page-link" href="#" onclick="changePage(event, ${prevPage})">« Previous</a>`
                                 : `<span class="page-link">« Previous</span>`}
                           </li>
                           <li class="page-item ${!nextPage ? 'disabled' : ''}">
-                              ${nextPage 
-                                ? `<a class="page-link" href="#" onclick="changePage(event, ${nextPage})">Next »</a>` 
+                              ${nextPage
+                                ? `<a class="page-link" href="#" onclick="changePage(event, ${nextPage})">Next »</a>`
                                 : `<span class="page-link">Next »</span>`}
                           </li>
                       </ul>`;
-                  
+
                   if (!query && !category && !priority && !status) {
                       initialPaginationHtml = pagContainer.innerHTML;
                   }
@@ -691,10 +736,10 @@
     function updateBulkActionBar() {
         const checkedBoxes = document.querySelectorAll('.tasks-list .task .task-select-checkbox:checked');
         const count = checkedBoxes.length;
-        
+
         const selectAllCheckbox = document.getElementById('select-all-tasks');
         const visibleCheckboxes = document.querySelectorAll('.tasks-list .task:not([style*="display: none"]) .task-select-checkbox');
-        
+
         if (selectAllCheckbox && visibleCheckboxes.length > 0) {
             selectAllCheckbox.checked = (checkedBoxes.length === visibleCheckboxes.length);
         }
@@ -803,7 +848,7 @@
       }
 
       setTimeout(() => {
-        document.getElementById("update-category-id").value = task.category_id;
+        document.getElementById("update-category-id").value = task.category_id || "";
       }, 0);
       toggleUpdateForm();
     }
@@ -821,7 +866,7 @@
         description: document.getElementById("update-task-description").value,
         due_date: document.getElementById("update-task-due").value,
         priority: document.getElementById("update-task-priority").value,
-        category_id: document.getElementById("update-category-id").value,
+        category_id: document.getElementById("update-category-id").value || null,
         subtasks: getSubtasks("update-subtask-list"),
         _token: document.querySelector('input[name="_token"]').value,
       };
@@ -877,17 +922,17 @@
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
-            
+
             oscillator.type = 'sine';
             oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
             oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
-            
+
             gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-            
+
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
-            
+
             oscillator.start();
             oscillator.stop(audioCtx.currentTime + 0.4);
         } catch (e) {
@@ -912,7 +957,7 @@
             `;
             document.body.appendChild(container);
         }
-        
+
         const toast = document.createElement('div');
         toast.className = 'toast-notification';
         toast.style.cssText = `
@@ -932,15 +977,15 @@
             transform: translateY(-20px) scale(0.9);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         `;
-        
+
         toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="font-size: 1.2rem;"></i> <span>${message}</span>`;
         container.appendChild(toast);
-        
+
         setTimeout(() => {
             toast.style.opacity = '1';
             toast.style.transform = 'translateY(0) scale(1)';
         }, 50);
-        
+
         playNotificationBeep();
 
         setTimeout(() => {
@@ -968,7 +1013,7 @@
             const taskStatus = el.dataset.status;
             const textEl = el.querySelector('.countdown-text');
             const iconEl = el.querySelector('i');
-            
+
             if (taskStatus === 'completed') {
                 el.style.display = 'flex';
                 el.classList.remove('urgent');
@@ -978,11 +1023,11 @@
                 }
                 return;
             }
-            
+
             const dueDate = new Date(dueDateStr);
             const now = new Date();
             const diffMs = dueDate - now;
-            
+
             if (diffMs <= 0) {
                 // Task is overdue
                 el.classList.remove('urgent');
@@ -994,7 +1039,7 @@
                         if (titleEl && !titleEl.querySelector('.overdue-badge')) {
                             titleEl.insertAdjacentHTML('beforeend', '<span class="overdue-badge"><i class="fa-solid fa-circle-exclamation"></i> Overdue</span>');
                         }
-                        
+
                         // Just expired! Trigger notification
                         const taskTitle = taskCard.querySelector('.task-title a').innerText;
                         showTaskExpiredNotification(taskTitle);
@@ -1006,14 +1051,14 @@
                 }
                 return;
             }
-            
+
             // Calculate time parts
             const diffSecs = Math.floor(diffMs / 1000);
             const days = Math.floor(diffSecs / 86400);
             const hours = Math.floor((diffSecs % 86400) / 3600);
             const minutes = Math.floor((diffSecs % 3600) / 60);
             const seconds = diffSecs % 60;
-            
+
             // Format output string
             let timeStr = '';
             if (days > 0) {
@@ -1023,9 +1068,9 @@
             } else {
                 timeStr += `${minutes}m ${seconds}s remaining`;
             }
-            
+
             textEl.innerText = timeStr;
-            
+
             // If less than 24 hours remaining, mark as urgent
             if (diffMs < 24 * 60 * 60 * 1000) {
                 el.classList.add('urgent');
@@ -1040,9 +1085,167 @@
             }
         });
     }
-    
+
     // Start interval
     updateCountdowns();
     setInterval(updateCountdowns, 1000);
+
+    // ================== Share Modal Handlers ==================
+    function openShareModal(taskId, isShared, shareUrl, shareCanEdit = false, shareCanComplete = false) {
+        const overlay = document.getElementById('share-modal-overlay');
+        const card = document.getElementById('share-modal-card');
+        const linkSection = document.getElementById('share-modal-link-section');
+        const urlInput = document.getElementById('share-modal-url');
+        const toggleBtn = document.getElementById('share-modal-toggle-btn');
+        const taskIdInput = document.getElementById('share-modal-task-id');
+        const editCheckbox = document.getElementById('share-modal-can-edit');
+        const completeCheckbox = document.getElementById('share-modal-can-complete');
+
+        taskIdInput.value = taskId;
+
+        if (isShared && shareUrl) {
+            linkSection.style.display = 'flex';
+            urlInput.value = shareUrl;
+            toggleBtn.innerHTML = '<i class="fa-solid fa-link-slash"></i> Disable Public Link';
+            toggleBtn.style.background = 'var(--overdue-color)';
+            editCheckbox.checked = shareCanEdit;
+            completeCheckbox.checked = shareCanComplete;
+        } else {
+            linkSection.style.display = 'none';
+            urlInput.value = '';
+            toggleBtn.innerHTML = '<i class="fa-solid fa-link"></i> Enable Public Link';
+            toggleBtn.style.background = '';
+            editCheckbox.checked = false;
+            completeCheckbox.checked = false;
+        }
+
+        overlay.style.display = 'flex';
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+            card.style.transform = 'scale(1)';
+        }, 10);
+    }
+
+    function closeShareModal() {
+        const overlay = document.getElementById('share-modal-overlay');
+        const card = document.getElementById('share-modal-card');
+        overlay.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
+    }
+
+    function toggleShareFromModal() {
+        const taskId = document.getElementById('share-modal-task-id').value;
+        const toggleBtn = document.getElementById('share-modal-toggle-btn');
+        const linkSection = document.getElementById('share-modal-link-section');
+        const urlInput = document.getElementById('share-modal-url');
+        const editCheckbox = document.getElementById('share-modal-can-edit');
+        const completeCheckbox = document.getElementById('share-modal-can-complete');
+
+        toggleBtn.disabled = true;
+        toggleBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+        axios.post(`/tasks/${taskId}/share`, {
+            _token: document.querySelector('input[name="_token"]').value
+        })
+        .then(response => {
+            const data = response.data;
+            if (data.shared) {
+                linkSection.style.display = 'flex';
+                urlInput.value = data.share_url;
+                toggleBtn.innerHTML = '<i class="fa-solid fa-link-slash"></i> Disable Public Link';
+                toggleBtn.style.background = 'var(--overdue-color)';
+                editCheckbox.checked = false;
+                completeCheckbox.checked = false;
+                // Update the share icon on the task card
+                updateTaskShareIcon(taskId, true);
+            } else {
+                linkSection.style.display = 'none';
+                urlInput.value = '';
+                toggleBtn.innerHTML = '<i class="fa-solid fa-link"></i> Enable Public Link';
+                toggleBtn.style.background = '';
+                updateTaskShareIcon(taskId, false);
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Error toggling task share settings');
+        })
+        .finally(() => {
+            toggleBtn.disabled = false;
+        });
+    }
+
+    function updateShareModalPermission(permissionType, checkbox) {
+        const taskId = document.getElementById('share-modal-task-id').value;
+        checkbox.disabled = true;
+
+        const params = {
+            _token: document.querySelector('input[name="_token"]').value
+        };
+        params[permissionType] = checkbox.checked ? 1 : 0;
+
+        axios.post(`/tasks/${taskId}/share`, params)
+        .then(response => {
+            // Update the share button parameters on the page so if we reopen, they stick
+            const taskCard = document.getElementById(`task-${taskId}`);
+            if (taskCard) {
+                const shareBtn = taskCard.querySelector('.task-action.share');
+                if (shareBtn) {
+                    const onclickAttr = shareBtn.getAttribute('onclick');
+                    // Simple replacement of params or refresh task list to update onclick values
+                }
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Error updating share permissions');
+            checkbox.checked = !checkbox.checked;
+        })
+        .finally(() => {
+            checkbox.disabled = false;
+        });
+    }
+
+    function updateTaskShareIcon(taskId, isShared) {
+        const taskCard = document.getElementById(`task-${taskId}`);
+        if (!taskCard) return;
+        const shareBtn = taskCard.querySelector('.task-action.share i');
+        if (shareBtn) {
+            shareBtn.style.color = isShared ? 'var(--accent-color)' : '';
+        }
+    }
+
+    function copyShareModalUrl() {
+        const input = document.getElementById('share-modal-url');
+        const btn = document.getElementById('share-modal-copy-btn');
+        input.select();
+        input.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(input.value)
+            .then(() => {
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+                btn.style.background = 'var(--completed-color)';
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.style.background = '';
+                }, 2000);
+            })
+            .catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+    }
+
+    // Close share modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const overlay = document.getElementById('share-modal-overlay');
+            if (overlay && overlay.style.display === 'flex') {
+                closeShareModal();
+            }
+        }
+    });
   </script>
 @endsection

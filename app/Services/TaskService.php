@@ -106,6 +106,7 @@ class TaskService
     {
         return Auth::user()->tasks()
             ->with(['category', 'subtasks'])
+            ->where('status', '!=', 'completed')
             ->whereDate('due_date', \Carbon\Carbon::today())
             ->orderBy('due_date', 'asc')
             ->paginate(10);
@@ -118,6 +119,7 @@ class TaskService
     {
         return Auth::user()->tasks()
             ->with(['category', 'subtasks'])
+            ->where('status', '!=', 'completed')
             ->whereDate('due_date', '>', \Carbon\Carbon::today())
             ->orderBy('due_date', 'asc')
             ->paginate(10);
@@ -130,6 +132,7 @@ class TaskService
     {
         return Auth::user()->tasks()
             ->with(['category', 'subtasks'])
+            ->where('status', '!=', 'completed')
             ->where('priority', 'high')
             ->orderBy('due_date', 'asc')
             ->paginate(10);

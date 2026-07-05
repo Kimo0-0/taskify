@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subtask;
+use App\Events\SubtaskToggled;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SubtaskController extends Controller
 {
@@ -26,6 +28,8 @@ class SubtaskController extends Controller
             }
             $task->save();
         }
+
+        broadcast(new SubtaskToggled($subtask, $task->user_id))->toOthers();
 
         return response()->json([
             'status' => 'success',

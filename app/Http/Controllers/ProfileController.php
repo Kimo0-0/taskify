@@ -73,4 +73,64 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    /**
+     * Toggle public sharing of all tasks for this user,
+     * or update sharing permissions (share_can_complete / share_can_edit)
+     * when the user already has an active share token.
+     */
+    public function toggleShare(Request $request): JsonResponse
+    {
+        try {
+            $user = $request->user();
+
+            // If permission-only update (share already enabled)
+            if ($request->has('share_can_complete') || $request->has('share_can_edit')) {
+                if ($request->has('share_can_complete')) {
+                    $user->share_can_complete = (bool) $request->input('share_can_complete');
+                }
+                if ($request->has('share_can_edit')) {
+                    $user->share_can_edit = (bool) $request->input('share_can_edit');
+                }
+                $user->save();
+
+                return response()->json([
+                    'status'  => 'success',
+                    'shared'  => (bool) $user->share_token,
+                    'message' => 'Permissions updated successfully',
+                ]);
+            }
+
+            // Toggle share token on/off
+            if ($user->share_token) {
+                $user->share_token        = null;
+                $user->share_can_edit     = false;
+                $user->share_can_complete = false;
+                $user->save();
+
+                return response()->json([
+                    'status'  => 'success',
+                    'shared'  => false,
+                    'message' => 'Profile sharing disabled successfully',
+                ]);
+            } else {
+                $user->share_token = \Illuminate\Support\Str::random(32);
+                $user->save();
+
+                return response()->json([
+                    'status'    => 'success',
+                    'shared'    => true,
+                    'share_url' => $user->share_url,
+                    'message'   => 'Profile sharing enabled successfully',
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('ProfileController::toggleShare error: ' . $e->getMessage());
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Failed to update sharing settings. Please run: php artisan migrate',
+                'debug'   => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

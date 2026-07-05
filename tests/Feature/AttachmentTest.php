@@ -54,8 +54,8 @@ test('user cannot upload attachments exceeding size limit', function () {
 
     Storage::fake('public'); // size-limit test — no disk assertions needed
 
-    // Create a fake file larger than 10MB (11MB)
-    $file = UploadedFile::fake()->create('heavy.pdf', 11 * 1024);
+    // Create a fake file larger than 50MB (51MB)
+    $file = UploadedFile::fake()->create('heavy.pdf', 51 * 1024);
 
     $response = $test
         ->actingAs($user)

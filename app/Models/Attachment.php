@@ -17,7 +17,7 @@ class Attachment extends Model
         'file_type',
     ];
 
-    protected $appends = ['file_url', 'formatted_size', 'is_image'];
+    protected $appends = ['file_url', 'formatted_size', 'is_image', 'is_video'];
 
     public function task()
     {
@@ -26,7 +26,7 @@ class Attachment extends Model
 
     public function getFileUrlAttribute()
     {
-        return Storage::url($this->file_path);
+        return '/storage/' . $this->file_path;
     }
 
     public function getFormattedSizeAttribute()
@@ -50,5 +50,10 @@ class Attachment extends Model
     public function getIsImageAttribute()
     {
         return str_starts_with($this->file_type, 'image/');
+    }
+
+    public function getIsVideoAttribute()
+    {
+        return str_starts_with($this->file_type, 'video/');
     }
 }

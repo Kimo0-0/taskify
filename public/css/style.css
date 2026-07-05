@@ -434,6 +434,7 @@ nav {
 .add_Task_Form.active,
 .update_Task_Form.active {
   display: flex;
+  z-index: 99999999;
 }
 form.add_Task,
 form.update_Task {
@@ -563,7 +564,7 @@ form label {
   border-color: var(--accent-color);
 }
 .custom-checkbox.checked::after {
-  content: "✓";
+  content: "âœ“";
   color: #fff;
   font-size: 12px;
   position: absolute;
@@ -613,7 +614,6 @@ img {
   border-right: 1px solid rgba(219, 61, 66, 0.15);
   border-bottom: 1px solid rgba(219, 61, 66, 0.15);
   box-shadow: 0 4px 6px rgba(219, 61, 66, 0.02);
-  order: 9;
 }
 .task.overdue:hover {
   box-shadow: 0 10px 15px -3px rgba(219, 61, 66, 0.1);
@@ -835,4 +835,147 @@ html.dark-mode .task-countdown {
   background: rgba(255,255,255,0.2) !important;
   border-color: rgba(255,255,255,0.3) !important;
   transform: scale(1.05);
+}
+
+/* ==========================================================================
+   Page-Specific Visibility & Layout Overrides (No block CSS in Blade files)
+   ========================================================================== */
+
+/* Hide 'Create New Task' button on details, categories, and trash pages */
+.page-task-details #create-task-btn,
+.page-categories #create-task-btn,
+.page-trash #create-task-btn {
+  display: none !important;
+}
+
+/* Display 'Back to Dashboard' button on task details page */
+.page-task-details #Back-to-Dashboard {
+  display: flex !important;
+}
+
+/* Category Management Page Styles */
+.category-container {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 36px;
+  margin: 36px;
+}
+
+@media (max-width: 768px) {
+  .category-container {
+    grid-template-columns: 1fr;
+    margin: 16px;
+    gap: 20px;
+  }
+}
+
+.category-panel {
+  background: var(--card-bg);
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.category-card {
+  background: var(--border-color);
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.category-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-main);
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Task Details Page Styles */
+.task-details-card {
+  max-width: 800px;
+  margin: 40px auto;
+  background: var(--card-bg);
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .task-details-card {
+    margin: 16px;
+    padding: 24px;
+  }
+}
+
+.description-box {
+  color: var(--text-muted);
+  line-height: 1.6;
+  background: var(--subtask-bg);
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid var(--border-color);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.subtask-detail-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  border-radius: 12px;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.subtask-item.completed span {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.custom-checkbox.checked {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+/* Video Card & Upload Progress Styles */
+.video-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
+  transform: translateY(-3px);
+}
+.video-card:hover .video-play-overlay {
+  background: rgba(0,0,0,0.4) !important;
+}
+.video-card:hover .video-play-overlay div {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+.upload-progress-item {
+  animation: slideIn 0.3s ease;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
