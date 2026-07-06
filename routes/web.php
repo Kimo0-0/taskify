@@ -83,9 +83,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
   });
 });
 
-Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-
-
 
 
 
