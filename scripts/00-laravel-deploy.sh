@@ -9,7 +9,7 @@ echo "======================================="
 # Guard: skip everything if APP_KEY is missing
 if [ -z "$APP_KEY" ]; then
     echo "WARNING: APP_KEY is not set. Skipping artisan commands."
-    echo "Please set environment variables in Railway Dashboard."
+    echo "Please set APP_KEY in Railway Dashboard → Variables."
     exit 0
 fi
 
