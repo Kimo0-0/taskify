@@ -6,36 +6,33 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Stage 2: Production PHP/Nginx environment
-FROM richarvey/nginx-php-fpm:3.1.6
+# Stage 2: PHP 8.3 + Nginx via serversideup (designed for Laravel)
+FROM serversideup/php:8.3-fpm-nginx
 
-# Configure Environment
-ENV SKIP_COMPOSER 1
-ENV WEBROOT /var/www/html/public
-ENV PHP_ERRORS_STDERR 1
-ENV RUN_SCRIPTS 1
-ENV REAL_IP_HEADER 1
-ENV APP_ENV production
-ENV APP_DEBUG false
-ENV LOG_CHANNEL stderr
-ENV COMPOSER_ALLOW_SUPERUSER 1
+# Allow composer to run as root
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Railway uses port 8080 by default
-ENV LISTEN_PORT 8080
-EXPOSE 8080
-
-# Set the working directory
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy all files
-COPY . .
+# Switch to root for installation
+USER root
 
-# Copy compiled assets from the builder stage
-COPY --from=assets-builder /app/public/build ./public/build
+# Copy application files with correct ownership
+COPY --chown=www-data:www-data . .
 
-# Install production dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Copy compiled assets from builder stage
+COPY --from=assets-builder --chown=www-data:www-data /app/public/build ./public/build
 
-# Fix storage & bootstrap/cache permissions
+# Install PHP production dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Fix storage & cache permissions
 RUN chmod -R 775 storage bootstrap/cache \
-    && chown -R nginx:nginx storage bootstrap/cache
+    && chown -R www-data:www-data storage bootstrap/cache
+
+# Copy deploy script to entrypoint directory (serversideup convention)
+COPY scripts/00-laravel-deploy.sh /etc/entrypoint.d/00-laravel-deploy.sh
+RUN chmod +x /etc/entrypoint.d/00-laravel-deploy.sh
+
+EXPOSE 8080
